@@ -10,10 +10,10 @@ ___
 нужные аудитории
 ```
 ### Команда
-* __Еникеев Руслан__  - [enikeevruslan](https://t.me/enikeevruslan)
-* __Рахимов Михаил__ - [Klladee](https://t.me/Klladee)
-* __Насибулин Андрей__ - [Grady](https://t.me/A_Grady)
-* __Буторин Роман__ - [disQaaa](https://t.me/disQaaa)
+* __Еникеев Руслан__  - [@enikeevruslan](https://t.me/enikeevruslan)
+* __Рахимов Михаил__ - [@Klladee](https://t.me/Klladee)
+* __Насибулин Андрей__ - [@A_Grady](https://t.me/A_Grady)
+* __Буторин Роман__ - [@disQaaa](https://t.me/disQaaa)
 ### Менторы
 * __Анастасия Ищенко__ - [an_ischenko](https://t.me/an_ischenko)
 * __Александра Курганова__ - [axndkgn](https://t.me/axndkgn)
