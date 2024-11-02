@@ -24,4 +24,4 @@ ___
 * ___Figma___
 * ___Git___
 ### Макеты:
-__[Fifma](https://www.figma.com/design/xlVue8Sg1H3NoEAJAHkiTj/МАИ?node-id=253-1135&node-type=frame&t=H2ToGKEUI1VNEQyK-0)
+__[Figma] - (https://www.figma.com/design/xlVue8Sg1H3NoEAJAHkiTj/МАИ?node-id=253-1135&node-type=frame&t=H2ToGKEUI1VNEQyK-0)
