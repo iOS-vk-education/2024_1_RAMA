@@ -1,11 +1,11 @@
 # 2024_1_RAMA
 ___
-Проект команды RAMA по курсу "Мобильный разработчик на IOS" от VK 
+Проект команды RAMA по курсу "Мобильный разработчик на iOS" от VK 
 ## Описание:
 ___
 ```
 Приложение предоставляет возможность просмотра расписания для каждой группы
-Доступен deadline list(to do list) для учета мертвых линий и личных целей
+Доступен deadline list (to do list) для учета мертвых линий и личных целей
 В будущем будет добавлена карта с основными корпусами, чтобы студенты легко находили
 нужные аудитории
 ```
@@ -24,4 +24,4 @@ ___
 * ___Figma___
 * ___Git___
 ### Макеты:
-__[Figma] - (https://www.figma.com/design/xlVue8Sg1H3NoEAJAHkiTj/МАИ?node-id=253-1135&node-type=frame&t=H2ToGKEUI1VNEQyK-0)
+__[Figma]__ - (https://www.figma.com/design/xlVue8Sg1H3NoEAJAHkiTj/МАИ?node-id=253-1135&node-type=frame&t=H2ToGKEUI1VNEQyK-0)
