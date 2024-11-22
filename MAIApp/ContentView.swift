@@ -9,11 +9,26 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        VStack {
-            ScheduleView()
-            Spacer()
+        TabView {
+            Text("Главная")
+                .tabItem {
+                    Label("Главная", systemImage: "house")
+                }
+            NavigationStack {
+                ScheduleView()
+            }
+                .tabItem {
+                    Label("Расписание", systemImage: "calendar")
+                }
+            Text("Дедлайны")
+                .tabItem {
+                    Label("Дедлайны", systemImage: "flame")
+                }
+            Text("Профиль")
+                .tabItem {
+                    Label("Профиль", systemImage: "person.circle.fill")
+                }
         }
-        .padding()
     }
 }
 

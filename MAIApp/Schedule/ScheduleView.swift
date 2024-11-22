@@ -9,8 +9,15 @@ import SwiftUI
 
 struct ScheduleView: View {
     var body: some View {
-        GroupAndWeekView()
-        DatePickerView()
+        VStack(spacing: 8) {
+            GroupAndWeekView()
+            DatePickerView()
+            LessonsView()
+            Spacer()
+        }
+        .padding()
+        .navigationTitle("Расписание")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 

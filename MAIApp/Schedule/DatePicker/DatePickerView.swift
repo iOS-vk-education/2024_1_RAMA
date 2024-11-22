@@ -12,7 +12,7 @@ struct DatePickerView: View {
     var body: some View {
         HStack(spacing: 0) {
             ForEach(0..<6) { i in
-                DayView(day: i)
+                DayView(day: i, isActive: i == 0)
                     .frame(maxWidth: .infinity)
                 if i < 5 {
                     Rectangle()
@@ -29,6 +29,7 @@ struct DatePickerView: View {
                     .stroke(.gray, lineWidth: 1)
                     .opacity(0.25)
                 )
+        .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 }
 
