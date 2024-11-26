@@ -1,5 +1,5 @@
 //
-//  DatePickerView.swift
+//  CalendarView.swift
 //  MAIApp
 //
 //  Created by Андрей  Насибулин  on 23.11.2024.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct DatePickerView: View {
+struct CalendarView: View {
     @State private var date = Date()
     
     var body: some View {
@@ -22,5 +22,5 @@ struct DatePickerView: View {
 }
 
 #Preview {
-    DatePickerView()
+    CalendarView()
 }

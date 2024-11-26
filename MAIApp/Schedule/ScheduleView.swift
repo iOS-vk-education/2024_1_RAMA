@@ -9,15 +9,17 @@ import SwiftUI
 
 struct ScheduleView: View {
     var body: some View {
-        VStack(spacing: 8) {
-            GroupAndWeekView()
-            DatePickerView()
-            LessonsView()
-            Spacer()
+        NavigationStack {
+            VStack(spacing: 8) {
+                GroupAndWeekView()
+                DatePickerView()
+                LessonsView()
+                Spacer()
+            }
+            .padding()
+            .navigationTitle("Расписание")
+            .navigationBarTitleDisplayMode(.inline)
         }
-        .padding()
-        .navigationTitle("Расписание")
-        .navigationBarTitleDisplayMode(.inline)
     }
 }
 

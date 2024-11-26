@@ -14,13 +14,11 @@ struct ContentView: View {
                 .tabItem {
                     Label("Главная", systemImage: "house")
                 }
-            NavigationStack {
-                ScheduleView()
-            }
+            ScheduleView()
                 .tabItem {
                     Label("Расписание", systemImage: "calendar")
                 }
-            Text("Дедлайны")
+            DeadlinesView()
                 .tabItem {
                     Label("Дедлайны", systemImage: "flame")
                 }

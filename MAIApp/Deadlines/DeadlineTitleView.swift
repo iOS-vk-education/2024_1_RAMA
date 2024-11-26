@@ -8,11 +8,27 @@
 import SwiftUI
 
 struct DeadlineTitleView: View {
+    let color: Color
+    let text: String
+    let time: String
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        HStack {
+            RoundedRectangle(cornerRadius: 2)
+                .frame(width: 3, height: 25)
+            Text(text)
+                .fontWeight(.medium)
+            Spacer()
+            Text(time)
+                .fontWeight(.medium)
+        }
+        .padding(12)
+        .background(color.opacity(0.12))
+        .foregroundStyle(color)
+        .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 }
 
 #Preview {
-    DeadlineTitleView()
+    DeadlineTitleView(color: .blue, text: "Заголовок для дедлайна", time: "14:00")
 }
