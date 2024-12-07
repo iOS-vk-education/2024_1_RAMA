@@ -16,6 +16,7 @@ struct DeadlineTitleView: View {
         HStack {
             RoundedRectangle(cornerRadius: 2)
                 .frame(width: 3, height: 25)
+                .foregroundColor(color)
             Text(text)
                 .fontWeight(.medium)
             Spacer()
