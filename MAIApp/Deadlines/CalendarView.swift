@@ -8,19 +8,20 @@
 import SwiftUI
 
 struct CalendarView: View {
-    @State private var date = Date()
+    @Binding var date: Date
     
     var body: some View {
         DatePicker(
-            "Start Date",
+            "",
             selection: $date,
             displayedComponents: [.date]
         )
-        .environment(\.locale, Locale.init(identifier: "ru_RU"))
+        .labelsHidden()
+        .environment(\.locale, Locale(identifier: "ru_RU"))
         .datePickerStyle(.graphical)
     }
 }
 
 #Preview {
-    CalendarView()
+    CalendarView(date: .constant(Date()))
 }
