@@ -1,25 +1,24 @@
 //
-//  GroupView.swift
+//  CourseView.swift
 //  MAIApp
 //
-//  Created by Андрей  Насибулин  on 18.11.2024.
+//  Created by Руслан on 08.12.2024.
 //
 
 import SwiftUI
 
-struct GroupView: View {
-    let group: String
-
+struct CourseView: View {
+    let course: String
     var body: some View {
         HStack {
             VStack(alignment: .leading) {
-                Text("группа")
+                Text("курс")
                     .font(.caption)
                     .foregroundStyle(.secondary)
-                Text(group)
+                Text(course)
                     .font(.headline)
             }
-            .foregroundColor(.black)
+//            .foregroundColor(.black)
             Spacer()
         }
         .padding(.horizontal)
@@ -27,7 +26,6 @@ struct GroupView: View {
         .frame(maxWidth: .infinity)
     }
 }
-
 #Preview {
-//    GroupView()
+//    WeekView()
 }

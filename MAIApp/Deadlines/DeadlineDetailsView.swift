@@ -68,6 +68,21 @@ enum Priority: String, CaseIterable {
     }
 }
 
+enum Faculty: String, CaseIterable {
+    case three = "Институт №3"
+    case four = "Институт №4"
+    case eight = "Институт №8"
+    
+    var color: Color {
+        switch self {
+        case .three: return .green
+        case .four: return .orange
+        case .eight: return .red
+        }
+    }
+}
+
+
 #Preview {
     DeadlineDetailsView()
 }

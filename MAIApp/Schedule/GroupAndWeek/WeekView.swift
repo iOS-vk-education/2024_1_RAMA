@@ -18,6 +18,7 @@ struct WeekView: View {
                 Text(week)
                     .font(.headline)
             }
+            .foregroundColor(.black)
             Spacer()
         }
         .padding(.horizontal)
