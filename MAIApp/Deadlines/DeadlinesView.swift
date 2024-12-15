@@ -31,9 +31,6 @@ struct DeadlinesView: View {
                 CalendarView(date: $date)
                 
                 ForEach(filterDeadlinesByDay(deadlines: deadlines, date: date)) { deadline in
-                    //                    NavigationLink(destination: DeadlineDetailsViewWrapper(deadline: deadline)) {
-                    //                        DeadlineTitleView(color: deadline.color, text: deadline.title, time: deadline.time)
-                    //                    }
                     DeadlineTitleView(deadline: deadline)
                 }
                 
@@ -61,34 +58,9 @@ struct DeadlinesView: View {
             .sheet(isPresented: $isOpened) {
                 CreateDeadlineView(deadlines: $deadlines)
             }
-            .onChange(of: date) { oldValue, newValue in
-                print("date change")
-            }
         }
     }
 }
-
-//struct DeadlineDetailsViewWrapper: View {
-//    let deadline: Deadline
-//    @Environment(\.dismiss) private var dismiss
-//    
-//    var body: some View {
-//        DeadlineDetailsView()
-//            .navigationTitle(deadline.title)
-//            .navigationBarTitleDisplayMode(.inline)
-//            .toolbar {
-//                ToolbarItem(placement: .navigationBarTrailing) {
-//                    Button("Сохранить") {
-//                        print("Данные сохранены")
-//                        dismiss()
-//                    }
-//                }
-//            }
-//    }
-//}
-
-
-
 
 #Preview {
     DeadlinesView()

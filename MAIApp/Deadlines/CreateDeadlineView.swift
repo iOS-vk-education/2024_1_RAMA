@@ -85,6 +85,7 @@ struct CreateDeadlineView: View {
                         dismiss()
                     }
                     .disabled(title.isEmpty)
+                    .fontWeight(.semibold)
 //                    Button("Добавить") {
 //                        print("Новый дедлайн добавлен: \(title), \(taskDescription), \(endDate), \(priority.rawValue)")
 //                        dismiss()

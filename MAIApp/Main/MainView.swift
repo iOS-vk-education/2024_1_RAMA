@@ -8,198 +8,132 @@
 import SwiftUI
 
 struct MainView: View {
+    // Массив данных для верхней секции
+    let topSectionItems = [
+        ("main-payments", "Платежи"),
+        ("main-lms", "ЛМС"),
+        ("main-profile", "Личный кабинет"),
+        ("main-rector", "Приёмная")
+    ]
+    
+    // Массив данных для средней секции
+    let middleSectionItems = [
+        ("main-teacher", "Преподы"),
+        ("main-food", "Питание"),
+        ("main-sport", "Спорт"),
+        ("main-news", "Новости")
+    ]
+    
+    // Массив данных для нижней секции
+    let bottomSectionItems = [
+        ("main-map", "Кампус МАИ", "Карта главного корпуса"),
+        ("main-rest", "Базы отдыха", "Оздоровительно-учебные центры"),
+        ("main-dorm", "Студенческий городок", "Общежития при университете")
+    ]
+    
     var body: some View {
         NavigationStack {
             VStack(spacing: 36) {
                 VStack(spacing: 24) {
                     HStack(spacing: 36) {
-                        VStack {
-                            ZStack(alignment: .bottom) {
-                                RoundedRectangle(cornerRadius: 25)
-                                    .fill(.quinary)
-                                    .frame(height: 70)
-                                Image("main-payments")
-                                    .resizable()
-                                    .aspectRatio(1, contentMode: .fit)
-                                    .offset(x: 0, y: -8)
-                            }
-                            
-                            Text("Платежи")
-                                .font(.body)
-                        }
-                        VStack {
-                            ZStack(alignment: .bottom) {
-                                RoundedRectangle(cornerRadius: 25)
-                                    .fill(.quinary)
-                                    .frame(height: 70)
-                                Image("main-lms")
-                                    .resizable()
-                                    .aspectRatio(1, contentMode: .fit)
-                                    .offset(x: 0, y: -8)
-                            }
-                            
-                            Text("ЛМС")
-                                .font(.body)
+                        ForEach(topSectionItems.prefix(2), id: \.0) { item in
+                            createTopItem(imageName: item.0, title: item.1)
                         }
                     }
                     HStack(spacing: 36) {
-                        VStack {
-                            ZStack(alignment: .bottom) {
-                                RoundedRectangle(cornerRadius: 25)
-                                    .fill(.quinary)
-                                    .frame(height: 70)
-                                Image("main-profile")
-                                    .resizable()
-                                    .aspectRatio(1, contentMode: .fit)
-                            }
-                            
-                            Text("Личный кабинет")
-                                .font(.body)
-                        }
-                        VStack {
-                            ZStack(alignment: .bottom) {
-                                RoundedRectangle(cornerRadius: 25)
-                                    .fill(.quinary)
-                                    .frame(height: 70)
-                                Image("main-rector")
-                                    .resizable()
-                                    .aspectRatio(1, contentMode: .fit)
-                            }
-                            
-                            Text("Приёмная")
-                                .font(.body)
+                        ForEach(topSectionItems.suffix(2), id: \.0) { item in
+                            createTopItem(imageName: item.0, title: item.1)
                         }
                     }
                 }
+                
+                // Средняя секция
                 HStack(spacing: 36) {
-                    VStack {
-                        ZStack(alignment: .bottom) {
-                            RoundedRectangle(cornerRadius: 20)
-                                .fill(.quinary)
-                                
-                            Image("main-teacher")
-                                .resizable()
-                                .aspectRatio(1, contentMode: .fit)
-                                .clipShape(RoundedRectangle(cornerRadius: 20))
-                        }
-                        .aspectRatio(1, contentMode: .fit)
-                        
-                        Text("Преподы")
-                            .font(.subheadline)
-                    }
-                    VStack {
-                        ZStack(alignment: .bottom) {
-                            RoundedRectangle(cornerRadius: 20)
-                                .fill(.quinary)
-                                
-                            Image("main-food")
-                                .resizable()
-                                .aspectRatio(1, contentMode: .fit)
-                                .clipShape(RoundedRectangle(cornerRadius: 20))
-                        }
-                        .aspectRatio(1, contentMode: .fit)
-                        
-                        Text("Питание")
-                            .font(.subheadline)
-                    }
-                    VStack {
-                        ZStack(alignment: .bottom) {
-                            RoundedRectangle(cornerRadius: 20)
-                                .fill(.quinary)
-                                
-                            Image("main-sport")
-                                .resizable()
-                                .aspectRatio(1, contentMode: .fit)
-                                .clipShape(RoundedRectangle(cornerRadius: 20))
-                        }
-                        .aspectRatio(1, contentMode: .fit)
-                        
-                        Text("Спорт")
-                            .font(.subheadline)
-                    }
-                    VStack {
-                        ZStack(alignment: .bottom) {
-                            RoundedRectangle(cornerRadius: 20)
-                                .fill(.quinary)
-                                
-                            Image("main-news")
-                                .resizable()
-                                .aspectRatio(1, contentMode: .fit)
-                                .clipShape(RoundedRectangle(cornerRadius: 20))
-                        }
-                        .aspectRatio(1, contentMode: .fit)
-                        
-                        Text("Новости")
-                            .font(.subheadline)
+                    ForEach(middleSectionItems, id: \.0) { item in
+                        createMiddleItem(imageName: item.0, title: item.1)
                     }
                 }
+                
+                // Нижняя секция
                 VStack(alignment: .leading, spacing: 0) {
-                    HStack(spacing: 16) {
-                        Image("main-map")
-                            .resizable()
-                            .aspectRatio(1, contentMode: .fit)
-                            .frame(height: 50)
-                        VStack(alignment: .leading) {
-                            Text("Кампус МАИ")
-                                .font(.headline)
-                            Text("Карта главного корпуса")
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
-                        }
+                    ForEach(bottomSectionItems, id: \.0) { item in
+                        createBottomItem(imageName: item.0, title: item.1, subtitle: item.2)
                     }
-                    .padding(12)
-                    
-                    Rectangle()
-                        .fill(.gray)
-                        .opacity(0.25)
-                        .frame(height: 1)
-                    
-                    HStack(spacing: 16) {
-                        Image("main-rest")
-                            .resizable()
-                            .aspectRatio(1, contentMode: .fit)
-                            .frame(height: 50)
-                        VStack(alignment: .leading) {
-                            Text("Базы отдыха")
-                                .font(.headline)
-                            Text("Оздоровительно-учебные центры")
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
-                        }
-                    }
-                    .padding(12)
-                    
-                    Rectangle()
-                        .fill(.gray)
-                        .opacity(0.25)
-                        .frame(height: 1)
-                    
-                    HStack(spacing: 16) {
-                        Image("main-dorm")
-                            .resizable()
-                            .aspectRatio(1, contentMode: .fit)
-                            .frame(height: 50)
-                        VStack(alignment: .leading) {
-                            Text("Студенческий городок")
-                                .font(.headline)
-                            Text("Общежития при университете")
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
-                        }
-                    }
-                    .padding(12)
                 }
                 .overlay(
-                        RoundedRectangle(cornerRadius: 20)
-                            .stroke(.gray, lineWidth: 1)
-                            .opacity(0.25)
-                        )
+                    RoundedRectangle(cornerRadius: 20)
+                        .stroke(.gray, lineWidth: 1)
+                        .opacity(0.25)
+                )
                 
                 Spacer()
             }
-            .padding()
+            .padding(.horizontal, 32)
+            .padding(.vertical)
             .navigationTitle("Главная")
             .navigationBarTitleDisplayMode(.inline)
+        }
+    }
+    
+    // Функция для создания элементов верхней секции
+    func createTopItem(imageName: String, title: String) -> some View {
+        VStack(spacing: 8) {
+            ZStack(alignment: .bottom) {
+                RoundedRectangle(cornerRadius: 20)
+                    .fill(.quinary)
+                    .frame(height: 60)
+                Image(imageName)
+                    .resizable()
+                    .aspectRatio(1, contentMode: .fit)
+            }
+            Text(title)
+                .font(.caption)
+                .fontWeight(.medium)
+        }
+    }
+    
+    // Функция для создания элементов средней секции
+    func createMiddleItem(imageName: String, title: String) -> some View {
+        VStack(spacing: 8) {
+            ZStack(alignment: .bottom) {
+                RoundedRectangle(cornerRadius: 20)
+                    .fill(.quinary)
+                Image(imageName)
+                    .resizable()
+                    .aspectRatio(1, contentMode: .fit)
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
+            }
+            .aspectRatio(1, contentMode: .fit)
+            Text(title)
+                .font(.caption2)
+                .fontWeight(.medium)
+        }
+    }
+    
+    // Функция для создания элементов нижней секции
+    func createBottomItem(imageName: String, title: String, subtitle: String) -> some View {
+        VStack(alignment: .leading, spacing: 0) {
+            HStack(spacing: 16) {
+                Image(imageName)
+                    .resizable()
+                    .aspectRatio(1, contentMode: .fit)
+                    .frame(height: 50)
+                VStack(alignment: .leading) {
+                    Text(title)
+                        .font(.headline)
+                    Text(subtitle)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
+            }
+            .padding(12)
+            
+            if bottomSectionItems.last?.0 != imageName {
+                Rectangle()
+                    .fill(.gray)
+                    .opacity(0.25)
+                    .frame(height: 1)
+            }
         }
     }
 }
