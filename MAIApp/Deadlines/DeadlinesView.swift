@@ -27,37 +27,40 @@ struct DeadlinesView: View {
     
     var body: some View {
         NavigationStack {
-            VStack {
-                CalendarView(date: $date)
-                
-                ForEach(filterDeadlinesByDay(deadlines: deadlines, date: date)) { deadline in
-                    DeadlineTitleView(deadline: deadline)
+            ScrollView {
+                VStack {
+                    CalendarView(date: $date)
+                    
+                    ForEach(filterDeadlinesByDay(deadlines: deadlines, date: date)) { deadline in
+                        DeadlineTitleView(deadline: deadline)
+                    }
+                    
+                    Spacer()
                 }
-                
-                Spacer()
-            }
-            .padding()
-            .navigationTitle("Дедлайны")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                //                ToolbarItem(placement: .topBarLeading) {
-                //                    Button {
-                //                        print("magnifyingglass button clicked!")
-                //                    } label: {
-                //                        Image(systemName: "magnifyingglass")
-                //                    }
-                //                }
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        isOpened = true
-                    } label: {
-                        Image(systemName: "plus")
+                .padding()
+                .navigationTitle("Дедлайны")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    //                ToolbarItem(placement: .topBarLeading) {
+                    //                    Button {
+                    //                        print("magnifyingglass button clicked!")
+                    //                    } label: {
+                    //                        Image(systemName: "magnifyingglass")
+                    //                    }
+                    //                }
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button {
+                            isOpened = true
+                        } label: {
+                            Image(systemName: "plus")
+                        }
                     }
                 }
+                .sheet(isPresented: $isOpened) {
+                    CreateDeadlineView(deadlines: $deadlines)
+                }
             }
-            .sheet(isPresented: $isOpened) {
-                CreateDeadlineView(deadlines: $deadlines)
-            }
+            
         }
     }
 }

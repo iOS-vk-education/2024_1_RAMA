@@ -1,25 +1,23 @@
 //
-//  GroupView.swift
+//  FacultyView.swift
 //  MAIApp
 //
-//  Created by Андрей  Насибулин  on 18.11.2024.
+//  Created by Руслан on 08.12.2024.
 //
 
 import SwiftUI
 
-struct GroupView: View {
-    let group: String
-
+struct FacultyView: View {
     var body: some View {
         HStack {
             VStack(alignment: .leading) {
-                Text("группа")
+                Text("институт")
                     .font(.caption)
                     .foregroundStyle(.secondary)
-                Text(group)
+                Text("Институт №3")
                     .font(.headline)
             }
-            .foregroundColor(.black)
+//            .foregroundColor(.black)
             Spacer()
         }
         .padding(.horizontal)
@@ -29,5 +27,5 @@ struct GroupView: View {
 }
 
 #Preview {
-//    GroupView()
+//    FacultyView()
 }

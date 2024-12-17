@@ -7,23 +7,31 @@
 
 import SwiftUI
 
+
+
 struct GroupAndWeekView: View {
     var body: some View {
-        HStack(spacing: 0) {
-            GroupView(group: "М3О-212Б-23")
-            Rectangle()
-                .fill(.gray)
-                .opacity(0.25)
-                .frame(width: 1)
-            WeekView(week: "28.10 – 03.11")
-        }
-        .frame(maxWidth: .infinity)
-        .fixedSize(horizontal: false, vertical: true)
-        .overlay(
-                RoundedRectangle(cornerRadius: 12)
-                    .stroke(.gray, lineWidth: 1)
+        NavigationStack {
+            HStack(spacing: 0) {
+                NavigationLink(destination: ChooseGroupView()) {
+                    GroupView(group: "М3О-212Б-23")
+                }
+                Rectangle()
+                    .fill(.gray)
                     .opacity(0.25)
-                )
+                    .frame(width: 1)
+                NavigationLink(destination: ChooseWeekView()) {
+                    WeekView(week: "28.10 – 03.11")
+                }
+            }
+            .frame(maxWidth: .infinity)
+            .fixedSize(horizontal: false, vertical: true)
+            .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(.gray, lineWidth: 1)
+                        .opacity(0.25)
+                    )
+        }
     }
 }
 
