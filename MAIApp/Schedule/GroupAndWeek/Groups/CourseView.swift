@@ -27,5 +27,5 @@ struct CourseView: View {
     }
 }
 #Preview {
-//    WeekView()
+    CourseView(course: "2 курс")
 }

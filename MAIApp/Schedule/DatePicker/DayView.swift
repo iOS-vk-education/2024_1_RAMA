@@ -12,7 +12,7 @@ let date = ["28", "29", "30", "31", "01", "02"]
 
 struct DayView: View {
     let day: Int
-    let isActive: Bool
+    var isActive: Bool
     var body: some View {
         VStack {
             Text(days[day])

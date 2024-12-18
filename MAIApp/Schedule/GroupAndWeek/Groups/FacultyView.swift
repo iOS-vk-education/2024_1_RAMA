@@ -27,5 +27,5 @@ struct FacultyView: View {
 }
 
 #Preview {
-//    FacultyView()
+    FacultyView()
 }
