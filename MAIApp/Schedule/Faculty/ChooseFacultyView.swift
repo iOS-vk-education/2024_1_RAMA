@@ -10,13 +10,15 @@ import SwiftUI
 struct ChooseFacultyView: View {
     var body: some View {
         NavigationStack {
-            VStack(spacing: 8) {
-                FacultyAndCourseView()
-                Spacer()
+            ScrollView {
+                VStack(alignment: .leading, spacing: 8) {
+                    ManyFacultyView()
+    
+                }
+                .padding()
+                .navigationTitle("Институт")
+                .navigationBarTitleDisplayMode(.inline)
             }
-            .padding()
-            .navigationTitle("Институт")
-            .navigationBarTitleDisplayMode(.inline)
         }
     }
 }

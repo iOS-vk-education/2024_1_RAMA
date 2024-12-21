@@ -9,7 +9,6 @@ import SwiftUI
 
 struct GroupView: View {
     let group: String
-
     var body: some View {
         HStack {
             VStack(alignment: .leading) {
@@ -28,6 +27,6 @@ struct GroupView: View {
     }
 }
 
-#Preview {
+//#Preview {
 //    GroupView()
-}
+//}

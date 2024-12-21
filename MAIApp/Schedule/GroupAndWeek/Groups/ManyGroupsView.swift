@@ -4,9 +4,6 @@
 //
 //  Created by Руслан on 17.12.2024.
 //
-
-import SwiftUI
-
 //struct ManyGroupsView: View {
 //    var body: some View {
 //        VStack(spacing: 10) {
@@ -17,23 +14,53 @@ import SwiftUI
 //    }
 //}
 
+import SwiftUI
+
+//struct ManyGroupsView: View {
+//    @Binding var selectedGroup: String  // Привязка для обновления группы
+//    var selectedCourse: String          // Выбранный курс
+//    
+//    private let groupsByCourse: [String: [String]] = [
+//        "1": ["М3О-101Б-23", "М3О-102Б-23", "М3О-103Б-23"],
+//        "2": ["М3О-212Б-23", "М3О-213Б-23", "М3О-214Б-23"]
+//    ]
+//    
+//    var body: some View {
+//        let groups = groupsByCourse[selectedCourse] ?? []
+//        
+//        LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
+//            ForEach(groups, id: \.self) { group in
+//                OneGroupView(group: group)
+//                    .onTapGesture {
+//                        selectedGroup = group  // Обновляем выбранную группу
+//                        print("Выбрана группа: \(group)")
+//                    }
+//            }
+//        }
+//        .padding()
+//    }
+//}
+//
+//#Preview {
+//    ManyGroupsView(selectedGroup: .constant("М3О-212Б-23"), selectedCourse: "2")
+//}
+
 struct ManyGroupsView: View {
-    @State private var selectedGroup = "М3О-212Б-23"
-    let groups = [
-        "М4О-200Б-23", "М4О-201Б-23", "М4О-202Б-23", "М4О-203Б-23",
-        "М4О-204Б-23", "М4О-205Б-23", "М4О-206Б-23", "М4О-207Б-23", "М4О-208Б-23"
-    ]
     
-    // Количество столбцов
+    @Binding var selectedGroup: Group?
+    @Binding var selectedCourse: Course
+    
+    
+    
     let columns = [GridItem(.flexible()), GridItem(.flexible())]
     
     var body: some View {
         LazyVGrid(columns: columns) {
-            ForEach(groups.indices, id: \.self) { index in
-                OneGroupView(group: groups[index])
+            ForEach(selectedCourse.groups, id: \.name) {group in
+                OneGroupView(group: group.name)
                     .onTapGesture {
-                        selectedGroup = groups[index]
-                        print(groups[index])
+                        selectedGroup = group
+                        print(group)
                     }
             }
             
@@ -41,6 +68,6 @@ struct ManyGroupsView: View {
     }
 }
 
-#Preview {
-    ManyGroupsView()
-}
+//#Preview {
+//    ManyGroupsView()
+//}
