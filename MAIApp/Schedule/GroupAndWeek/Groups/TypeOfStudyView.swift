@@ -39,12 +39,10 @@ struct TypeOfStudyView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            // Прямоугольник с заголовком и текущим значением
             VStack(alignment: .leading, spacing: 0) {
                 Text("тип образования")
                     .font(.caption)
                     .foregroundColor(.secondary)
-                // Кнопка с текущим выбранным значением и стрелкой
                 Button(action: {
                     isPickerVisible.toggle()
                 }) {
@@ -66,7 +64,6 @@ struct TypeOfStudyView: View {
                         .opacity(0.25)
                     )
             
-            // Список типов
             if isPickerVisible {
                 VStack(spacing: 0) {
                     ForEach(types, id: \.self) { type in

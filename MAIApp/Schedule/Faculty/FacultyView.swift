@@ -1,5 +1,5 @@
 //
-//  CourseView.swift
+//  FacultyView.swift
 //  MAIApp
 //
 //  Created by Руслан on 08.12.2024.
@@ -7,18 +7,18 @@
 
 import SwiftUI
 
-struct CourseView: View {
-    let course: String
+struct FacultyView: View {
+    let faculty: String
     var body: some View {
         HStack {
             VStack(alignment: .leading) {
-                Text("курс")
+                Text("факультет")
                     .font(.caption)
                     .foregroundStyle(.secondary)
-                Text(course)
+                Text(faculty)
                     .font(.headline)
             }
-//            .foregroundColor(.black)
+            .foregroundColor(.black)
             Spacer()
         }
         .padding(.horizontal)
@@ -26,6 +26,7 @@ struct CourseView: View {
         .frame(maxWidth: .infinity)
     }
 }
+
 #Preview {
-    CourseView(course: "2 курс")
+    FacultyView(faculty: "Институт №3")
 }

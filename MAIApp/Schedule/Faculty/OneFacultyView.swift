@@ -1,16 +1,16 @@
 //
-//  OneGroupView.swift
+//  OneFacultyView.swift
 //  MAIApp
 //
-//  Created by Руслан on 17.12.2024.
+//  Created by Михаил Рахимов on 20.12.2024.
 //
 
 import SwiftUI
 
-struct OneGroupView: View {
-    let group: String;
+struct OneFacultyView: View {
+    let faculty: String;
     var body: some View {
-        Text(group)
+        Text(faculty)
             .padding(8)
             .frame(maxWidth: .infinity)
             .overlay(
@@ -22,6 +22,6 @@ struct OneGroupView: View {
     }
 }
 
-//#Preview {
-//    OneGroupView(group: "М4О-210Б-23")
-//}
+#Preview {
+    OneFacultyView(faculty: "Институт №3")
+}

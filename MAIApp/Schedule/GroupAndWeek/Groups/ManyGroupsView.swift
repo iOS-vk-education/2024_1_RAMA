@@ -18,29 +18,24 @@ import SwiftUI
 //}
 
 struct ManyGroupsView: View {
-    @State private var selectedGroup = "М3О-212Б-23"
-    let groups = [
-        "М4О-200Б-23", "М4О-201Б-23", "М4О-202Б-23", "М4О-203Б-23",
-        "М4О-204Б-23", "М4О-205Б-23", "М4О-206Б-23", "М4О-207Б-23", "М4О-208Б-23"
-    ]
+    @Binding var selectedCourse: Course
+    @State private var selectedGroup: Group?
     
-    // Количество столбцов
     let columns = [GridItem(.flexible()), GridItem(.flexible())]
     
     var body: some View {
         LazyVGrid(columns: columns) {
-            ForEach(groups.indices, id: \.self) { index in
-                OneGroupView(group: groups[index])
+            ForEach(selectedCourse.groups, id: \.name) { group in
+                OneGroupView(group: group.name)
                     .onTapGesture {
-                        selectedGroup = groups[index]
-                        print(groups[index])
+                        selectedGroup = group
+                        print(group.name) 
                     }
             }
-            
         }
     }
 }
 
-#Preview {
-    ManyGroupsView()
-}
+//#Preview {
+//    ManyGroupsView()
+//}

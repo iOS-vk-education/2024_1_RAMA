@@ -8,14 +8,20 @@
 import SwiftUI
 
 struct FacultyAndCourseView: View {
+    @Binding var selectedCourse: Course
     var body: some View {
         HStack(spacing: 0) {
-            FacultyView()
+            NavigationLink(destination: ChooseFacultyView()) {
+                FacultyView(faculty: "Институт №3")
+            }
             Rectangle()
                 .fill(.gray)
                 .opacity(0.25)
                 .frame(width: 1)
-            CourseView(course: "2")
+            NavigationLink(destination: ChooseCourseView(selectedCourse: $selectedCourse)) {
+                CourseView(course: selectedCourse)
+            }
+            
         }
         .frame(maxWidth: .infinity)
         .fixedSize(horizontal: false, vertical: true)
@@ -27,6 +33,6 @@ struct FacultyAndCourseView: View {
     }
 }
 
-#Preview {
-    FacultyAndCourseView()
-}
+//#Preview {
+//    FacultyAndCourseView(selectedCourse: selectedCourse)
+//}
