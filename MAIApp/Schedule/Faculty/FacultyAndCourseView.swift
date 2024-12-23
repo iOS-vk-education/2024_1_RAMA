@@ -8,21 +8,20 @@
 import SwiftUI
 
 struct FacultyAndCourseView: View {
-    @State var selectedCourse: Course
-    @Binding var selectedGroup: Group?
+    @Binding var selectedGroup: Group
     
     var body: some View {
         HStack(spacing: 0) {
             NavigationLink(destination: ChooseFacultyView()) {
-                FacultyView(faculty: "Институт №3")
+                FacultyView(faculty: selectedGroup.fac)
             }
             Rectangle()
                 .fill(.gray)
                 .opacity(0.25)
                 .frame(width: 1)
-            NavigationLink(destination: ChooseCourseView(selectedCourse: $selectedCourse)) {
-                CourseView(selectedCourse: selectedCourse, course: selectedCourse)
-            }
+//            NavigationLink(destination: ChooseCourseView(selectedCourse: $selectedCourse)) {
+//                CourseView(selectedCourse: selectedCourse, course: selectedCourse)
+//            }
             Rectangle()
                 .fill(.gray)
                 .opacity(0.25)

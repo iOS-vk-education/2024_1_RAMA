@@ -8,13 +8,13 @@
 import SwiftUI
 
 struct GroupAndWeekView: View {
-    @State var selectedGroup: Group?
-    @State var selectedCourse: Course
+    @State var selectedGroup: Group
+//    @State var selectedCourse: Course
     var body: some View {
         NavigationStack {
             HStack(spacing: 0) {
-                NavigationLink(destination: ChooseGroupView(selectedGroup: $selectedGroup, selectedCourse: selectedCourse)) {
-                    GroupView(group: selectedGroup?.name ?? "Не выбрана")  // Отображаем текущую группу
+                NavigationLink(destination: ChooseGroupView(selectedGroup: $selectedGroup)) {
+                    GroupView(group: selectedGroup.name)  // Отображаем текущую группу
                     }
                     Rectangle()
                         .fill(.gray)
