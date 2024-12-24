@@ -1,17 +1,17 @@
 //
-//  OneFacultyView.swift
+//  OneTypeOfStudyView.swift
 //  MAIApp
 //
-//  Created by Михаил Рахимов on 20.12.2024.
+//  Created by Руслан on 24.12.2024.
 //
 
 import SwiftUI
 
-struct OneFacultyView: View {
-    let faculty: String;
+struct OneTypeOfStudyView: View {
+    let type: String
     var body: some View {
         VStack {
-            Text(faculty)
+            Text(type)
                 .padding(8)
                 .frame(maxWidth: .infinity)
                 .overlay(
@@ -24,6 +24,6 @@ struct OneFacultyView: View {
     }
 }
 
-#Preview {
-    OneFacultyView(faculty: "Институт №3")
-}
+//#Preview {
+//    OneTypeOfStudyView(type: "Бакалавриат")
+//}

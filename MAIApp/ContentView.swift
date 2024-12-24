@@ -18,10 +18,10 @@ struct ContentView: View {
                 .tabItem {
                     Label("Расписание", systemImage: "calendar")
                 }
-//            DeadlinesView()
-//                .tabItem {
-//                    Label("Дедлайны", systemImage: "flame")
-//                }
+            DeadlinesView()
+                .tabItem {
+                    Label("Дедлайны", systemImage: "flame")
+                }
 //            Text("Профиль")
 //                .tabItem {
 //                    Label("Профиль", systemImage: "person.circle.fill")

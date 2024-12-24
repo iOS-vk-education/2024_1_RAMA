@@ -64,7 +64,7 @@ struct WeekView: View {
         let startDateString = dateFormatter.string(from: startOfWeek)
         let endDateString = dateFormatter.string(from: endOfWeek)
         
-        return "\(startDateString) - \(endDateString)"
+        return "\(startDateString) – \(endDateString)"
     }
 }
 #Preview {

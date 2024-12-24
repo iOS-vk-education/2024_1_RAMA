@@ -32,10 +32,13 @@ import SwiftUI
 //    }
 //}
 
-struct TypeOfStudyView: View {
+struct oldTypeOfStudyView: View {
     @State private var isPickerVisible = false
-    @State private var selectedType = "Бакалавриат"
-    let types = ["Бакалавриат", "Базовое высшее образование", "Магистратура", "Спец. высшее образование", "Аспирантура"]
+    @Binding var selectedTypeOfStudy: TypeOfStudy
+//    @State private var selectedType = "Бакалавриат"
+//    let types = ["Бакалавриат", "Базовое высшее образование", "Магистратура", "Спец. высшее образование", "Аспирантура"]
+    let type: String
+    let viewModel: TypeOfStudyViewModel
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -47,7 +50,7 @@ struct TypeOfStudyView: View {
                     isPickerVisible.toggle()
                 }) {
                     HStack {
-                        Text(selectedType)
+                        Text(selectedTypeOfStudy.name)
                             .font(.headline)
                             .foregroundColor(.black)
                         Spacer()
@@ -66,13 +69,13 @@ struct TypeOfStudyView: View {
             
             if isPickerVisible {
                 VStack(spacing: 0) {
-                    ForEach(types, id: \.self) { type in
+                    ForEach(viewModel.availabeTypeOfStudy, id: \.name) { type in
                         Button(action: {
-                            selectedType = type
+                            viewModel.selectedTypeOfStudy = type
                             isPickerVisible = false
                         }) {
                             HStack {
-                                Text(type)
+                                Text(type.name)
                                     .foregroundColor(.black)
                                     .padding()
                                 Spacer()
@@ -90,6 +93,6 @@ struct TypeOfStudyView: View {
     }
 }
 
-#Preview {
-    TypeOfStudyView()
-}
+//#Preview {
+//    TypeOfStudyView()
+//}

@@ -7,8 +7,7 @@
 
 import SwiftUI
 
-
-struct OneCourseView: View { // Привязка для обновления курса
+struct OneCourseView: View {
     let course: String    
     var body: some View {
         VStack {
@@ -18,7 +17,8 @@ struct OneCourseView: View { // Привязка для обновления к�
                 .overlay(
                     RoundedRectangle(cornerRadius: 10)
                         .stroke(.gray, lineWidth: 1)
-                        .opacity(0.25) )
+                        .opacity(0.25)
+                )
                 .font(.subheadline)
         }
     }

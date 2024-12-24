@@ -9,10 +9,12 @@ import SwiftUI
 
 struct FacultyAndCourseView: View {
     @Binding var selectedCourse: Course
+    @Binding var selectedFaculty: Faculty
+    
     var body: some View {
         HStack(spacing: 0) {
-            NavigationLink(destination: ChooseFacultyView()) {
-                FacultyView(faculty: "Институт №3")
+            NavigationLink(destination: ChooseFacultyView(selectedFaculty: $selectedFaculty)) {
+                FacultyView(faculty: selectedFaculty.name)
             }
             Rectangle()
                 .fill(.gray)

@@ -8,11 +8,20 @@
 import SwiftUI
 
 struct OneWeekView: View {
+    let week: String
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Text(week)
+            .padding(8)
+            .frame(maxWidth: .infinity)
+            .overlay(
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(.gray, lineWidth: 1)
+                        .opacity(0.25)
+                    )
+            .font(.subheadline)
     }
 }
 
-#Preview {
-    OneWeekView()
-}
+//#Preview {
+//    OneWeekView()
+//}

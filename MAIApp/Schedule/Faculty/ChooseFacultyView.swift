@@ -8,20 +8,28 @@
 import SwiftUI
 
 struct ChooseFacultyView: View {
+    @Binding var selectedFaculty: Faculty
+    @Environment(\.dismiss) private var dismiss
+    
     var body: some View {
         NavigationStack {
-            VStack(spacing: 8) {
-                ManyFacultyView()
-                Spacer()
+            ScrollView {
+                VStack(alignment: .leading, spacing: 8) {
+                    ManyFacultyView(viewModel: ManyFacultyViewModel(selectedFaculty: $selectedFaculty, model: .init()))
+                    Spacer()
+                }
+                .padding()
+                .navigationTitle("Институт")
+                .navigationBarTitleDisplayMode(.inline)
             }
-            .padding()
-            .navigationTitle("Институт")
-            .navigationBarTitleDisplayMode(.inline)
+        }
+        .onChange(of: selectedFaculty) { _, _ in
+            dismiss()
         }
     }
 }
 
-#Preview {
-    ChooseFacultyView()
-}
+//#Preview {
+//    ChooseFacultyView()
+//}
 
