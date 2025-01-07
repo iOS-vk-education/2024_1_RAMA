@@ -15,9 +15,12 @@ struct ManyFacultyView: View {
                 OneFacultyView(faculty: faculty.name)
                     .onTapGesture {
                         viewModel.selectedFaculty = faculty
+                        
                     }
+                    
             }
         }
+        .padding()
     }
 }
 

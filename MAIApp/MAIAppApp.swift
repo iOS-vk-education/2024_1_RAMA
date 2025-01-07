@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct MAIAppApp: App {
+    
+    @StateObject private var groupSelectionModel = GroupSelectionModel()
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(groupSelectionModel)
         }
     }
 }

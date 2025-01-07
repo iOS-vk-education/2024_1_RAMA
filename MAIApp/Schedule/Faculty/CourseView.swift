@@ -8,9 +8,7 @@
 import SwiftUI
 
 struct CourseView: View {
-    
     let course: Course
-    
     var body: some View {
         HStack {
             VStack(alignment: .leading) {

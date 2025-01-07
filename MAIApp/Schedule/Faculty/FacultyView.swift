@@ -12,7 +12,7 @@ struct FacultyView: View {
     var body: some View {
         HStack {
             VStack(alignment: .leading) {
-                Text("факультет")
+                Text("институт")
                     .font(.caption)
                     .foregroundStyle(.secondary)
                 Text(faculty)

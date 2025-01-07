@@ -10,17 +10,18 @@ import SwiftUI
 struct FacultyAndCourseView: View {
     @Binding var selectedCourse: Course
     @Binding var selectedFaculty: Faculty
+    @EnvironmentObject var groupSelectionModel: GroupSelectionModel
     
     var body: some View {
         HStack(spacing: 0) {
-            NavigationLink(destination: ChooseFacultyView(selectedFaculty: $selectedFaculty)) {
+            NavigationLink(destination: ChooseFacultyView(selectedFaculty: $selectedFaculty, selectedCourse: $selectedCourse)) {
                 FacultyView(faculty: selectedFaculty.name)
             }
             Rectangle()
                 .fill(.gray)
                 .opacity(0.25)
                 .frame(width: 1)
-            NavigationLink(destination: ChooseCourseView(selectedCourse: $selectedCourse)) {
+            NavigationLink(destination: ChooseCourseView(selectedFaculty: $selectedFaculty, selectedCourse: $selectedCourse)) {
                 CourseView(course: selectedCourse)
             }
             
@@ -32,6 +33,12 @@ struct FacultyAndCourseView: View {
                     .stroke(.gray, lineWidth: 1)
                     .opacity(0.25)
                 )
+        .onChange(of: selectedFaculty) { _, newFaculty in
+                    if groupSelectionModel.selectedFaculty != newFaculty {
+                        groupSelectionModel.selectedCourse = .empty
+                    }
+                    groupSelectionModel.selectedFaculty = newFaculty
+                }
     }
 }
 

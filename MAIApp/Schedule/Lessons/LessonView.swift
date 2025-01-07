@@ -12,7 +12,7 @@ struct LessonView: View {
     let classroom: String;
     let lessonType: String;
     let lessonName: String;
-    let teacher: String;
+    let lector: String;
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
@@ -24,7 +24,7 @@ struct LessonView: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(lessonName)
                     .font(.headline)
-                Text(teacher)
+                Text(lector)
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -33,6 +33,6 @@ struct LessonView: View {
     }
 }
 
-#Preview {
-    LessonView(timeRange: "xx:xx – xx:xx", classroom: "XXXX", lessonType: "XX", lessonName: "Название дисциплины", teacher: "Фамилия Имя Отчество")
-}
+//#Preview {
+//    LessonView(timeRange: "xx:xx – xx:xx", classroom: "XXXX", lessonType: "XX", lessonName: "Название дисциплины", teacher: "Фамилия Имя Отчество")
+//}

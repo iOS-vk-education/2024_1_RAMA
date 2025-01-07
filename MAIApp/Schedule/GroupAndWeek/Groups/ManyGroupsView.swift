@@ -19,7 +19,8 @@ import SwiftUI
 
 struct ManyGroupsView: View {
     @Binding var selectedCourse: Course
-    @State private var selectedGroup: Group?
+//    @State var selectedGroup: Group?
+    var onGroupSelected: (Group) -> Void
     
     let columns = [GridItem(.flexible()), GridItem(.flexible())]
     
@@ -28,8 +29,9 @@ struct ManyGroupsView: View {
             ForEach(selectedCourse.groups, id: \.name) { group in
                 OneGroupView(group: group.name)
                     .onTapGesture {
-                        selectedGroup = group
-                        print(group.name) 
+//                        selectedGroup = group
+                        onGroupSelected(group)
+                        print(group.name)
                     }
             }
         }

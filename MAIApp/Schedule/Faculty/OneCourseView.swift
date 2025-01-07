@@ -23,9 +23,9 @@ struct OneCourseView: View {
         }
     }
 }
-#Preview {
-    OneCourseView(course: "1")
-}
+//#Preview {
+//    OneCourseView(course: "1")
+//}
 //struct OneCourseView: View {
 //    @Binding var selectedCourse: String
 //    let course: String;

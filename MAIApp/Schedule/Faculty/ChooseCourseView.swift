@@ -7,7 +7,9 @@
 
 import SwiftUI
 
+
 struct ChooseCourseView: View {
+    @Binding var selectedFaculty: Faculty
     @Binding var selectedCourse: Course
     @Environment(\.dismiss) private var dismiss
     
@@ -15,7 +17,11 @@ struct ChooseCourseView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 8) {
-                    ManyCourseView(viewModel: ManyCourseViewModel(selectedCourse: $selectedCourse, model: .init()))
+                    ManyCourseView(viewModel: ManyCourseViewModel(
+                        selectedCourse: $selectedCourse,
+                        selectedFaculty: selectedFaculty,
+                        model: .init()
+                    ))
                 }
                 .padding()
                 .navigationTitle("Курс")
@@ -23,10 +29,33 @@ struct ChooseCourseView: View {
             }
         }
         .onChange(of: selectedCourse) { _, _ in
-            dismiss()  
+            dismiss()
         }
     }
 }
+
+
+//struct ChooseCourseView: View {
+//    @Binding var selectedFaculty: Faculty
+//    @Binding var selectedCourse: Course
+//    @Environment(\.dismiss) private var dismiss
+//    
+//    var body: some View {
+//        NavigationStack {
+//            ScrollView {
+//                VStack(alignment: .leading, spacing: 8) {
+//                    ManyCourseView(viewModel: ManyCourseViewModel(selectedCourse: $selectedCourse, selectedFaculty: selectedFaculty, model: .init()))
+//                }
+//                .padding()
+//                .navigationTitle("Курс")
+//                .navigationBarTitleDisplayMode(.inline)
+//            }
+//        }
+//        .onChange(of: selectedCourse) { _, _ in
+//            dismiss()  
+//        }
+//    }
+//}
 
 
 

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct OneGroupView: View {
-    let group: String;
+    let group: String
     var body: some View {
         Text(group)
             .padding(8)
@@ -21,7 +21,7 @@ struct OneGroupView: View {
             .font(.subheadline)
     }
 }
-
-#Preview {
-    OneGroupView(group: "М4О-210Б-23")
-}
+//
+//#Preview {
+//    OneGroupView(group: "М4О-210Б-23")
+//}

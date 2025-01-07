@@ -14,6 +14,8 @@ struct Course: Equatable {
     
     let name: String
     let groups: [Group]
+    
+    static let empty = Course(name: "Не указан", groups: [])
 }
 
 struct Group {
@@ -21,22 +23,43 @@ struct Group {
 }
 
 final class ManyCourseModel {
-    func obtainAvailableCourses() -> [Course] {
-        [Course(name: "1", groups: [Group(name: "М3О-101БВ-24")]), Course(name: "2", groups: [Group(name: "М3О-212Б-23")]), Course(name: "3", groups: [Group(name: "М3О-312Б-22")])]
+    func obtainAvailableCourses(for faculty: Faculty) -> [Course] {
+        switch faculty.name {
+        case "Институт №8":
+            return [
+                Course(name: "1", groups: [Group(name: "М8О-101БВ-24"), Group(name: "М8О-102БВ-24")]),
+                Course(name: "2", groups: [Group(name: "М8О-208Б-23")])
+            ]
+        case "Институт №3":
+            return [
+                Course(name: "1", groups: [Group(name: "М3О-101БВ-24")]),
+                Course(name: "2", groups: [Group(name: "М3О-212Б-23")])
+            ]
+        case "Институт №4":
+            return [
+                Course(name: "2", groups: [Group(name: "М8О-208Б-23")])
+            ]
+        default:
+            return []
+        }
     }
 }
 
-final class ManyCourseViewModel: ObservableObject {
-    @Binding var selectedCourse: Course
-    @Published var availabeCourses: [Course] = []
-    let model: ManyCourseModel
-    
-    init(selectedCourse: Binding<Course>, model: ManyCourseModel) {
-        self._selectedCourse = selectedCourse
-        self.model = model
-        obtainAvailableCourses()
+    final class ManyCourseViewModel: ObservableObject {
+        @Binding var selectedCourse: Course
+        let selectedFaculty: Faculty
+        @Published var availabeCourses: [Course] = []
+        let model: ManyCourseModel
+        
+        init(selectedCourse: Binding<Course>, selectedFaculty: Faculty, model: ManyCourseModel) {
+            self._selectedCourse = selectedCourse
+            self.selectedFaculty = selectedFaculty
+            self.model = model
+            obtainAvailableCourses()
+        }
+        
+        func obtainAvailableCourses() {
+            availabeCourses = selectedFaculty.courses
+        }
     }
-    func obtainAvailableCourses(){
-        availabeCourses = model.obtainAvailableCourses()
-    }
-}
+

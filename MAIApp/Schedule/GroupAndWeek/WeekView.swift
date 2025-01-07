@@ -30,36 +30,36 @@ struct WeekView: View {
     
     func weekRange(for weekNumber: Int) -> String {
         var calendar = Calendar.current
-        calendar.locale = Locale(identifier: "ru_RU") // Русская локаль
-        calendar.firstWeekday = 2 // Устанавливаем понедельник как первый день недели
+        calendar.locale = Locale(identifier: "ru_RU")
+        calendar.firstWeekday = 2 //понедельник как первый день недели
         
         let currentYear = calendar.component(.year, from: Date())
         
-        // Находим 1 января текущего года
+        //1 января текущего года
         guard let startOfYear = calendar.date(from: DateComponents(year: currentYear, month: 1, day: 1)) else {
             return ""
         }
         
-        // Найдем первый понедельник года
+        //первый понедельник года
         var firstMonday = startOfYear
         while calendar.component(.weekday, from: firstMonday) != calendar.firstWeekday {
             firstMonday = calendar.date(byAdding: .day, value: 1, to: firstMonday)!
         }
         
-        // Переходим к нужной неделе
+        //переходим к нужной неделе
         let daysToAdd = (weekNumber - 1) * 7
         guard let startOfWeek = calendar.date(byAdding: .day, value: daysToAdd, to: firstMonday) else {
             return ""
         }
         
-        // Определяем конец недели (воскресенье)
+        //конец недели (воскресенье)
         guard let endOfWeek = calendar.date(byAdding: .day, value: 6, to: startOfWeek) else {
             return ""
         }
         
-        // Форматируем даты
+        //форматирование даты
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd.MM" // Формат для короткой записи дня и месяца
+        dateFormatter.dateFormat = "dd.MM"
         
         let startDateString = dateFormatter.string(from: startOfWeek)
         let endDateString = dateFormatter.string(from: endOfWeek)
@@ -67,6 +67,6 @@ struct WeekView: View {
         return "\(startDateString) – \(endDateString)"
     }
 }
-#Preview {
+//#Preview {
 //    WeekView()
-}
+//}

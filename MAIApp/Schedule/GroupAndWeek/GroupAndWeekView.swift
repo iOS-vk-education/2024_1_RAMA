@@ -7,15 +7,14 @@
 
 import SwiftUI
 
-
-
 struct GroupAndWeekView: View {
     @Binding var weekNumber: Int
+    @Binding var selectedGroup: String
     var body: some View {
         NavigationStack {
             HStack(spacing: 0) {
                 NavigationLink(destination: ChooseGroupView()) {
-                    GroupView(group: "М3О-212Б-23")
+                    GroupView(group: selectedGroup)
                 }
                 Rectangle()
                     .fill(.gray)
@@ -36,6 +35,6 @@ struct GroupAndWeekView: View {
     }
 }
 
-#Preview {
-    GroupAndWeekView(weekNumber: .constant(52))
-}
+//#Preview {
+//    GroupAndWeekView(weekNumber: .constant(52))
+//}

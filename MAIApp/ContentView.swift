@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject private var groupSelectionModel = GroupSelectionModel()
     var body: some View {
         TabView {
             MainView()
@@ -15,6 +16,7 @@ struct ContentView: View {
                     Label("Главная", systemImage: "house")
                 }
             ScheduleView()
+                .environmentObject(groupSelectionModel)
                 .tabItem {
                     Label("Расписание", systemImage: "calendar")
                 }
@@ -30,6 +32,6 @@ struct ContentView: View {
     }
 }
 
-#Preview {
-    ContentView()
-}
+//#Preview {
+//    ContentView()
+//}
