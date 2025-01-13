@@ -6,9 +6,21 @@ struct DeadlineDetailsView: View {
     @State private var endDate: Date = Date()
     @State private var priority: Priority = .normal
     @State private var isDatePickerVisible: Bool = false
+    @Binding var deadlines: [Deadline]
+    var deadline: Deadline
+    
+    
+    init(deadlines: Binding<[Deadline]>, deadline: Deadline) {
+            _deadlines = deadlines
+            self.deadline = deadline
+            _taskDescription = State(initialValue: deadline.description)
+            _endDate = State(initialValue: deadline.date)
+            _priority = State(initialValue: deadline.priority)
+        }
+    
     
     var body: some View {
-        NavigationView { // Используем NavigationView для поддержки toolbar
+        NavigationView {
             Form {
                 Section(header: Text("Описание задачи")) {
                     TextEditor(text: $taskDescription)
@@ -48,10 +60,24 @@ struct DeadlineDetailsView: View {
                     }
                     .pickerStyle(SegmentedPickerStyle())
                 }
+                
+                Button(action: {
+                    deleteDeadline()
+                    }, label: {
+                        Text("Delete")
+                 }
+                )
             }
 
         }
     }
+    func deleteDeadline() {
+            // Находим индекс дедлайна
+            if let index = deadlines.firstIndex(where: { $0.id == deadline.id }) {
+                deadlines.remove(at: index) 
+            }
+            dismiss() // Закрываем экран
+        }
 }
 
 enum Priority: String, CaseIterable {
@@ -68,6 +94,6 @@ enum Priority: String, CaseIterable {
     }
 }
 
-#Preview {
-    DeadlineDetailsView()
-}
+//#Preview {
+//    DeadlineDetailsView()
+//}

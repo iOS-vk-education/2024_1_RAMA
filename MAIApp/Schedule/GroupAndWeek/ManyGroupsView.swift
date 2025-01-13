@@ -18,7 +18,7 @@ import SwiftUI
 //}
 
 struct ManyGroupsView: View {
-    @Binding var selectedCourse: Course
+    @Binding var selectedLevel: Level
 //    @State var selectedGroup: Group?
     var onGroupSelected: (Group) -> Void
     
@@ -26,7 +26,7 @@ struct ManyGroupsView: View {
     
     var body: some View {
         LazyVGrid(columns: columns) {
-            ForEach(selectedCourse.groups, id: \.name) { group in
+            ForEach(selectedLevel.groups, id: \.name) { group in
                 OneGroupView(group: group.name)
                     .onTapGesture {
 //                        selectedGroup = group

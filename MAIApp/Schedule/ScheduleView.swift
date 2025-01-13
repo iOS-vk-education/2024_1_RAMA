@@ -14,14 +14,32 @@ struct ScheduleView: View {
     @State private var selectedDay: Date = Date()
     @EnvironmentObject var groupSelectionModel: GroupSelectionModel
     let scheduleModel = ScheduleModel()
+    @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
         NavigationStack {
             VStack(spacing: 8) {
-                GroupAndWeekView(weekNumber: $weekNumber, selectedGroup: $groupSelectionModel.selectedGroup)
-                DatePickerView(selectedDay: $selectedDay, weekNumber: $weekNumber)
-                LessonsView(selectedDay: $selectedDay, selectedGroup: $groupSelectionModel.selectedGroup, scheduleModel: scheduleModel)
-                Spacer()
+                if groupSelectionModel.selectedGroup == "Не выбрана"{
+                    GroupAndWeekView(weekNumber: $weekNumber,
+                                     selectedGroup: $groupSelectionModel.selectedGroup,
+                                     selectedDay: $selectedDay
+                    )
+                    ErrorGroupView()
+                }
+                else {
+                    GroupAndWeekView(weekNumber: $weekNumber,
+                                     selectedGroup: $groupSelectionModel.selectedGroup,
+                                     selectedDay: $selectedDay
+                    )
+                    DatePickerView(selectedDay: $selectedDay,
+                                   weekNumber: $weekNumber
+                    )
+                    LessonsView(selectedDay: $selectedDay,
+                                selectedGroup: $groupSelectionModel.selectedGroup,
+                                scheduleModel: scheduleModel
+                    )
+                    Spacer()
+                }
             }
             .padding()
             .navigationTitle("Расписание")

@@ -18,7 +18,7 @@ struct TypeOfStudy: Equatable {
 
 final class TypeOfStudyModel {
     func obtainAvailableTypeOfStudy() -> [TypeOfStudy] {
-        [TypeOfStudy(name: "Бакалавриат", groups: [Group(name: "М3О-212Б-23")]), TypeOfStudy(name: "Бакалавриат", groups: [Group(name: "М3О-312Б-22")]), TypeOfStudy(name: "Базовое высшее образование", groups: [Group(name: "М3О-101БВ-24")])]
+        [TypeOfStudy(name: "Бакалавриат", groups: [Group(name: "М3О-212Б-23"), Group(name: "М4О-210Б-23")]), TypeOfStudy(name: "Базовое высшее образование", groups: [Group(name: "М8О-101БВ-24"), Group(name: "М8О-102БВ-24"), Group(name: "М3О-101БВ-24")])]
     }
 }
 

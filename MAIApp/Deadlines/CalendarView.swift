@@ -14,6 +14,7 @@ struct CalendarView: View {
         DatePicker(
             "",
             selection: $date,
+            in: Date()...,
             displayedComponents: [.date]
         )
         .labelsHidden()
@@ -22,6 +23,6 @@ struct CalendarView: View {
     }
 }
 
-#Preview {
-    CalendarView(date: .constant(Date()))
-}
+//#Preview {
+//    CalendarView(date: .constant(Date()))
+//}

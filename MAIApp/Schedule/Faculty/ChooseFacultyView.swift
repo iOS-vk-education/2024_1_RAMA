@@ -11,7 +11,9 @@ import SwiftUI
 struct ChooseFacultyView: View {
     @Binding var selectedFaculty: Faculty
     @Binding var selectedCourse: Course
+    @Binding var selectedLevel: Level
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
         NavigationStack {
@@ -26,6 +28,7 @@ struct ChooseFacultyView: View {
         }
         .onChange(of: selectedFaculty) { _, _ in
             selectedCourse = .empty
+            selectedLevel = .empty
             dismiss()
         }
     }

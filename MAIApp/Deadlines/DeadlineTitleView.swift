@@ -9,6 +9,7 @@ import SwiftUI
 
 struct DeadlineTitleView: View {
     let deadline: Deadline
+    @Binding var deadlines: [Deadline]
     @State private var isOpened = false
     
     var body: some View {
@@ -31,11 +32,11 @@ struct DeadlineTitleView: View {
         .foregroundStyle(deadline.priority.color)
         .clipShape(RoundedRectangle(cornerRadius: 12))
         .sheet(isPresented: $isOpened) {
-            UpdateDeadlineView(deadline: deadline)
+            UpdateDeadlineView(deadline: deadline, deadlines: $deadlines)
         }
     }
 }
 
-#Preview {
-    DeadlineTitleView(deadline: Deadline(priority: Priority.low, title: "Title", description: "Desc", date: Date.now))
-}
+//#Preview {
+//    DeadlineTitleView(deadline: Deadline(priority: Priority.low, title: "Title", description: "Desc", date: Date.now))
+//}

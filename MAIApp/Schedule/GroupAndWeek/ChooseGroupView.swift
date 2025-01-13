@@ -13,33 +13,27 @@ struct ChooseGroupView: View {
     @Environment(\.presentationMode) var presentationMode
     @State private var selectedCourse: Course = .empty
     @State private var selectedFaculty: Faculty = .empty
-//    @State private var selectedTypeOfStudy: TypeOfStudy = TypeOfStudy(name: "Бакалавриат", groups: [
-//        Group(name: "М8О-101БВ-24") ])
+    @State private var selectedLevel: Level = .empty
+    @State private var selectedTypeOfStudy: TypeOfStudy = TypeOfStudy(name: "Не указан", groups: [
+        Group(name: "М8О-101БВ-24") ])
     
     var body: some View {
         NavigationStack {
                     VStack(alignment: .leading, spacing: 8) {
                         FacultyAndCourseView(
                             selectedCourse: $selectedCourse,
-                            selectedFaculty: $selectedFaculty
+                            selectedFaculty: $selectedFaculty,
+                            selectedLevel: $selectedLevel
                         )
                         Spacer().frame(height: 2)
-//                                TypeOfStudyView(selectedTypeOfStudy: $selectedTypeOfStudy, type: "Бакалавриат")
-//                        Spacer().frame(height: 2)
+                        LevelView(selectedLevel: $selectedLevel, selectedCourse: $selectedCourse)
+                        Spacer().frame(height: 2)
                         ScrollView{
-                            if selectedCourse.groups.isEmpty && selectedCourse.name.isEmpty {
-                                VStack {
-                                    Spacer()
-                                    Text("Групп для выбранного курса нет")
-                                        .foregroundColor(.gray)
-                                        .font(.system(size: 16, weight: .medium, design: .rounded))
-                                        .padding(.top, 225)
-                                    Spacer()
-                                }
-                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            if selectedLevel.groups.isEmpty{
+                                CourseAndGroupErrorView()
                             } else {
                                 ManyGroupsView(
-                                    selectedCourse: $selectedCourse,
+                                    selectedLevel: $selectedLevel,
                                     onGroupSelected: { group in
                                         groupSelectionModel.selectedGroup = group.name
                                         presentationMode.wrappedValue.dismiss()

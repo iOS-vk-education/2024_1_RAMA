@@ -8,7 +8,6 @@
 import SwiftUI
 
 let days = ["пн", "вт", "ср", "чт", "пт", "сб"]
-let date = ["28", "29", "30", "31", "01", "02"]
 
 struct DayView: View {
     let day: Date

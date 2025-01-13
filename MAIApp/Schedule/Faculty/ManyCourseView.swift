@@ -11,7 +11,7 @@ struct ManyCourseView: View {
     let viewModel: ManyCourseViewModel
     var body: some View {
         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
-            ForEach(viewModel.availabeCourses, id: \.name) { course in
+            ForEach(viewModel.availableCourses, id: \.name) { course in
                 OneCourseView(course: course.name)
                     .onTapGesture {
                         viewModel.selectedCourse = course

@@ -9,6 +9,8 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject private var groupSelectionModel = GroupSelectionModel()
+    @State private var showAuth = true
+    @Environment(\.colorScheme) var colorScheme
     var body: some View {
         TabView {
             MainView()
@@ -24,10 +26,11 @@ struct ContentView: View {
                 .tabItem {
                     Label("Дедлайны", systemImage: "flame")
                 }
-//            Text("Профиль")
-//                .tabItem {
-//                    Label("Профиль", systemImage: "person.circle.fill")
-//                }
+            ProfileView()
+                .tabItem {
+                    Label("Профиль", systemImage: "person.circle.fill")
+                }
+            
         }
     }
 }

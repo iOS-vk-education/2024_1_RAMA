@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ChooseWeekView: View {
     @Binding var weekNumber: Int
+    @Binding var selectedDay: Date
     @Environment(\.dismiss) private var dismiss
     
     var body: some View {
@@ -19,6 +20,8 @@ struct ChooseWeekView: View {
                         OneWeekView(week: week)
                             .onTapGesture {
                                 weekNumber = index + 1
+                                selectedDay = daysOfWeek(for: weekNumber).first ?? Date()
+                                print(selectedDay, weekNumber, "<- проверка")
                                 dismiss()
                             }
                     }
@@ -73,8 +76,29 @@ struct ChooseWeekView: View {
         
         return weeks
     }
+    
+    func daysOfWeek(for weekNumber: Int) -> [Date] {
+        var calendar = Calendar.current
+        calendar.locale = Locale(identifier: "ru_RU")
+        calendar.firstWeekday = 2
+        
+        let currentYear = calendar.component(.year, from: Date())
+        
+        var components = DateComponents()
+        components.year = currentYear
+        components.weekOfYear = weekNumber
+        components.weekday = calendar.firstWeekday
+        
+        guard let firstDayOfWeek = calendar.date(from: components) else {
+            return []
+        }
+        
+        return (0..<7).compactMap { i in
+            calendar.date(byAdding: .day, value: i, to: firstDayOfWeek)
+        }
+    }
 }
 
-#Preview {
-    ChooseWeekView(weekNumber: .constant(52))
-}
+//#Preview {
+//    ChooseWeekView(weekNumber: .constant(52))
+//}
