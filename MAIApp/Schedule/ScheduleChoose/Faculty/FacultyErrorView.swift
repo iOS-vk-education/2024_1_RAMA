@@ -1,17 +1,17 @@
 //
-//  CourseAndGroupErrorView.swift
+//  FacultyErrorView.swift
 //  MAIApp
 //
-//  Created by Михаил Рахимов on 10.01.2025.
+//  Created by Михаил Рахимов on 14.01.2025.
 //
 
 import SwiftUI
 
-struct CourseAndGroupErrorView: View {
+struct FacultyErrorView: View {
     var body: some View {
         VStack {
             Spacer()
-            Text("Групп для выбранного курса нет")
+            Text("Выберите институт")
                 .foregroundColor(.gray)
                 .font(.system(size: 16, weight: .medium, design: .rounded))
                 .padding(.top, 225)
@@ -22,5 +22,5 @@ struct CourseAndGroupErrorView: View {
 }
 
 //#Preview {
-//    CourseAndGroupErrorView()
+//    FacultyErrorView()
 //}

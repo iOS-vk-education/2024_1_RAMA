@@ -1,10 +1,3 @@
-//
-//  CalendarView.swift
-//  MAIApp
-//
-//  Created by Андрей  Насибулин  on 23.11.2024.
-//
-
 import SwiftUI
 
 struct CalendarView: View {

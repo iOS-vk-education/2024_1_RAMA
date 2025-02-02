@@ -12,7 +12,7 @@ struct ManyLevelView: View {
     var body: some View {
         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
             ForEach(viewModel.availableLevels, id: \.id) { level in
-                OneTypeOfStudyView(type: level.name)
+                OneLevelView(type: level.name)
                     .onTapGesture {
                         viewModel.selectedLevel = level
                     }

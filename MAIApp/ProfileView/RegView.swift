@@ -143,7 +143,7 @@ struct RegView: View {
         Spacer()
     
     
-        }
+            }
     }
 }
 

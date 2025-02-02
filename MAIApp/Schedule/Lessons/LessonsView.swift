@@ -1,155 +1,234 @@
-//
-//  LessonsView.swift
-//  MAIApp
-//
-//  Created by Андрей  Насибулин  on 21.11.2024.
-//
-
 import SwiftUI
-//
-//struct LessonsView: View {
-//    let lessonDays: [LessonDay] = GetData()
-//    
-//    var body: some View {
-//        VStack {
-//            ForEach(lessonDays, id: \.day) {
-//                lessonDay in ForEach(Array(lessonDay.lessons.enumerated()), id: \.element.time_start) {
-//                    index, lesson in
-//                    VStack {
-//                        LessonView(
-//                            timeRange: "\(lesson.time_start) – \(lesson.time_end)",
-//                            classroom: lesson.classroom,
-//                            lessonType: lesson.lessonType,
-//                            lessonName: lesson.lessonName,
-//                            teacher: lesson.teacher
-//                        )
-//                        if index < lessonDay.lessons.count - 1 {
-//                            Rectangle()
-//                                .fill(.gray)
-//                                .opacity(0.25)
-//                                .frame(height: 1)
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//        .overlay(
-//            RoundedRectangle(cornerRadius: 12)
-//                .stroke(.gray, lineWidth: 1)
-//                .opacity(0.25)
-//        )
-//    }
-//}
 
 struct LessonsView: View {
     @Binding var selectedDay: Date
     @Binding var selectedGroup: String
-
-    let scheduleModel: ScheduleModel
-
+    @ObservedObject var viewModel: LessonViewModel
+    @State private var error: Error?
+    
     var body: some View {
         ScrollView {
             VStack {
-                if let selectedLessonDay = findLessonDay(for: selectedDay, group: selectedGroup) {
-                    VStack {
-                        ForEach(Array(selectedLessonDay.pairs.keys.sorted()), id: \.self) { timeStart in
-                            if let pair = selectedLessonDay.pairs[timeStart] {
-                                VStack {
-                                    LessonView(
-                                        timeRange: "\(formatTime(pair.timeStart)) – \(formatTime(pair.timeEnd))",
-                                        classroom: pair.room,
-                                        lessonType: pair.type,
-                                        lessonName: pair.subject,
-                                        lector: pair.lector
-                                    )
-                                    Rectangle()
-                                        .fill(.gray)
-                                        .opacity(0.25)
-                                        .frame(height: 1)
-                                }
-                            }
-                        }
+                if viewModel.groupSchedule != nil {
+                    if let selectedLessonDay = viewModel.findLessonDay(for: selectedDay) {
+                        scheduleContent(for: selectedLessonDay)
+                    } else {
+                        placeholderView
                     }
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 12)
-                            .stroke(.gray, lineWidth: 1)
-                            .opacity(0.25)
-                    )
+                } else if error != nil {
+                    placeholderView
                 } else {
-                    VStack {
-                        Spacer()
-                        Image("error_schedule")
-                            .padding(.top, 100)
-                        Text("Данные не найдены :(")
-                            .font(.system(size: 20, weight: .medium, design: .rounded))
-                            .padding(.top, 15)
-                        Text("Расписание ещё не выложили, либо в расписании ошибка.")
-                            .foregroundColor(.gray)
-                            .font(.system(size: 12, weight: .light, design: .rounded))
-                            .padding(.top, 1)
-                        Spacer()
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    loadingSkeleton
                 }
             }
         }
-    }
-    
-    func findLessonDay(for date: Date, group: String) -> DaySchedule? {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd.MM.yyyy"
-        let dateString = dateFormatter.string(from: date)
-        
-        print("Ищем расписание для группы: \(group), дата: \(dateString)")  // Выводим для отладки
-        
-        if let groupSchedule = scheduleModel.obtainGroupSchedule().first(where: { $0.group == selectedGroup }) {
-            print("Найдено расписание для группы: \(groupSchedule.group)")  // Выводим для отладки
-            
-            // Ищем по дате
-            if let selectedLessonDay = groupSchedule.schedule[dateString] {
-                print("Найдено расписание для дня: \(dateString)")  // Выводим для отладки
-                return selectedLessonDay
-            } else {
-                print("Не найдено расписание для дня: \(dateString)")  // Выводим для отладки
-            }
-        } else {
-            print("Не найдено расписание для группы: \(group)")  // Выводим для отладки
+        .onAppear {
+            viewModel.loadSchedule(for: selectedGroup)
         }
-        return nil
     }
     
-    func formatTime(_ timeString: String) -> String {
-        let inputFormatter = DateFormatter()
-        inputFormatter.dateFormat = "HH:mm:ss"
+    // MARK: - View Components
+    private struct LessonRow: View {
+        let pair: Pair
+        let subject: String
+        let formatTime: (String) -> String
         
+        var body: some View {
+            VStack {
+                LessonView(
+                    timeRange: "\(formatTime(pair.timeStart)) – \(formatTime(pair.timeEnd))",
+                    classroom: pair.room.values.first ?? "не указана",
+                    lessonType: pair.type.keys.first ?? "не указан",
+                    lessonName: subject,
+                    lector: pair.lector.values.first?.toCapitalizedCase() ?? "не указан"
+                )
+            }
+        }
+    }
+
+    private func scheduleContent(for daySchedule: DaySchedule) -> some View {
+        let allLessons = sortedTimes(in: daySchedule).flatMap { timeKey, pairs in
+            sortedSubjects(in: pairs).map { subject, pair in
+                LessonItem(timeKey: timeKey, subject: subject, pair: pair)
+            }
+        }
+        
+        return VStack {
+            ForEach(allLessons) { lesson in
+                VStack {
+                    LessonRow(
+                        pair: lesson.pair,
+                        subject: lesson.subject,
+                        formatTime: formatTime
+                    )
+                    
+                    if lesson.id != allLessons.last?.id {
+                        Rectangle()
+                            .fill(.gray)
+                            .opacity(0.25)
+                            .frame(height: 1)
+                    }
+                }
+            }
+        }
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(.gray, lineWidth: 1)
+                .opacity(0.25)
+        )
+    }
+    
+    // MARK: - Loading Skeleton
+    private var loadingSkeleton: some View {
+        VStack(spacing: 16) {
+            ForEach(0..<5) { _ in
+                SkeletonView()
+                    .frame(height: 80)
+                    .cornerRadius(12)
+            }
+        }
+        .padding()
+        .redacted(reason: .placeholder)
+    }
+    
+    private struct SkeletonView: View {
+        @State private var isAnimating = false
+        
+        var body: some View {
+            Rectangle()
+                .fill(
+                    LinearGradient(
+                        gradient: Gradient(colors: [
+                            Color.gray.opacity(0.1),
+                            Color.gray.opacity(0.3),
+                            Color.gray.opacity(0.1)
+                        ]),
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                )
+                .opacity(isAnimating ? 1 : 0.5)
+                .animation(
+                    Animation.easeInOut(duration: 1.5)
+                        .repeatForever(autoreverses: true),
+                    value: isAnimating
+                )
+                .onAppear {
+                    isAnimating = true
+                }
+        }
+    }
+    
+    // MARK: - Placeholder View
+    private var placeholderView: some View {
+        VStack {
+            Spacer()
+            Image("error_schedule")
+                .padding(.top, 100)
+            Text("Данные не найдены :(")
+                .font(.system(size: 20, weight: .medium, design: .rounded))
+                .padding(.top, 15)
+            if let error = error {
+                Text("Ошибка: \(error.localizedDescription)")
+                    .foregroundColor(.red)
+                    .font(.system(size: 12, weight: .light, design: .rounded))
+            } else {
+                Text("Расписание ещё не выложили, либо в расписании ошибка.")
+                    .foregroundColor(.gray)
+                    .font(.system(size: 12, weight: .light, design: .rounded))
+            }
+            Spacer()
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+    
+    // MARK: - Sorting Helpers
+    private func sortedTimes(in daySchedule: DaySchedule) -> [(key: String, value: [String: Pair])] {
+        daySchedule.pairs.sorted {
+            guard let time1 = $0.key.toDate(),
+                  let time2 = $1.key.toDate() else {
+                return $0.key < $1.key
+            }
+            return time1 < time2
+        }
+    }
+    
+    private func sortedSubjects(in pairs: [String: Pair]) -> [(key: String, value: Pair)] {
+        pairs.sorted {
+            if $0.key == $1.key {
+                return $0.value.timeStart < $1.value.timeStart
+            } else {
+                return $0.key < $1.key
+            }
+        }
+    }
+    
+    private func formatTime(_ timeString: String) -> String {
+        guard let date = timeString.toDate() else {
+            return timeString
+        }
         let outputFormatter = DateFormatter()
         outputFormatter.dateFormat = "HH:mm"
+        return outputFormatter.string(from: date)
+    }
+    
+    private struct LessonItem: Identifiable {
+        let id: String
+        let timeKey: String
+        let subject: String
+        let pair: Pair
         
-        if let date = inputFormatter.date(from: timeString) {
-            return outputFormatter.string(from: date)
+        init(timeKey: String, subject: String, pair: Pair) {
+            self.timeKey = timeKey
+            self.subject = subject
+            self.pair = pair
+            self.id = "\(timeKey)-\(subject)-\(pair.timeStart)-\(pair.timeEnd)"
         }
-        return timeString
     }
 }
+
+// MARK: - Extension
+extension String {
+    func toDate() -> Date? {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm:ss"
+        formatter.locale = Locale(identifier: "ru_RU")
+        return formatter.date(from: self)
+    }
+//Форматирует строку, делая первую букву каждого слова заглавной, остальные — строчными.
+    func toCapitalizedCase() -> String {
+        self
+            .lowercased()
+            .components(separatedBy: " ")
+            .map { $0.capitalized }
+            .joined(separator: " ")
+    }
+}
+
+
+// MARK: - Extension Форматирует строку, делая первую букву каждого слова заглавной, остальные — строчными.
+
 //struct LessonsView: View {
-//    let lessonDays: [LessonDay] = GetData()
 //    @Binding var selectedDay: Date
+//    @Binding var selectedGroup: String
+//
+//    let scheduleModel: ScheduleModel
 //
 //    var body: some View {
 //        ScrollView {
 //            VStack {
-//                if let selectedLessonDay = lessonDays.first(where: { Calendar.current.isDate($0.day, inSameDayAs: selectedDay) }) {
+//                if let selectedLessonDay = findLessonDay(for: selectedDay, group: selectedGroup) {
 //                    VStack {
-//                        ForEach(Array(selectedLessonDay.lessons.enumerated()), id: \.element.time_start) { index, lesson in
-//                            VStack {
-//                                LessonView(
-//                                    timeRange: "\(lesson.time_start) – \(lesson.time_end)",
-//                                    classroom: lesson.classroom,
-//                                    lessonType: lesson.lessonType,
-//                                    lessonName: lesson.lessonName,
-//                                    lector: lesson.lector
-//                                )
-//                                if index < selectedLessonDay.lessons.count - 1 {
+//                        ForEach(Array(selectedLessonDay.pairs.keys.sorted()), id: \.self) { timeStart in
+//                            if let pair = selectedLessonDay.pairs[timeStart] {
+//                                VStack {
+//                                    LessonView(
+//                                        timeRange: "\(formatTime(pair.timeStart)) – \(formatTime(pair.timeEnd))",
+//                                        classroom: pair.room,
+//                                        lessonType: pair.type,
+//                                        lessonName: pair.subject,
+//                                        lector: pair.lector
+//                                    )
 //                                    Rectangle()
 //                                        .fill(.gray)
 //                                        .opacity(0.25)
@@ -171,7 +250,7 @@ struct LessonsView: View {
 //                        Text("Данные не найдены :(")
 //                            .font(.system(size: 20, weight: .medium, design: .rounded))
 //                            .padding(.top, 15)
-//                        Text("Расписание ещё не выложили, либо в расписании ошибка.")
+//                        Text("Расписание ещё не выложили, либо в расписании ошибка.")
 //                            .foregroundColor(.gray)
 //                            .font(.system(size: 12, weight: .light, design: .rounded))
 //                            .padding(.top, 1)
@@ -182,10 +261,41 @@ struct LessonsView: View {
 //            }
 //        }
 //    }
+//    
+//    func findLessonDay(for date: Date, group: String) -> DaySchedule? {
+//        let dateFormatter = DateFormatter()
+//        dateFormatter.dateFormat = "dd.MM.yyyy"
+//        let dateString = dateFormatter.string(from: date)
+//        
+//        print("Ищем расписание для группы: \(group), дата: \(dateString)")  // Выводим для отладки
+//        
+//        if let groupSchedule = scheduleModel.obtainGroupSchedule().first(where: { $0.group == selectedGroup }) {
+//            print("Найдено расписание для группы: \(groupSchedule.group)")  // Выводим для отладки
+//            
+//            // Ищем по дате
+//            if let selectedLessonDay = groupSchedule.schedule[dateString] {
+//                print("Найдено расписание для дня: \(dateString)")  // Выводим для отладки
+//                return selectedLessonDay
+//            } else {
+//                print("Не найдено расписание для дня: \(dateString)")  // Выводим для отладки
+//            }
+//        } else {
+//            print("Не найдено расписание для группы: \(group)")  // Выводим для отладки
+//        }
+//        return nil
+//    }
+//    
+//    func formatTime(_ timeString: String) -> String {
+//        let inputFormatter = DateFormatter()
+//        inputFormatter.dateFormat = "HH:mm:ss"
+//        
+//        let outputFormatter = DateFormatter()
+//        outputFormatter.dateFormat = "HH:mm"
+//        
+//        if let date = inputFormatter.date(from: timeString) {
+//            return outputFormatter.string(from: date)
+//        }
+//        return timeString
+//    }
 //}
 
-
-
-//#Preview {
-//    LessonsView(selectedDay: )
-//}

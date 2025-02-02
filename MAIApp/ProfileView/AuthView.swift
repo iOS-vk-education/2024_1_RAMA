@@ -12,7 +12,6 @@ struct AuthView: View {
     @State private var email: String = ""
     @State private var password: String = ""
     @Binding var isRegistration: Bool
-    @Environment(\.colorScheme) var colorScheme
     @AppStorage("theme") var selectedTheme: Theme = .light
     @AppStorage("lang") var selectedLang: Lang = .ru
     

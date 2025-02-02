@@ -12,6 +12,7 @@ struct FacultyAndCourseView: View {
     @Binding var selectedFaculty: Faculty
     @Binding var selectedLevel: Level
     @EnvironmentObject var groupSelectionModel: GroupSelectionModel
+    @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
         HStack(spacing: 0) {

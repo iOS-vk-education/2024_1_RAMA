@@ -1,10 +1,3 @@
-//
-//  LessonView.swift
-//  MAIApp
-//
-//  Created by Андрей  Насибулин  on 21.11.2024.
-//
-
 import SwiftUI
 
 struct LessonView: View {
@@ -15,7 +8,7 @@ struct LessonView: View {
     let lector: String;
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            HStack {
+            HStack (spacing: 4){
                 BadgeComponentView(content: timeRange)
                 Spacer()
                 BadgeComponentView(content: classroom)
@@ -24,9 +17,16 @@ struct LessonView: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(lessonName)
                     .font(.headline)
-                Text(lector)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                if lector.isEmpty {
+                    Text("Преподаватель не указан")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    }
+                else {
+                    Text(lector)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
             }
         }
         .padding(12)

@@ -11,6 +11,8 @@ struct GroupAndWeekView: View {
     @Binding var weekNumber: Int
     @Binding var selectedGroup: String
     @Binding var selectedDay: Date
+    @Environment(\.colorScheme) var colorScheme
+    
     var body: some View {
         NavigationStack {
             HStack(spacing: 0) {

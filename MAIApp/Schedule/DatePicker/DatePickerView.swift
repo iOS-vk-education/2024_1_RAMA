@@ -1,10 +1,3 @@
-//
-//  DatePickerView.swift
-//  MAIApp
-//
-//  Created by Андрей  Насибулин  on 18.11.2024.
-//
-
 import SwiftUI
 
 struct DatePickerView: View {
@@ -20,7 +13,7 @@ struct DatePickerView: View {
                 DayView(day: weekDates[i], index: i, isActive: Calendar.current.isDate(selectedDay, inSameDayAs: weekDates[i]))
                     .onTapGesture {
                         selectedDay = weekDates[i]
-                        print(selectedDay, weekDates[i + 1])
+                        print(selectedDay)
                     }
                     .frame(maxWidth: .infinity)
                     

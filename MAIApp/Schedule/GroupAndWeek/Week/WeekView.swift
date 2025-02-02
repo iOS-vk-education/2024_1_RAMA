@@ -10,7 +10,7 @@ import Foundation
 
 struct WeekView: View {
     @Binding var weekNumber: Int
-//    let week: String
+//    var isActive: Bool
     var body: some View {
         HStack {
             VStack(alignment: .leading) {

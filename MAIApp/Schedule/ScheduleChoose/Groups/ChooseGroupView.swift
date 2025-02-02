@@ -14,8 +14,9 @@ struct ChooseGroupView: View {
     @State private var selectedCourse: Course = .empty
     @State private var selectedFaculty: Faculty = .empty
     @State private var selectedLevel: Level = .empty
-    @State private var selectedTypeOfStudy: TypeOfStudy = TypeOfStudy(name: "Не указан", groups: [
-        Group(name: "М8О-101БВ-24") ])
+//    @State private var selectedTypeOfStudy: TypeOfStudy = TypeOfStudy(name: "Не указан", groups: [
+//        Group(name: "М8О-101БВ-24") ])
+    @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
         NavigationStack {
@@ -29,9 +30,19 @@ struct ChooseGroupView: View {
                         LevelView(selectedLevel: $selectedLevel, selectedCourse: $selectedCourse)
                         Spacer().frame(height: 2)
                         ScrollView{
-                            if selectedLevel.groups.isEmpty{
-                                CourseAndGroupErrorView()
-                            } else {
+                            if selectedFaculty.name == "Не указан" {
+                                FacultyErrorView()
+                            }
+                            else if selectedCourse.name == "Не указан" {
+                                CourseErrorView()
+                            }
+                            else if selectedLevel.name == "Не указан" {
+                                LevelErrorView()
+                            }
+                            else if selectedLevel.groups.isEmpty{
+                                GroupErrorView()
+                            }
+                            else {
                                 ManyGroupsView(
                                     selectedLevel: $selectedLevel,
                                     onGroupSelected: { group in
@@ -89,7 +100,7 @@ struct ChooseGroupView: View {
 //        }
 //    }
 //}
-
-#Preview {
-    ChooseGroupView()
-}
+//
+//#Preview {
+//    ChooseGroupView()
+//}

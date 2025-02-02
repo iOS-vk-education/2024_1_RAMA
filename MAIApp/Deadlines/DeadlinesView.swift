@@ -27,14 +27,15 @@ struct DeadlinesView: View {
     
     var body: some View {
         NavigationStack {
-            ScrollView {
+            
                 VStack {
                     CalendarView(date: $date)
-                    
-                    ForEach(filterDeadlinesByDay(deadlines: deadlines, date: date)) { deadline in
-                        DeadlineTitleView(deadline: deadline, deadlines: $deadlines)
-                    }            
-                    Spacer()
+                    ScrollView {
+                        ForEach(filterDeadlinesByDay(deadlines: deadlines, date: date)) { deadline in
+                            DeadlineTitleView(deadline: deadline, deadlines: $deadlines)
+                        }            
+                        Spacer()
+                    }
                 }
                 .padding()
                 .navigationTitle("Дедлайны")
@@ -51,7 +52,7 @@ struct DeadlinesView: View {
                 .sheet(isPresented: $isOpened) {
                     CreateDeadlineView(deadlines: $deadlines)
                 }
-            }
+            
             
         }
     }

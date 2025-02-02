@@ -9,6 +9,7 @@ import SwiftUI
 
 struct GroupView: View {
     let group: String
+    @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
         HStack {
@@ -25,7 +26,10 @@ struct GroupView: View {
         .padding(.horizontal)
         .padding(.vertical, 12)
         .frame(maxWidth: .infinity)
+        
+        .preferredColorScheme(colorScheme == .light ? .light : .dark)
     }
+        
 }
 
 //#Preview {

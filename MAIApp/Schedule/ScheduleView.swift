@@ -8,13 +8,11 @@
 import SwiftUI
 
 struct ScheduleView: View {
-//    @State private var selectedWeek = "28.10 - 03.11"
-//    @State var selectedGroup: String = "M3О-212Б-23"
     @State var weekNumber: Int = 1
     @State private var selectedDay: Date = Date()
     @EnvironmentObject var groupSelectionModel: GroupSelectionModel
-    let scheduleModel = ScheduleModel()
     @Environment(\.colorScheme) var colorScheme
+    
     
     var body: some View {
         NavigationStack {
@@ -35,8 +33,8 @@ struct ScheduleView: View {
                                    weekNumber: $weekNumber
                     )
                     LessonsView(selectedDay: $selectedDay,
-                                selectedGroup: $groupSelectionModel.selectedGroup,
-                                scheduleModel: scheduleModel
+                                selectedGroup: $groupSelectionModel.selectedGroup, viewModel: LessonViewModel()
+
                     )
                     Spacer()
                 }
@@ -45,7 +43,9 @@ struct ScheduleView: View {
             .navigationTitle("Расписание")
             .navigationBarTitleDisplayMode(.inline)
         }
+        
     }
+    
     
 }
 

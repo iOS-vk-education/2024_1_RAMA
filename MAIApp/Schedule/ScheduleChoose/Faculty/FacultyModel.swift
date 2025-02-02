@@ -18,6 +18,21 @@ struct Faculty: Equatable {
     static let empty = Faculty(name: "Не указан", courses: [])
 }
 
+final class ManyFacultyViewModel: ObservableObject {
+    @Binding var selectedFaculty: Faculty
+    @Published var availabeFaculties: [Faculty] = []
+    let model: ManyFacultyModel
+    
+    init(selectedFaculty: Binding<Faculty>, model: ManyFacultyModel) {
+        self._selectedFaculty = selectedFaculty
+        self.model = model
+        obtainAvailableFaculties()
+    }
+    func obtainAvailableFaculties(){
+        availabeFaculties = model.obtainAvailableFaculties()
+    }
+}
+
 final class ManyFacultyModel {
     func obtainAvailableFaculties() -> [Faculty] {
         return [
@@ -105,17 +120,4 @@ final class ManyFacultyModel {
 //    }
 //}
 
-final class ManyFacultyViewModel: ObservableObject {
-    @Binding var selectedFaculty: Faculty
-    @Published var availabeFaculties: [Faculty] = []
-    let model: ManyFacultyModel
-    
-    init(selectedFaculty: Binding<Faculty>, model: ManyFacultyModel) {
-        self._selectedFaculty = selectedFaculty
-        self.model = model
-        obtainAvailableFaculties()
-    }
-    func obtainAvailableFaculties(){
-        availabeFaculties = model.obtainAvailableFaculties()
-    }
-}
+

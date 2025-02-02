@@ -9,10 +9,12 @@ import SwiftUI
 
 struct OneWeekView: View {
     let week: String
+    let isSelected: Bool
     var body: some View {
         Text(week)
             .padding(8)
             .frame(maxWidth: .infinity)
+            .background(isSelected ? Color.gray.opacity(0.15) : Color.clear) // Подсветка
             .overlay(
                     RoundedRectangle(cornerRadius: 10)
                         .stroke(.gray, lineWidth: 1)

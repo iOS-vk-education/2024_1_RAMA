@@ -1,10 +1,3 @@
-//
-//  BadgeComponentView.swift
-//  MAIApp
-//
-//  Created by Андрей  Насибулин  on 21.11.2024.
-//
-
 import SwiftUI
 
 struct BadgeComponentView: View {
@@ -16,7 +9,6 @@ struct BadgeComponentView: View {
             .padding(.horizontal, 8)
             .background(.gray.opacity(0.1))
             .clipShape(RoundedRectangle(cornerRadius: 8))
-            
     }
 }
 

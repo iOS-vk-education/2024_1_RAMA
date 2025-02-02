@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct OneTypeOfStudyView: View {
+struct OneLevelView: View {
     let type: String
     var body: some View {
         VStack {

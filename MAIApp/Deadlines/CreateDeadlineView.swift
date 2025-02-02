@@ -15,13 +15,6 @@ struct CreateDeadlineView: View {
     @State private var description: String = ""
     @State private var date: Date = Date()
     @State private var priority: Priority = .normal
-    
-//    @State private var taskDescription: String = ""
-//    @State private var endDate: Date = Date()
-//    @State private var priority: Priority = .normal
-//    @State private var isDatePickerVisible: Bool = false
-//    @State private var includeLogs = false
-//    @State private var birthDate = Date.now
 
     var body: some View {
         NavigationView {
