@@ -9,15 +9,16 @@ import SwiftUI
 
 struct GroupAndWeekView: View {
     @Binding var weekNumber: Int
-    @Binding var selectedGroup: String
+//    @Binding var selectedGroup: String
     @Binding var selectedDay: Date
+    @EnvironmentObject var groupSelectionModel: GroupSelectionModel
     @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
         NavigationStack {
             HStack(spacing: 0) {
                 NavigationLink(destination: ChooseGroupView()) {
-                    GroupView(group: selectedGroup)
+                    GroupView(group: groupSelectionModel.selectedGroup)
                 }
                 Rectangle()
                     .fill(.gray)

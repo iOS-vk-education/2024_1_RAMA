@@ -14,12 +14,16 @@ struct OneWeekView: View {
         Text(week)
             .padding(8)
             .frame(maxWidth: .infinity)
-            .background(isSelected ? Color.gray.opacity(0.15) : Color.clear) // Подсветка
+            .background(
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(isSelected ? Color.gray.opacity(0.15) : Color.clear)
+                        )
             .overlay(
                     RoundedRectangle(cornerRadius: 10)
                         .stroke(.gray, lineWidth: 1)
                         .opacity(0.25)
                     )
+
             .font(.subheadline)
     }
 }

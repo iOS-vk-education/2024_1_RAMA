@@ -8,18 +8,20 @@
 import SwiftUI
 
 struct LevelView: View {
-    @Binding var selectedLevel: Level
-    @Binding var selectedCourse: Course
+    @EnvironmentObject var groupSelectionModel: GroupSelectionModel
     var body: some View {
         NavigationStack {
             HStack {
-                NavigationLink(destination: ChooseLevelView(selectedLevel: $selectedLevel, selectedCourse: $selectedCourse)) {
+                NavigationLink(destination: ChooseLevelView()) {
                     VStack(alignment: .leading) {
                         Text("тип образования")
                             .font(.caption)
                             .foregroundStyle(.secondary)
-                        Text(selectedLevel.name)
+                        Text(groupSelectionModel.selectedLevel.isEmpty
+                             ? "Не выбран"
+                             : groupSelectionModel.selectedLevel)
                             .font(.headline)
+
                     }
                     .foregroundColor(.black)
                     Spacer()

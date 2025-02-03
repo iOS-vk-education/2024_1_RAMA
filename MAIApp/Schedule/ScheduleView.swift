@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ScheduleView: View {
-    @State var weekNumber: Int = 1
+    @State var weekNumber = getWeekNumber()
     @State private var selectedDay: Date = Date()
     @EnvironmentObject var groupSelectionModel: GroupSelectionModel
     @Environment(\.colorScheme) var colorScheme
@@ -17,16 +17,14 @@ struct ScheduleView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 8) {
-                if groupSelectionModel.selectedGroup == "Не выбрана"{
+                if groupSelectionModel.selectedGroup == ""  {
                     GroupAndWeekView(weekNumber: $weekNumber,
-                                     selectedGroup: $groupSelectionModel.selectedGroup,
                                      selectedDay: $selectedDay
                     )
                     ErrorGroupView()
                 }
                 else {
                     GroupAndWeekView(weekNumber: $weekNumber,
-                                     selectedGroup: $groupSelectionModel.selectedGroup,
                                      selectedDay: $selectedDay
                     )
                     DatePickerView(selectedDay: $selectedDay,
@@ -45,8 +43,13 @@ struct ScheduleView: View {
         }
         
     }
-    
-    
+}
+
+// MARK: Functions
+
+func getWeekNumber(from date: Date = Date()) -> Int {
+    let calendar = Calendar.current
+    return calendar.component(.weekOfYear, from: date) - 1
 }
 
 //#Preview {

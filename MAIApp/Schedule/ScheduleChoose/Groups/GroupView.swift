@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct GroupView: View {
+    @EnvironmentObject var groupSelectionModel: GroupSelectionModel
     let group: String
     @Environment(\.colorScheme) var colorScheme
 
@@ -17,7 +18,10 @@ struct GroupView: View {
                 Text("группа")
                     .font(.caption)
                     .foregroundStyle(.secondary)
-                Text(group)
+                Text(groupSelectionModel.selectedGroup == ""
+                     ? "Не выбрана"
+                     : groupSelectionModel.selectedGroup
+                    )
                     .font(.headline)
             }
             .foregroundColor(.black)

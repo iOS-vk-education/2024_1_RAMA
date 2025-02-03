@@ -9,9 +9,10 @@ import SwiftUI
 
 
 struct ChooseCourseView: View {
-    @Binding var selectedFaculty: Faculty
-    @Binding var selectedCourse: Course
-    @Binding var selectedLevel: Level
+//    @Binding var selectedFaculty: Faculty
+//    @Binding var selectedCourse: Course
+//    @Binding var selectedLevel: Level
+    @EnvironmentObject var groupSelectionModel: GroupSelectionModel
     @Environment(\.dismiss) private var dismiss
     @Environment(\.colorScheme) var colorScheme
     
@@ -19,20 +20,16 @@ struct ChooseCourseView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 8) {
-                    ManyCourseView(viewModel: ManyCourseViewModel(
-                        selectedCourse: $selectedCourse,
-                        selectedFaculty: selectedFaculty
-                        
-                    ))
+                    ManyCourseView()
                 }
                 .padding()
                 .navigationTitle("Курс")
                 .navigationBarTitleDisplayMode(.inline)
             }
         }
-        .onChange(of: selectedCourse) { _, _ in
-            selectedLevel = .empty
+        .onChange(of: groupSelectionModel.selectedCourse) { _, _ in
             dismiss()
+            groupSelectionModel.selectedLevel = ""
         }
     }
 }

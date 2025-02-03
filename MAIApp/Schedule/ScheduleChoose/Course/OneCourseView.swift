@@ -1,14 +1,8 @@
-//
-//  OneCourseView.swift
-//  MAIApp
-//
-//  Created by Михаил Рахимов on 20.12.2024.
-//
-
 import SwiftUI
 
 struct OneCourseView: View {
-    let course: String    
+    let course: String
+    let isSelected: Bool
     var body: some View {
         VStack {
             Text(course)
@@ -16,8 +10,8 @@ struct OneCourseView: View {
                 .frame(maxWidth: .infinity)
                 .overlay(
                     RoundedRectangle(cornerRadius: 10)
-                        .stroke(.gray, lineWidth: 1)
-                        .opacity(0.25)
+                        .stroke(isSelected ? Color.customBlue : Color.gray, lineWidth: 1)
+                        .opacity(isSelected ? 0.75 : 0.25)
                 )
                 .font(.subheadline)
         }

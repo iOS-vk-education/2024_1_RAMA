@@ -8,14 +8,16 @@
 import SwiftUI
 
 struct CourseView: View {
-    let course: Course
+    let course: String
     var body: some View {
         HStack {
             VStack(alignment: .leading) {
                 Text("курс")
                     .font(.caption)
                     .foregroundStyle(.secondary)
-                Text(course.name)
+                Text(course.isEmpty
+                     ? "Не выбран"
+                     : course)
                     .font(.headline)
             }
             .foregroundColor(.black)

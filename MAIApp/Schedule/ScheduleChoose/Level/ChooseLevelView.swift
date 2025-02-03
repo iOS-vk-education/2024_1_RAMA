@@ -8,22 +8,23 @@
 import SwiftUI
 
 struct ChooseLevelView: View {
-    @Binding var selectedLevel: Level
-    @Binding var selectedCourse: Course
+//    @Binding var selectedLevel: Level
+//    @Binding var selectedCourse: Course
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject var groupSelectionModel: GroupSelectionModel
     
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 8) {
-                    ManyLevelView(viewModel: ManyLevelViewModel(selectedLevel: $selectedLevel, selectedCourse: selectedCourse))
+                    ManyLevelView()
                 }
                 .padding()
                 .navigationTitle("Тип образования")
                 .navigationBarTitleDisplayMode(.inline)
             }
         }
-        .onChange(of: selectedLevel) { _, _ in
+        .onChange(of: groupSelectionModel.selectedLevel) { _, _ in
             dismiss()
         }
     }

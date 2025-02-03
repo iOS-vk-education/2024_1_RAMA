@@ -5,20 +5,37 @@
 //  Created by Михаил Рахимов on 08.01.2025.
 //
 
-import Foundation
-import SwiftUI
+//import Foundation
+//import SwiftUI
+//
+//struct Level: Equatable {
+//    static func == (lhs: Level, rhs: Level) -> Bool {
+//        lhs.name == rhs.name
+//    }
+//    
+//    let id = UUID()
+//    let name: String
+//    let groups: [Group]
+//    
+//    static let empty = Level(name: "Не указан", groups: [])
+//}
+//
+//final class ManyLevelViewModel: ObservableObject {
+//    @Binding var selectedLevel: Level
+//    let selectedCourse: Course
+//    @Published var availableLevels: [Level] = []
+//    
+//    init(selectedLevel: Binding<Level>, selectedCourse: Course) {
+//        self._selectedLevel = selectedLevel
+//        self.selectedCourse = selectedCourse
+//        loadLevels()
+//    }
+//    
+//    func loadLevels() {
+//        availableLevels = selectedCourse.levels
+//    }
+//}
 
-struct Level: Equatable {
-    static func == (lhs: Level, rhs: Level) -> Bool {
-        lhs.name == rhs.name
-    }
-    
-    let id = UUID()
-    let name: String
-    let groups: [Group]
-    
-    static let empty = Level(name: "Не указан", groups: [])
-}
 
 //final class LevelModel {
 //    func obtainAvailableLevels() -> [Level] {
@@ -45,18 +62,3 @@ struct Level: Equatable {
 //    }
 //}
 
-final class ManyLevelViewModel: ObservableObject {
-    @Binding var selectedLevel: Level
-    let selectedCourse: Course
-    @Published var availableLevels: [Level] = []
-    
-    init(selectedLevel: Binding<Level>, selectedCourse: Course) {
-        self._selectedLevel = selectedLevel
-        self.selectedCourse = selectedCourse
-        loadLevels()
-    }
-    
-    func loadLevels() {
-        availableLevels = selectedCourse.levels
-    }
-}
