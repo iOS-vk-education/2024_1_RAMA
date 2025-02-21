@@ -1,11 +1,75 @@
 import SwiftUI
 
-struct LessonsView: View {
+struct WeekLessonsView: View {
     @Binding var selectedDay: Date
     @Binding var selectedGroup: String
     @ObservedObject var viewModel: LessonViewModel
     @State private var error: Error?
-//    var scheduleMode: ScheduleMode
+    var scheduleMode: ScheduleMode
+    
+    private var weekDays: [Date] {
+        let calendar = Calendar.current
+        let startOfWeek = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: selectedDay))!
+        return (0..<7).compactMap { calendar.date(byAdding: .day, value: $0, to: startOfWeek) }
+    }
+    
+    private let headerDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "d MMMM" // Пример: "5 июня"
+        return formatter
+    }()
+
+    private let weekdayFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "EEEE" // Полное название дня недели: "Понедельник"
+        return formatter
+    }()
+    
+    // MARK: - Секция для одного дня
+    private func dayScheduleSection(for date: Date) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            dayHeader(for: date)
+            
+            // Убираем $ перед viewModel
+            if let daySchedule = viewModel.getSchedule(for: date) {
+                scheduleContent(for: daySchedule)
+            } else {
+                Text("Нет занятий")
+                    .foregroundColor(.gray)
+                    .padding()
+                    .frame(maxWidth: .infinity)
+            }
+        }
+        .padding()
+        .background(Color(.systemBackground))
+        .cornerRadius(12)
+        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
+    }
+    
+    // MARK: - Заголовок дня
+       private func dayHeader(for date: Date) -> some View {
+           HStack {
+               VStack(alignment: .leading) {
+                   Text(DateFormatter.headerDate.string(from: date))
+                       .font(.headline)
+                   
+                   Text(DateFormatter.weekday.string(from: date))
+                       .font(.subheadline)
+                       .foregroundColor(.secondary)
+               }
+               
+               Spacer()
+               
+               if Calendar.current.isDate(date, inSameDayAs: Date()) {
+                   Text("Сегодня")
+                       .font(.caption)
+                       .foregroundColor(.white)
+                       .padding(5)
+                       .background(Capsule().fill(Color.blue))
+               }
+           }
+           .padding(.bottom, 8)
+       }
     
     var body: some View {
         ScrollView {
@@ -27,6 +91,8 @@ struct LessonsView: View {
             viewModel.loadSchedule(for: selectedGroup)
         }
     }
+    
+    
     
     // MARK: - View Components
     private struct LessonRow: View {
@@ -188,115 +254,26 @@ struct LessonsView: View {
     }
 }
 
-// MARK: - Extension
-extension String {
-    func toDate() -> Date? {
+
+extension DateFormatter {
+    static let yyyyMMdd: DateFormatter = {
         let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm:ss"
+        formatter.dateFormat = "yyyy-MM-dd"
         formatter.locale = Locale(identifier: "ru_RU")
-        return formatter.date(from: self)
-    }
-//Форматирует строку, делая первую букву каждого слова заглавной, остальные — строчными.
-    func toCapitalizedCase() -> String {
-        self
-            .lowercased()
-            .components(separatedBy: " ")
-            .map { $0.capitalized }
-            .joined(separator: " ")
-    }
+        return formatter
+    }()
+    
+    static let headerDate: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "d MMMM"
+        formatter.locale = Locale(identifier: "ru_RU")
+        return formatter
+    }()
+    
+    static let weekday: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "EEEE"
+        formatter.locale = Locale(identifier: "ru_RU")
+        return formatter
+    }()
 }
-
-
-// MARK: - Extension Форматирует строку, делая первую букву каждого слова заглавной, остальные — строчными.
-
-//struct LessonsView: View {
-//    @Binding var selectedDay: Date
-//    @Binding var selectedGroup: String
-//
-//    let scheduleModel: ScheduleModel
-//
-//    var body: some View {
-//        ScrollView {
-//            VStack {
-//                if let selectedLessonDay = findLessonDay(for: selectedDay, group: selectedGroup) {
-//                    VStack {
-//                        ForEach(Array(selectedLessonDay.pairs.keys.sorted()), id: \.self) { timeStart in
-//                            if let pair = selectedLessonDay.pairs[timeStart] {
-//                                VStack {
-//                                    LessonView(
-//                                        timeRange: "\(formatTime(pair.timeStart)) – \(formatTime(pair.timeEnd))",
-//                                        classroom: pair.room,
-//                                        lessonType: pair.type,
-//                                        lessonName: pair.subject,
-//                                        lector: pair.lector
-//                                    )
-//                                    Rectangle()
-//                                        .fill(.gray)
-//                                        .opacity(0.25)
-//                                        .frame(height: 1)
-//                                }
-//                            }
-//                        }
-//                    }
-//                    .overlay(
-//                        RoundedRectangle(cornerRadius: 12)
-//                            .stroke(.gray, lineWidth: 1)
-//                            .opacity(0.25)
-//                    )
-//                } else {
-//                    VStack {
-//                        Spacer()
-//                        Image("error_schedule")
-//                            .padding(.top, 100)
-//                        Text("Данные не найдены :(")
-//                            .font(.system(size: 20, weight: .medium, design: .rounded))
-//                            .padding(.top, 15)
-//                        Text("Расписание ещё не выложили, либо в расписании ошибка.")
-//                            .foregroundColor(.gray)
-//                            .font(.system(size: 12, weight: .light, design: .rounded))
-//                            .padding(.top, 1)
-//                        Spacer()
-//                    }
-//                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-//                }
-//            }
-//        }
-//    }
-//    
-//    func findLessonDay(for date: Date, group: String) -> DaySchedule? {
-//        let dateFormatter = DateFormatter()
-//        dateFormatter.dateFormat = "dd.MM.yyyy"
-//        let dateString = dateFormatter.string(from: date)
-//        
-//        print("Ищем расписание для группы: \(group), дата: \(dateString)")  // Выводим для отладки
-//        
-//        if let groupSchedule = scheduleModel.obtainGroupSchedule().first(where: { $0.group == selectedGroup }) {
-//            print("Найдено расписание для группы: \(groupSchedule.group)")  // Выводим для отладки
-//            
-//            // Ищем по дате
-//            if let selectedLessonDay = groupSchedule.schedule[dateString] {
-//                print("Найдено расписание для дня: \(dateString)")  // Выводим для отладки
-//                return selectedLessonDay
-//            } else {
-//                print("Не найдено расписание для дня: \(dateString)")  // Выводим для отладки
-//            }
-//        } else {
-//            print("Не найдено расписание для группы: \(group)")  // Выводим для отладки
-//        }
-//        return nil
-//    }
-//    
-//    func formatTime(_ timeString: String) -> String {
-//        let inputFormatter = DateFormatter()
-//        inputFormatter.dateFormat = "HH:mm:ss"
-//        
-//        let outputFormatter = DateFormatter()
-//        outputFormatter.dateFormat = "HH:mm"
-//        
-//        if let date = inputFormatter.date(from: timeString) {
-//            return outputFormatter.string(from: date)
-//        }
-//        return timeString
-//    }
-//}
-

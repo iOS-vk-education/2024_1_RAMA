@@ -92,3 +92,13 @@ class LessonViewModel: ObservableObject {
     }
 }
 
+extension LessonViewModel {
+    func getSchedule(for date: Date) -> DaySchedule? {
+        let dateString = DateFormatter.yyyyMMdd.string(from: date)
+        // Обращаемся к свойству schedule в GroupSchedule
+        return groupSchedule?.schedule[dateString]
+    }
+}
+
+
+

@@ -1,10 +1,3 @@
-//
-//  MainView.swift
-//  MAIApp
-//
-//  Created by Андрей  Насибулин  on 01.12.2024.
-//
-
 import SwiftUI
 
 struct MainView: View {
@@ -127,25 +120,45 @@ struct MainView: View {
     // Функция для создания элементов нижней секции
     func createBottomItem(imageName: String, title: String, subtitle: String, link: String) -> some View {
         VStack(alignment: .leading, spacing: 0) {
-            HStack(spacing: 16) {
-                Image(imageName)
-                    .resizable()
-                    .aspectRatio(1, contentMode: .fit)
-                    .frame(height: 50)
-                VStack(alignment: .leading) {
-                    Text(title)
-                        .font(.headline)
-                    Text(subtitle)
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                }
-            }
-            .padding(12)
-            .onTapGesture {
-                if let url = URL(string: link) {
-                    UIApplication.shared.open(url)
-                }
-            }
+            if imageName == "main-map" {
+                NavigationLink(destination: MapView()) {
+                            HStack(spacing: 16) {
+                                Image(imageName)
+                                    .resizable()
+                                    .aspectRatio(1, contentMode: .fit)
+                                    .frame(height: 50)
+                                VStack(alignment: .leading) {
+                                    Text(title)
+                                        .font(.headline)
+                                    Text(subtitle)
+                                        .font(.subheadline)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+                            .padding(12)
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                    } else {
+                        HStack(spacing: 16) {
+                            Image(imageName)
+                                .resizable()
+                                .aspectRatio(1, contentMode: .fit)
+                                .frame(height: 50)
+                            VStack(alignment: .leading) {
+                                Text(title)
+                                    .font(.headline)
+                                Text(subtitle)
+                                    .font(.subheadline)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                        .padding(12)
+                        .onTapGesture {
+                            if let url = URL(string: link) {
+                                UIApplication.shared.open(url)
+                            }
+                        }
+                    }
             
             if bottomSectionItems.last?.0 != imageName {
                 Rectangle()
