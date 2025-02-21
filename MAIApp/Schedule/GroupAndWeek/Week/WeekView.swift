@@ -1,10 +1,3 @@
-//
-//  WeekView.swift
-//  MAIApp
-//
-//  Created by Андрей  Насибулин  on 18.11.2024.
-//
-
 import SwiftUI
 import Foundation
 
@@ -20,7 +13,7 @@ struct WeekView: View {
                 Text(weekRange(for: weekNumber))
                     .font(.headline)
             }
-            .foregroundColor(.black)
+//            .foregroundColor(.black)
             Spacer()
         }
         .padding(.horizontal)
@@ -67,6 +60,3 @@ struct WeekView: View {
         return "\(startDateString) – \(endDateString)"
     }
 }
-//#Preview {
-//    WeekView()
-//}

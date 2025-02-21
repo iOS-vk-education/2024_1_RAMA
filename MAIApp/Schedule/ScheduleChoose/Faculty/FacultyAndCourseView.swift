@@ -6,6 +6,7 @@ struct FacultyAndCourseView: View {
     
     var body: some View {
         HStack(spacing: 0) {
+            
             NavigationLink(destination: ChooseFacultyView()) {
                 FacultyView(faculty: groupSelectionModel.selectedFaculty)
             }
@@ -13,10 +14,17 @@ struct FacultyAndCourseView: View {
                 .fill(.gray)
                 .opacity(0.25)
                 .frame(width: 1)
-            NavigationLink(destination: ChooseCourseView()) {
-                CourseView(course: groupSelectionModel.selectedCourse)
-            }
             
+            
+            if !groupSelectionModel.selectedFaculty.isEmpty {
+                            NavigationLink(destination: ChooseCourseView()) {
+                                CourseView(course: groupSelectionModel.selectedCourse)
+                            }
+            } else {
+                CourseView(course: groupSelectionModel.selectedCourse)
+                    .disabled(true)
+                    .opacity(0.5)
+            }
         }
         .frame(maxWidth: .infinity)
         .fixedSize(horizontal: false, vertical: true)
@@ -25,15 +33,7 @@ struct FacultyAndCourseView: View {
                     .stroke(.gray, lineWidth: 1)
                     .opacity(0.25)
                 )
-        .onChange(of: groupSelectionModel.selectedFaculty) { _, newFaculty in
-                    if groupSelectionModel.selectedFaculty != newFaculty {
-                        groupSelectionModel.selectedCourse = ""
-                    }
-                    groupSelectionModel.selectedFaculty = newFaculty
-                }
     }
 }
 
-//#Preview {
-//    FacultyAndCourseView(selectedCourse: selectedCourse)
-//}
+

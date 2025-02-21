@@ -1,10 +1,3 @@
-//
-//  FacultyView.swift
-//  MAIApp
-//
-//  Created by Руслан on 08.12.2024.
-//
-
 import SwiftUI
 
 struct FacultyView: View {
@@ -21,7 +14,7 @@ struct FacultyView: View {
                 )
                     .font(.headline)
             }
-            .foregroundColor(.black)
+            .foregroundStyle(.primary)
             Spacer()
         }
         .padding(.horizontal)
@@ -30,6 +23,3 @@ struct FacultyView: View {
     }
 }
 
-//#Preview {
-//    FacultyView(faculty: "Институт №3")
-//}

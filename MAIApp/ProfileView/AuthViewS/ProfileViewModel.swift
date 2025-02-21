@@ -1,0 +1,82 @@
+//
+//  ProfileViewModel.swift
+//  MAIApp
+//
+//  Created by Михаил Рахимов on 12.03.2025.
+//
+
+import Foundation
+import SwiftUI
+
+final class ProfileViewModel: ObservableObject {
+    @Published var email: String = ""
+    @Published var password: String = ""
+    @Published var passwordVerifiсation: String = "" 
+    @Published var isLoading: Bool = false
+    @Published var isLoggedIn: Bool = false
+    @Published var accessToken: String = ""
+    @Published var refreshToken: String = ""
+    
+    @Published var name: String = ""
+    @Published var group: String = ""
+    
+    private let apiService = APIService()
+    
+    func register() {
+        guard !email.isEmpty, !password.isEmpty else {
+            print("Email или пароль пустые")
+            return
+        }
+        
+        self.isLoading = true
+        apiService.register(email: email, password: password) { [weak self] result in
+            DispatchQueue.main.async {
+                self?.isLoading = false
+                
+                switch result {
+                case .success(let tokenInfo):
+                    self?.accessToken = tokenInfo.access_token
+                    self?.refreshToken = tokenInfo.refresh_token
+                    self?.isLoggedIn = true
+                    print("Регстрация прошла успешно: \(tokenInfo)")
+                case .failure(let error):
+                    print("Ошибка регистрации: \(error.localizedDescription)")
+                }
+            }
+            
+        }
+    }
+    
+    func getUserInfo() {
+            // Проверяем, что токен не пустой
+            guard !accessToken.isEmpty else {
+                print("Токен не найден")
+                return
+            }
+            
+            // Вызываем метод получения информации о пользователе из APIService
+            apiService.getUserInfo(token: accessToken) { [weak self] result in
+                // Выполняем код в основном потоке
+                DispatchQueue.main.async {
+                    // Обрабатываем результат
+                    switch result {
+                    case .success(let json):
+                        // Обрабатываем информацию о пользователе
+                        if let name = json["name"] as? String {
+                            self?.name = name
+                        }
+                        if let group = json["group"] as? String {
+                            self?.group = group
+                        }
+                        print("Информация о пользователе получена: \(json)")
+                    case .failure(let error):
+                        print("Ошибка получения информации о пользователе: \(error.localizedDescription)")
+                    }
+                }
+            }
+        }
+    
+    
+}
+
+

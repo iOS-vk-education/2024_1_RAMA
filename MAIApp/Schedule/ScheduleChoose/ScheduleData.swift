@@ -1,18 +1,14 @@
-//
-//  ScheduleModel.swift
-//  MAIApp
-//
-//  Created by Михаил Рахимов on 02.02.2025.
-//
-
 import Foundation
 import SwiftUI
 
-struct Group: Decodable {
-    let name: String
-    let fac: String
-    let level: String
-    let course: String
+
+
+protocol ScheduleManagerDescription {
+    func loadGroups() async throws -> [Group]
+}
+
+enum ScheduleManagerError: Error {
+    case invalidData
 }
 
 extension Sequence where Iterator.Element: Hashable {
@@ -33,7 +29,10 @@ class GroupSelectionModel: ObservableObject {
     // MARK: - Data Loading
         @MainActor
         func loadGroups() async {
-            guard let url = URL(string: "https://public.mai.ru/schedule/data/groups.json") else {
+//            let urlBackend = "https://public.mai.ru/schedule/data/groups.json"
+            let urlBase = "https://public.mai.ru/schedule/data/groups.json"
+            
+            guard let url = URL(string: urlBase) else {
                 print("❌ [ERROR] Invalid URL")
                 return
             }
@@ -77,21 +76,15 @@ class GroupSelectionModel: ObservableObject {
         }
         
         // MARK: - Data Filtering
-    var faculties: [String] {
-        let faculties = Set(allGroups.map { $0.fac })
-            .sorted { lhs, rhs in
-                extractInstituteNumber(lhs) < extractInstituteNumber(rhs)
+        var faculties: [String] {
+            let faculties = Set(allGroups.map { $0.fac })
+                .sorted { lhs, rhs in
+                    extractInstituteNumber(lhs) < extractInstituteNumber(rhs)
+                }
+                return faculties
             }
         
-//            print("\n=== FACULTIES ===")
-//            print("Available: \(faculties.joined(separator: ", "))")
-//            print("Selected: \(selectedFaculty)")
-//            print("=================\n")
-            return faculties
-        }
-        
         var courses: [String] {
-            //Удаление "нежелательных" пробелов
             let normalizedFaculty = selectedFaculty.trimmingCharacters(in: .whitespacesAndNewlines)
             
             let filtered = allGroups
@@ -101,18 +94,10 @@ class GroupSelectionModel: ObservableObject {
                 .map { $0.course }
                 .unique()
                 .sorted()
-            
-//            print("\n=== COURSES ===")
-//            print("Faculty: \(selectedFaculty)")
-//            print("Available: \(filtered.joined(separator: ", "))")
-//            print("Selected: \(selectedCourse)")
-//            print("Total: \(filtered.count)")
-//            print("===============\n")
             return filtered
         }
         
         var levels: [String] {
-            //Удаление "нежелательных" пробелов
             let normalizedFaculty = selectedFaculty.trimmingCharacters(in: .whitespacesAndNewlines)
             let normalizedCourse = selectedCourse.trimmingCharacters(in: .whitespacesAndNewlines)
             
@@ -124,19 +109,10 @@ class GroupSelectionModel: ObservableObject {
                 .map { $0.level }
                 .unique()
                 .sorted()
-            
-//            print("\n=== LEVELS ===")
-//            print("Faculty: \(selectedFaculty)")
-//            print("Course: \(selectedCourse)")
-//            print("Available: \(filtered.joined(separator: ", "))")
-//            print("Selected: \(selectedLevel)")
-//            print("Total: \(filtered.count)")
-//            print("==============\n")
             return filtered
         }
         
         var groups: [Group] {
-            //Удаление "нежелательных" пробелов
             let normalizedFaculty = selectedFaculty.trimmingCharacters(in: .whitespacesAndNewlines)
             let normalizedCourse = selectedCourse.trimmingCharacters(in: .whitespacesAndNewlines)
             let normalizedLevel = selectedLevel.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -150,15 +126,6 @@ class GroupSelectionModel: ObservableObject {
                 .sorted { lhs, rhs in
                     extractGroupNumber(lhs) < extractGroupNumber(rhs)
                 }
-     
-//            print("\n=== GROUPS ===")
-//            print("Faculty: \(selectedFaculty)")
-//            print("Course: \(selectedCourse)")
-//            print("Level: \(selectedLevel)")
-//            print("Available: \(allGroups.map { $0.name }.joined(separator: ", "))")
-//            print("Selected: \(selectedGroup)")
-//            print("Total: \(filtered.count)")
-//            print("==============\n")
             return filtered
         }
     
@@ -194,11 +161,10 @@ class GroupSelectionModel: ObservableObject {
             }
             print("====================\n")
         }
-    }
+}
 
 
 // MARK: Functions
-//для сортировки институтов
 private func extractInstituteNumber(_ faculty: String) -> Int {
     let numbers = faculty.components(separatedBy: CharacterSet.decimalDigits.inverted)
     return Int(numbers.joined()) ?? Int.max

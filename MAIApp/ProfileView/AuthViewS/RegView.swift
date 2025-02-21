@@ -1,5 +1,5 @@
 //
-//  AuthView.swift
+//  RegView.swift
 //  MAIApp
 //
 //  Created by Михаил Рахимов on 11.01.2025.
@@ -7,49 +7,56 @@
 
 import SwiftUI
 
-struct AuthView: View {
+struct RegView: View {
     @State private var isDarkMode = false
-    @State private var email: String = ""
-    @State private var password: String = ""
+    @EnvironmentObject var profileVM: ProfileViewModel
+//    private let apiService = APIService()
+    
+//    @State private var email: String = ""
+//    @State private var password: String = ""
+//    @State var passwordVerifiсation = ""
     @Binding var isRegistration: Bool
-    @AppStorage("theme") var selectedTheme: Theme = .light
+    @AppStorage("theme") var selectedTheme: Theme = .system
     @AppStorage("lang") var selectedLang: Lang = .ru
+    @Environment(\.colorScheme) var colorScheme
+    
     
     var body: some View {
         VStack {
             VStack (spacing: 30){
-                Text("Авторизация")
+                Text("Регистрация")
                     .font(.system(size: 26, weight: .bold))
                     .padding(.top, 100)
                 
                 VStack (spacing: 45){
-                    TextField("Электронная почта", text: $email)
+                    TextField("Электронная почта", text: $profileVM.email)
                         .padding()
-                    
                         .foregroundColor(Color.gray)
                         .background(RoundedRectangle(cornerRadius: 10).stroke(Color.gray, lineWidth: 1))
-                        
+                    
                         .frame(width: 300, height: 20)
                     
-                        
-                    SecureField("Пароль", text: $password)
+                    
+                    SecureField("Пароль", text: $profileVM.password)
                         .padding()
                         .background(RoundedRectangle(cornerRadius: 10).stroke(Color.gray, lineWidth: 1))
                         .frame(width: 300, height: 20)
-                    
+                        .textContentType(.newPassword)
+                
                 }
                 .padding(.top, 20)
                 
-                Button{
-                    
+                Button {
+                    profileVM.register()
                 } label: {
-                    Text("Авторизоваться")
+                    Text(profileVM.isLoading ? "Загрузка..." : "Зарегистрироваться")
                         .bold()
                         .frame(width: 300, height: 40)
                         .foregroundColor(Color.white)
                         .background(Color.customBlue)
-                        .cornerRadius(15)
+                        .cornerRadius(10)
                 }
+                .disabled(profileVM.isLoading)
             }
             .padding()
             VStack (spacing: 10){
@@ -90,58 +97,55 @@ struct AuthView: View {
                 }
                 
                 Button{
-                    isRegistration = true
+                    isRegistration = false
                 } label: {
-                    Text("Регистрация")
+                    Text("Авторизация")
                         .bold()
                         .frame(width: 300, height: 40)
                         .font(.system(size: 16, weight: .semibold))
                         .cornerRadius(10)
                         .foregroundColor(Color.customBlue)
                 }
-                    
+                
             }
-                    .toolbar {
-                        ToolbarItem(placement: .topBarLeading) {
-                            HStack {
-                                Image(selectedTheme == .light ? "MAI_LIGHT" : "MAI_DARK")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 60, height: 60)
-                                
-                                Text("MAI Students")
-                                    .font(.system(size: 17, weight: .semibold))
-                            }
-                        }
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    HStack {
+                        Image(colorScheme == .light ? "MAI_LIGHT" : "MAI_DARK")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 60, height: 60)
                         
-                        ToolbarItem(placement: .topBarTrailing) {
-                            Picker("Lang", selection: $selectedLang) {
-                                Image(systemName: "globe").tag(Lang.ru)
-                                    .foregroundColor(.white)
-                            }.pickerStyle(MenuPickerStyle())
-                        }
-                        
-                        ToolbarItem(placement: .topBarTrailing) {
-                            Picker("Theme", selection: $selectedTheme) {
-                                Image(systemName: "sun.max.fill").tag(Theme.light)
-                                Image(systemName: "moon.fill").tag(Theme.dark)
-                            }.pickerStyle(SegmentedPickerStyle())
-            
-                        }
-                        
+                        Text("MAI Students")
+                            .font(.system(size: 17, weight: .semibold))
                     }
-                    .preferredColorScheme(selectedTheme == .light ? .light : .dark)
-                    
-                Spacer()
+                }
+                
+                ToolbarItem(placement: .topBarTrailing) {
+                    Picker("Lang", selection: $selectedLang) {
+                        Image(systemName: "globe").tag(Lang.ru)
+                            .foregroundColor(.white)
+                    }.pickerStyle(MenuPickerStyle())
+                }
+                
+                ToolbarItem(placement: .topBarTrailing) {
+                                Picker("Theme", selection: $selectedTheme) {
+                                    Image(systemName: "circle.lefthalf.filled").tag(Theme.system)
+                                    Image(systemName: "sun.max.fill").tag(Theme.light)
+                                    Image(systemName: "moon.fill").tag(Theme.dark)
+                                }.pickerStyle(SegmentedPickerStyle())
+                            }
+                
+            }
+            .preferredColorScheme(colorScheme == .light ? .light : .dark)
             
-            
-        }
+        Spacer()
+    
+    
+            }
     }
 }
 
-
-
-//
-////#Preview {
-////    AuthView()
-////}
+//#Preview {
+//    RegView()
+//}

@@ -1,10 +1,3 @@
-//
-//  CourseAndGroupErrorView.swift
-//  MAIApp
-//
-//  Created by Михаил Рахимов on 10.01.2025.
-//
-
 import SwiftUI
 
 struct GroupErrorView: View {
@@ -20,7 +13,3 @@ struct GroupErrorView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
-
-//#Preview {
-//    CourseAndGroupErrorView()
-//}

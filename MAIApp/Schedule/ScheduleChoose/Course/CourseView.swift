@@ -1,34 +1,49 @@
-//
-//  CourseView.swift
-//  MAIApp
-//
-//  Created by Руслан on 08.12.2024.
-//
-
 import SwiftUI
 
 struct CourseView: View {
+    @EnvironmentObject var groupSelectionModel: GroupSelectionModel
+    @Environment(\.colorScheme) var colorScheme
     let course: String
     var body: some View {
-        HStack {
-            VStack(alignment: .leading) {
-                Text("курс")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                Text(course.isEmpty
-                     ? "Не выбран"
-                     : course)
-                    .font(.headline)
+        NavigationStack {
+            HStack {
+                if !groupSelectionModel.selectedFaculty.isEmpty {
+                    
+                    NavigationLink(destination: ChooseCourseView()) {
+                        VStack(alignment: .leading) {
+                            Text("курс")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                            
+                            Text(groupSelectionModel.selectedCourse.isEmpty
+                                 ? "Не выбран"
+                                 : groupSelectionModel.selectedCourse)
+                            .font(.headline)
+                            
+                            
+                        }
+                        .foregroundStyle(colorScheme == .dark ? .white : .black)
+                        Spacer()
+                    }
+                }
+                
+                else {
+                    VStack(alignment: .leading) {
+                        Text("курс")
+                            .font(.caption)
+                            .foregroundStyle(colorScheme == .dark ? .white : .black)
+                        Text("Выберите институт")
+                            .font(.headline)
+                            .foregroundStyle(colorScheme == .dark ? .white : .black)
+                    }
+                    .foregroundStyle(colorScheme == .dark ? .white : .black)
+                    Spacer()
+                }
             }
-            .foregroundColor(.black)
-            Spacer()
+            .padding(.horizontal)
+            .padding(.vertical, 12)
+            .frame(maxWidth: .infinity)
         }
-        .padding(.horizontal)
-        .padding(.vertical, 12)
-        .frame(maxWidth: .infinity)
+        
     }
 }
-
-//#Preview {
-//    CourseView(course: "2 курс")
-//}

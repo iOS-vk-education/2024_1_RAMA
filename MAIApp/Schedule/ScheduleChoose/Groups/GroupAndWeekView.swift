@@ -1,15 +1,7 @@
-//
-//  GroupAndWeekView.swift
-//  MAIApp
-//
-//  Created by Андрей  Насибулин  on 18.11.2024.
-//
-
 import SwiftUI
 
 struct GroupAndWeekView: View {
     @Binding var weekNumber: Int
-//    @Binding var selectedGroup: String
     @Binding var selectedDay: Date
     @EnvironmentObject var groupSelectionModel: GroupSelectionModel
     @Environment(\.colorScheme) var colorScheme
@@ -20,6 +12,7 @@ struct GroupAndWeekView: View {
                 NavigationLink(destination: ChooseGroupView()) {
                     GroupView(group: groupSelectionModel.selectedGroup)
                 }
+                .foregroundStyle(colorScheme == .dark ? .white : .black)
                 Rectangle()
                     .fill(.gray)
                     .opacity(0.25)
@@ -27,6 +20,7 @@ struct GroupAndWeekView: View {
                 NavigationLink(destination: ChooseWeekView(weekNumber: $weekNumber, selectedDay: $selectedDay)) {
                     WeekView(weekNumber: $weekNumber)
                 }
+                .foregroundStyle(colorScheme == .dark ? .white : .black)
             }
             .frame(maxWidth: .infinity)
             .fixedSize(horizontal: false, vertical: true)
@@ -39,6 +33,4 @@ struct GroupAndWeekView: View {
     }
 }
 
-//#Preview {
-//    GroupAndWeekView(weekNumber: .constant(52))
-//}
+

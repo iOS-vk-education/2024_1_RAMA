@@ -1,37 +1,59 @@
-//
-//  ProfileView.swift
-//  MAIApp
-//
-//  Created by Михаил Рахимов on 12.01.2025.
-//
-
 import SwiftUI
 
 struct ProfileView: View {
-    @Environment(\.colorScheme) var colorScheme
-    @State private var isRegistration = false
+//    @State var name: String = "Имя не указано"
+//    @State var group: String = "Группа не указана"
+    @StateObject var profileVM: ProfileViewModel
+//    @StateObject private var profileData = ProfileData()
+    
     
     var body: some View {
-        NavigationStack {
-            if isRegistration {
-                RegView(isRegistration: $isRegistration)
-            } else {
-                AuthView(isRegistration: $isRegistration)
+        NavigationStack{
+            ScrollView{
+                VStack(spacing: 20) {
+                    VStack{
+                        Image(systemName: "person.circle.fill")
+                            .resizable()
+                            .frame(width: 80, height: 80)
+                            .foregroundColor(.customGray)
+                        
+                        Text(profileVM.name)
+                            .font(.title2)
+                        
+                        Text(profileVM.group)
+                            .foregroundColor(.gray)
+                    }
+                    .padding()
+                    
+                    VStack(alignment: .leading, spacing: 15) {
+                        Text("Настройки")
+                            .font(.headline)
+                        NavigationLink(destination: ChooseAppIconView()) {
+                            ListItemView(title: "Изменить иконку приложения")
+                        }
+                        NavigationLink(destination: ChooseGroupView()) {
+                            ListItemView(title: "Изменить группу")
+                        }
+                    }
+                    
+                }
+                .padding()
+                .navigationTitle("Профиль")
+                .navigationBarTitleDisplayMode(.inline)
+            }
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        
+                    } label: {
+                        Text("получить группы")
+                    }
+                }
             }
         }
     }
 }
 
-enum Theme: String {
-    case light
-    case dark
-}
-
-enum Lang: String {
-    case ru
-    case en
-    case ch
-}
 //#Preview {
-//    ProfileView()
+//    ProfileView(name: "Михаил Рахимов", group: "М8О-101БВ-24")
 //}

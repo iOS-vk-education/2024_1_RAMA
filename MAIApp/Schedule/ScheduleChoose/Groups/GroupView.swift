@@ -1,16 +1,10 @@
-//
-//  GroupView.swift
-//  MAIApp
-//
-//  Created by Андрей  Насибулин  on 18.11.2024.
-//
-
 import SwiftUI
 
 struct GroupView: View {
     @EnvironmentObject var groupSelectionModel: GroupSelectionModel
-    let group: String
     @Environment(\.colorScheme) var colorScheme
+    
+    let group: String
 
     var body: some View {
         HStack {
@@ -24,18 +18,12 @@ struct GroupView: View {
                     )
                     .font(.headline)
             }
-            .foregroundColor(.black)
             Spacer()
         }
         .padding(.horizontal)
         .padding(.vertical, 12)
         .frame(maxWidth: .infinity)
-        
-        .preferredColorScheme(colorScheme == .light ? .light : .dark)
     }
         
 }
 
-//#Preview {
-//    GroupView()
-//}

@@ -1,10 +1,3 @@
-//
-//  FacultyErrorView.swift
-//  MAIApp
-//
-//  Created by Михаил Рахимов on 14.01.2025.
-//
-
 import SwiftUI
 
 struct LevelErrorView: View {
@@ -21,6 +14,3 @@ struct LevelErrorView: View {
     }
 }
 
-//#Preview {
-//    FacultyErrorView()
-//}

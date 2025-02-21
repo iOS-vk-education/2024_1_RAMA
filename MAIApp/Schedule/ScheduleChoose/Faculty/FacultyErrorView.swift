@@ -1,26 +1,19 @@
-//
-//  FacultyErrorView.swift
-//  MAIApp
-//
-//  Created by Михаил Рахимов on 14.01.2025.
-//
-
 import SwiftUI
 
 struct FacultyErrorView: View {
     var body: some View {
         VStack {
             Spacer()
-            Text("Выберите институт")
+            Image("error_schedule")
+                .padding(.top, 50)
+            Spacer()
+            Text("Не указаны все данные")
                 .foregroundColor(.gray)
                 .font(.system(size: 16, weight: .medium, design: .rounded))
-                .padding(.top, 225)
+                .padding(.top, 15)
             Spacer()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
 
-//#Preview {
-//    FacultyErrorView()
-//}

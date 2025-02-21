@@ -57,22 +57,4 @@ struct DeadlinesView: View {
         }
     }
 }
-//    func deleteDeadline(at offsets: IndexSet) {
-//            deadlines.remove(atOffsets: offsets)
-//    }
-    
-//    func deleteDeadline(offsets: IndexSet) {
-//        let filteredDeadlines = filterDeadlinesByDay(deadlines: deadlines, date: date)
-//        for offset in offsets {
-//            if let index = deadlines.firstIndex(where: { $0.id == filteredDeadlines[offset].id }) {
-//                deadlines.remove(at: index)
-//            }
-//        }
-//    }
-//}
-    
 
-
-//#Preview {
-//    DeadlinesView()
-//}

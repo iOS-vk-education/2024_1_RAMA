@@ -1,10 +1,3 @@
-//
-//  LessonViewModel.swift
-//  MAIApp
-//
-//  Created by Михаил Рахимов on 01.02.2025.
-//
-
 import Foundation
 import Combine
 
@@ -27,8 +20,9 @@ class LessonViewModel: ObservableObject {
         dataTask?.cancel()
 
         let groupHash = group.md5Hash()
-
-        guard let url = URL(string: "https://public.mai.ru/schedule/data/\(groupHash).json") else {
+        let urlBase = "https://public.mai.ru/schedule/data/\(groupHash).json"
+        let urlBackend = "https://mai-students.ru/api/v1/schedule/\(groupHash)"
+        guard let url = URL(string: urlBase) else {
             DispatchQueue.main.async {
                 self.error = NSError(domain: "Invalid URL", code: 0, userInfo: nil)
             }
@@ -91,4 +85,14 @@ class LessonViewModel: ObservableObject {
         isLoading = false
     }
 }
+
+extension LessonViewModel {
+    func getSchedule(for date: Date) -> DaySchedule? {
+        let dateString = DateFormatter.yyyyMMdd.string(from: date)
+        // Обращаемся к свойству schedule в GroupSchedule
+        return groupSchedule?.schedule[dateString]
+    }
+}
+
+
 

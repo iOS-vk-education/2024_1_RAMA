@@ -1,10 +1,3 @@
-//
-//  ManyCourseView.swift
-//  MAIApp
-//
-//  Created by Михаил Рахимов on 20.12.2024.
-//
-
 import SwiftUI
 
 struct ManyCourseView: View {
@@ -17,7 +10,6 @@ struct ManyCourseView: View {
                             )
                     .onTapGesture {
                         groupSelectionModel.selectedCourse = course
-                        
                     }
             }
         }
@@ -25,8 +17,3 @@ struct ManyCourseView: View {
     }
 }
 
-
-
-//#Preview {
-//    ManyCourseView()
-//}
