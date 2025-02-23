@@ -8,19 +8,24 @@
 import SwiftUI
 
 struct ManyCourseView: View {
-    let viewModel: ManyCourseViewModel
+    @EnvironmentObject var groupSelectionModel: GroupSelectionModel
     var body: some View {
         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
-            ForEach(viewModel.availableCourses, id: \.name) { course in
-                OneCourseView(course: course.name)
+            ForEach(groupSelectionModel.courses, id: \.self) { course in
+                OneCourseView(course: course,
+                              isSelected: course == groupSelectionModel.selectedCourse
+                            )
                     .onTapGesture {
-                        viewModel.selectedCourse = course
+                        groupSelectionModel.selectedCourse = course
+                        
                     }
             }
         }
         .padding()
     }
 }
+
+
 
 //#Preview {
 //    ManyCourseView()

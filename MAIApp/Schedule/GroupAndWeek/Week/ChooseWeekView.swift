@@ -6,51 +6,37 @@ struct ChooseWeekView: View {
     @Environment(\.dismiss) private var dismiss
     
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 8) {
-//                    ForEach(Array(allWeeksInYear().enumerated()), id: \.element) { index, week in
-//                        OneWeekView(week: week)
-//                            .onTapGesture {
-//                                weekNumber = index + 1
-//                                let days = daysOfWeek(for: weekNumber)
-//                                print("Выбрана неделя: \(weekNumber), первый день: \(days.first?.formatted() ?? "nil")")
-//                                if !days.isEmpty {
-//                                    selectedDay = days[0]
-//                                }
-//                                dismiss()
-//                                
-//                            }
-//                    }
-                    ForEach(allWeeksInYear(), id: \.number) { week in
-                        OneWeekView(
-                            week: week.displayText,
-                            isSelected: week.number == weekNumber // Добавляем параметр
-                        )
-                        .onTapGesture {
-                            weekNumber = week.number
-                            selectedDay = week.startDate // Устанавливаем selectedDay на понедельник
-                            dismiss()
+            NavigationStack {
+                ScrollViewReader { placement in
+                    ScrollView {
+                        VStack(alignment: .leading, spacing: 8) {
+                            ForEach(allWeeksInYear(), id: \.number) { week in
+                                OneWeekView(
+                                    week: week.displayText,
+                                    isSelected: week.number == weekNumber
+                                )
+                                .id(week.number)
+                                .onTapGesture {
+                                    weekNumber = week.number
+                                    selectedDay = week.startDate
+                                    dismiss()
+                                }
+                            }
+                        }
+                        .padding()
+                    }
+                    .navigationTitle("Неделя")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .onAppear {
+                        DispatchQueue.main.async {
+                            placement.scrollTo(weekNumber, anchor: .center)
                         }
                     }
                 }
-                .padding()
-                .navigationTitle("Неделя")
-                .navigationBarTitleDisplayMode(.inline)
             }
         }
-    }
     
-    struct WeekData {
-        let number: Int       // Номер недели (1, 2, 3...)
-        let startDate: Date   // Понедельник недели
-        let endDate: Date     // Воскресенье недели
-        var displayText: String {
-            let formatter = DateFormatter()
-            formatter.dateFormat = "dd.MM"
-            return "\(formatter.string(from: startDate)) – \(formatter.string(from: endDate))"
-        }
-    }
+    
     
     func allWeeksInYear() -> [WeekData] {
         var calendar = Calendar.current
@@ -91,6 +77,22 @@ struct ChooseWeekView: View {
         
         return weeks
     }
+    
+    
+    //                    ForEach(Array(allWeeksInYear().enumerated()), id: \.element) { index, week in
+    //                        OneWeekView(week: week)
+    //                            .onTapGesture {
+    //                                weekNumber = index + 1
+    //                                let days = daysOfWeek(for: weekNumber)
+    //                                print("Выбрана неделя: \(weekNumber), первый день: \(days.first?.formatted() ?? "nil")")
+    //                                if !days.isEmpty {
+    //                                    selectedDay = days[0]
+    //                                }
+    //                                dismiss()
+    //
+    //                            }
+    //                    }
+    
 //    func allWeeksInYear() -> [String] {
 //        var calendar = Calendar.current
 //        calendar.locale = Locale(identifier: "ru_RU")

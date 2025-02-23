@@ -15,7 +15,10 @@ struct FacultyView: View {
                 Text("институт")
                     .font(.caption)
                     .foregroundStyle(.secondary)
-                Text(faculty)
+                Text(faculty.isEmpty
+                     ? "Не выбран"
+                     : faculty
+                )
                     .font(.headline)
             }
             .foregroundColor(.black)
@@ -27,6 +30,6 @@ struct FacultyView: View {
     }
 }
 
-#Preview {
-    FacultyView(faculty: "Институт №3")
-}
+//#Preview {
+//    FacultyView(faculty: "Институт №3")
+//}

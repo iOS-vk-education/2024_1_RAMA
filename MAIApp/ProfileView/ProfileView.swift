@@ -1,37 +1,59 @@
-//
-//  ProfileView.swift
-//  MAIApp
-//
-//  Created by Михаил Рахимов on 12.01.2025.
-//
 
 import SwiftUI
 
 struct ProfileView: View {
-    @Environment(\.colorScheme) var colorScheme
-    @State private var isRegistration = false
-    
     var body: some View {
-        NavigationStack {
-            if isRegistration {
-                RegView(isRegistration: $isRegistration)
-            } else {
-                AuthView(isRegistration: $isRegistration)
+        NavigationStack{
+            ScrollView{
+                VStack(spacing: 20) {
+                    VStack{
+                        Image(systemName: "person.circle.fill")
+                            .resizable()
+                            .frame(width: 80, height: 80)
+                            .foregroundColor(.customGray)
+                        
+                        Text("Михаил Рахимов")
+                            .font(.title2)
+                        
+                        Text("М8О-101БВ-24")
+                            .foregroundColor(.gray)
+                    }
+                    .padding()
+                    
+                    VStack(alignment: .leading, spacing: 15) {
+                        Text("Настройки")
+                            .font(.headline)
+                        NavigationLink(destination: ChooseAppIconView()) {
+                            ListItemView(title: "Изменить иконку приложения")
+                        }
+                    }
+                    
+                }
+                .padding()
+                .navigationTitle("Профиль")
+                .navigationBarTitleDisplayMode(.inline)
             }
         }
     }
 }
 
-enum Theme: String {
-    case light
-    case dark
+struct ListItemView: View {
+    let title: String
+    
+    var body: some View {
+        HStack {
+            Text(title)
+                .foregroundColor(.black)
+            Spacer()
+            Image(systemName: "chevron.right")
+                .foregroundColor(.gray)
+        }
+        .padding()
+        .background(Color(.customGray))
+        .cornerRadius(15)
+    }
 }
 
-enum Lang: String {
-    case ru
-    case en
-    case ch
+#Preview {
+    ProfileView()
 }
-//#Preview {
-//    ProfileView()
-//}

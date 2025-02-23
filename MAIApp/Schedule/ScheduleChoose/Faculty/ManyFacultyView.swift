@@ -1,28 +1,48 @@
-//
-//  ManyFacultyView.swift
-//  MAIApp
-//
-//  Created by Михаил Рахимов on 20.12.2024.
-//
-
 import SwiftUI
 
 struct ManyFacultyView: View {
-    let viewModel: ManyFacultyViewModel
+    @EnvironmentObject var groupSelectionModel: GroupSelectionModel
     var body: some View {
-        LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
-            ForEach(viewModel.availabeFaculties, id: \.name) { faculty in
-                OneFacultyView(faculty: faculty.name)
-                    .onTapGesture {
-                        viewModel.selectedFaculty = faculty
-                        
+        VStack {
+            if groupSelectionModel.faculties.isEmpty {
+                Text("Нет доступных институтов")
+                    .foregroundColor(.gray)
+                    .padding()
+            }
+            else {
+                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
+                    ForEach(groupSelectionModel.faculties, id: \.self) { faculty in
+                        OneFacultyView(faculty: faculty,
+                                       isSelected: faculty == groupSelectionModel.selectedFaculty
+                                    )
+                            .onTapGesture {
+                                groupSelectionModel.selectedFaculty = faculty
+                            }
                     }
-                    
+                }
+                .padding()
             }
         }
-        .padding()
     }
 }
+
+
+//struct ManyFacultyView: View {
+//    let viewModel: ManyFacultyViewModel
+//    var body: some View {
+//        LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
+//            ForEach(viewModel.availabeFaculties, id: \.name) { faculty in
+//                OneFacultyView(faculty: faculty.name)
+//                    .onTapGesture {
+//                        viewModel.selectedFaculty = faculty
+//                        
+//                    }
+//                    
+//            }
+//        }
+//        .padding()
+//    }
+//}
 
 
 //struct ManyGroupsView: View {

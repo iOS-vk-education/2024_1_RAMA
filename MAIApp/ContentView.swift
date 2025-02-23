@@ -26,7 +26,7 @@ struct ContentView: View {
                 .tabItem {
                     Label("Дедлайны", systemImage: "flame")
                 }
-            ProfileView()
+            ProfileAuthView()
                 .tabItem {
                     Label("Профиль", systemImage: "person.circle.fill")
                 }

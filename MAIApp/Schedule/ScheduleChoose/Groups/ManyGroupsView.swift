@@ -18,18 +18,17 @@ import SwiftUI
 //}
 
 struct ManyGroupsView: View {
-    @Binding var selectedLevel: Level
-//    @State var selectedGroup: Group?
+    @ObservedObject var groupSelectionModel: GroupSelectionModel
     var onGroupSelected: (Group) -> Void
-    
+
     let columns = [GridItem(.flexible()), GridItem(.flexible())]
-    
+
     var body: some View {
         LazyVGrid(columns: columns) {
-            ForEach(selectedLevel.groups, id: \.name) { group in
+            ForEach(groupSelectionModel.groups, id: \.name) { group in
                 OneGroupView(group: group.name)
                     .onTapGesture {
-//                        selectedGroup = group
+                        groupSelectionModel.selectedGroup = group.name
                         onGroupSelected(group)
                         print(group.name)
                     }
@@ -37,6 +36,28 @@ struct ManyGroupsView: View {
         }
     }
 }
+//struct ManyGroupsView: View {
+//    @Binding var selectedLevel: Level
+////    @State var selectedGroup: Group?
+//    var onGroupSelected: (Group) -> Void
+//    
+//    let columns = [GridItem(.flexible()), GridItem(.flexible())]
+//    
+//    var body: some View {
+//        LazyVGrid(columns: columns) {
+//            ForEach(selectedLevel.groups, id: \.name) { group in
+//                OneGroupView(group: group.name)
+//                    .onTapGesture {
+////                        selectedGroup = group
+//                        onGroupSelected(group)
+//                        print(group.name)
+//                    }
+//            }
+//        }
+//    }
+//}
+
+
 
 //#Preview {
 //    ManyGroupsView()

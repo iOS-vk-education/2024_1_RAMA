@@ -43,7 +43,7 @@ struct AuthView: View {
                 Button{
                     
                 } label: {
-                    Text("Авторизоваться")
+                    Text("Войти")
                         .bold()
                         .frame(width: 300, height: 40)
                         .foregroundColor(Color.white)

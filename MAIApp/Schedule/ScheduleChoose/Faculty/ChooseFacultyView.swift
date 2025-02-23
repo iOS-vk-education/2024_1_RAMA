@@ -1,17 +1,7 @@
-//
-//  ChooseFacultyView.swift
-//  MAIApp
-//
-//  Created by Руслан on 08.12.2024.
-//
-
 import SwiftUI
 
-
 struct ChooseFacultyView: View {
-    @Binding var selectedFaculty: Faculty
-    @Binding var selectedCourse: Course
-    @Binding var selectedLevel: Level
+    @EnvironmentObject var groupSelectionModel: GroupSelectionModel
     @Environment(\.dismiss) private var dismiss
     @Environment(\.colorScheme) var colorScheme
     
@@ -19,20 +9,22 @@ struct ChooseFacultyView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 8) {
-                    ManyFacultyView(viewModel: ManyFacultyViewModel(selectedFaculty: $selectedFaculty, model: .init()))
+                    ManyFacultyView()
                 }
                 .padding()
                 .navigationTitle("Институт")
                 .navigationBarTitleDisplayMode(.inline)
             }
         }
-        .onChange(of: selectedFaculty) { _, _ in
-            selectedCourse = .empty
-            selectedLevel = .empty
+        .onChange(of: groupSelectionModel.selectedFaculty) { _, _ in
             dismiss()
+            groupSelectionModel.selectedCourse = ""
+            groupSelectionModel.selectedLevel = ""
+            groupSelectionModel.selectedGroup = ""
         }
     }
 }
+
 //struct ChooseFacultyView: View {
 //    @Binding var selectedFaculty: Faculty
 //    @Environment(\.dismiss) private var dismiss

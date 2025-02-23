@@ -1,14 +1,8 @@
-//
-//  OneFacultyView.swift
-//  MAIApp
-//
-//  Created by Михаил Рахимов on 20.12.2024.
-//
-
 import SwiftUI
 
 struct OneFacultyView: View {
     let faculty: String;
+    let isSelected: Bool
     var body: some View {
         VStack {
             Text(faculty)
@@ -16,14 +10,10 @@ struct OneFacultyView: View {
                 .frame(maxWidth: .infinity)
                 .overlay(
                     RoundedRectangle(cornerRadius: 10)
-                        .stroke(.gray, lineWidth: 1)
-                        .opacity(0.25)
+                        .stroke(isSelected ? Color.customBlue : Color.gray, lineWidth: 1)
+                        .opacity(isSelected ? 0.75 : 0.25)
                 )
                 .font(.subheadline)
         }
     }
-}
-
-#Preview {
-    OneFacultyView(faculty: "Институт №3")
 }

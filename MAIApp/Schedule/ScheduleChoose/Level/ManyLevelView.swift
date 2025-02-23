@@ -8,13 +8,15 @@
 import SwiftUI
 
 struct ManyLevelView: View {
-    let viewModel: ManyLevelViewModel
+    @EnvironmentObject var groupSelectionModel: GroupSelectionModel
     var body: some View {
         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
-            ForEach(viewModel.availableLevels, id: \.id) { level in
-                OneLevelView(type: level.name)
+            ForEach(groupSelectionModel.levels, id: \.self) { level in
+                OneLevelView(level: level,
+                             isSelected: level == groupSelectionModel.selectedLevel
+                            )
                     .onTapGesture {
-                        viewModel.selectedLevel = level
+                        groupSelectionModel.selectedLevel = level
                     }
             }
         }

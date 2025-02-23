@@ -5,6 +5,7 @@ struct LessonsView: View {
     @Binding var selectedGroup: String
     @ObservedObject var viewModel: LessonViewModel
     @State private var error: Error?
+//    var scheduleMode: ScheduleMode
     
     var body: some View {
         ScrollView {
