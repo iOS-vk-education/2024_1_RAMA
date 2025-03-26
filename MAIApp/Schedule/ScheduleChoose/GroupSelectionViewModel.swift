@@ -1,80 +1,26 @@
 import Foundation
 import SwiftUI
 
-
-
-protocol ScheduleManagerDescription {
-    func loadGroups() async throws -> [Group]
-}
-
-enum ScheduleManagerError: Error {
-    case invalidData
-}
-
-extension Sequence where Iterator.Element: Hashable {
-    func unique() -> [Iterator.Element] {
-        Array(Set(self))
-    }
-}
-
-class GroupSelectionModel: ObservableObject {
+final class GroupSelectionViewModel: ObservableObject {
     @Published var allGroups: [Group] = []
     @Published var selectedFaculty: String = ""
     @Published var selectedCourse: String = ""
     @Published var selectedLevel: String = ""
     @Published var selectedGroup: String = ""
-    @Published var facultyIsSelected: String = ""
     
+    @Published var isLoading = false
     
-    // MARK: - Data Loading
-        @MainActor
-        func loadGroups() async {
-//            let urlBackend = "https://public.mai.ru/schedule/data/groups.json"
-            let urlBase = "https://public.mai.ru/schedule/data/groups.json"
-            
-            guard let url = URL(string: urlBase) else {
-                print("❌ [ERROR] Invalid URL")
-                return
+    func loadDecodedGroups() {
+        Task(priority: .high) { @MainActor in
+            defer {
+                isLoading = false
             }
             
-            do {
-                print("⏳ [NETWORK] Starting data download...")
-                let (data, response) = try await URLSession.shared.data(from: url)
-                
-                // HTTP Status Check
-                _ = response as? HTTPURLResponse
-//                if httpResponse = response as? HTTPURLResponse {
-//                    print("🔍 [NETWORK] HTTP Status Code: \(httpResponse.statusCode)")
-//                    guard 200..<300 ~= httpResponse.statusCode else {
-//                        print("❌ [ERROR] Server returned status: \(httpResponse.statusCode)")
-//                        return
-//                    }
-//                }
-                
-                // Raw Data Logging
-                print("📥 [DATA] Received \(data.count) bytes")
-                _ = String(data: data, encoding: .utf8)
-//                if jsonString = String(data: data, encoding: .utf8) {
-//                    print("📄 [JSON] Raw data preview:\n\(String(jsonString.prefix(500)))...")
-//                }
-                
-                // Decoding
-                print("🔨 [DECODE] Starting JSON decoding...")
-                let decodedGroups = try JSONDecoder().decode([Group].self, from: data)
-                
-                DispatchQueue.main.async {
-                    self.allGroups = decodedGroups
-                    print("✅ [SUCCESS] Loaded \(decodedGroups.count) groups")
-                    self.logAvailableData()
-                }
-                
-            } catch let error as DecodingError {
-                handleDecodingError(error)
-            } catch {
-                print("❌ [ERROR] Network request failed: \(error.localizedDescription)")
-            }
+            isLoading = true
+            self.allGroups = try await ScheduleManager.shared.loadGroups()
+            self.logAvailableData()
         }
-        
+    }
         // MARK: - Data Filtering
         var faculties: [String] {
             let faculties = Set(allGroups.map { $0.fac })

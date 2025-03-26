@@ -2,20 +2,20 @@ import SwiftUI
 
 struct LevelView: View {
     @Environment(\.colorScheme) var colorScheme
-    @EnvironmentObject var groupSelectionModel: GroupSelectionModel
+    @EnvironmentObject var groupSelectionViewModel: GroupSelectionViewModel
     var body: some View {
         NavigationStack {
             HStack {
-                if !groupSelectionModel.selectedCourse.isEmpty {
-                    NavigationLink(destination: ChooseLevelView()) {
+                if !groupSelectionViewModel.selectedCourse.isEmpty {
+                    NavigationLink(destination: ChooseLevelView(groupSelectionViewModel: groupSelectionViewModel)) {
                         VStack(alignment: .leading) {
                             Text("тип образования")
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                             
-                            Text(groupSelectionModel.selectedLevel.isEmpty
+                            Text(groupSelectionViewModel.selectedLevel.isEmpty
                                  ? "Не выбран"
-                                 : groupSelectionModel.selectedLevel)
+                                 : groupSelectionViewModel.selectedLevel)
                             .font(.headline)
                             
                             

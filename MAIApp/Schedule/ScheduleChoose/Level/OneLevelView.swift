@@ -3,6 +3,7 @@ import SwiftUI
 struct OneLevelView: View {
     let level: String
     let isSelected: Bool
+    
     var body: some View {
         VStack {
             Text(level)

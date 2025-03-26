@@ -1,14 +1,14 @@
 import SwiftUI
 
 struct FacultyAndCourseView: View {
-    @EnvironmentObject var groupSelectionModel: GroupSelectionModel
+    @ObservedObject var groupSelectionViewModel: GroupSelectionViewModel
     @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
         HStack(spacing: 0) {
             
-            NavigationLink(destination: ChooseFacultyView()) {
-                FacultyView(faculty: groupSelectionModel.selectedFaculty)
+            NavigationLink(destination: ChooseFacultyView(groupSelectionViewModel: groupSelectionViewModel)) {
+                FacultyView(faculty: groupSelectionViewModel.selectedFaculty)
             }
             Rectangle()
                 .fill(.gray)
@@ -16,12 +16,12 @@ struct FacultyAndCourseView: View {
                 .frame(width: 1)
             
             
-            if !groupSelectionModel.selectedFaculty.isEmpty {
-                            NavigationLink(destination: ChooseCourseView()) {
-                                CourseView(course: groupSelectionModel.selectedCourse)
+            if !groupSelectionViewModel.selectedFaculty.isEmpty {
+                NavigationLink(destination: ChooseCourseView(groupSelectionViewModel: groupSelectionViewModel)) {
+                    CourseView(groupSelectionViewModel: groupSelectionViewModel, course: groupSelectionViewModel.selectedCourse)
                             }
             } else {
-                CourseView(course: groupSelectionModel.selectedCourse)
+                CourseView(groupSelectionViewModel: groupSelectionViewModel, course: groupSelectionViewModel.selectedCourse)
                     .disabled(true)
                     .opacity(0.5)
             }

@@ -1,7 +1,8 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject private var groupSelectionModel = GroupSelectionModel()
+    @ObservedObject private var groupSelectionViewModel = GroupSelectionViewModel()
+    @ObservedObject private var weekViewModel = WeekViewModel()
     @StateObject private var profileVM = ProfileViewModel()
     @State private var showAuth = true
     @Environment(\.colorScheme) var colorScheme
@@ -16,8 +17,8 @@ struct ContentView: View {
                 .tabItem {
                     Label("Карта", systemImage: "map.circle.fill")
                 }
-            ScheduleView()
-                .environmentObject(groupSelectionModel)
+            ScheduleView(groupSelectionViewModel: groupSelectionViewModel, weekViewModel: weekViewModel)
+                .environmentObject(groupSelectionViewModel)
                 .tabItem {
                     Label("Расписание", systemImage: "calendar")
                 }

@@ -29,11 +29,6 @@
 			path = MAIApp;
 			sourceTree = "<group>";
 		};
-		AA60EC092D660F7A00CA850A /* MaiMap */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = MaiMap;
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,7 +47,6 @@
 			children = (
 				5C9B8D792CEB692B0053A484 /* MAIApp */,
 				5C9B8D782CEB692A0053A484 /* Products */,
-				AA60EC092D660F7A00CA850A /* MaiMap */,
 			);
 			sourceTree = "<group>";
 		};
@@ -81,7 +75,6 @@
 			);
 			fileSystemSynchronizedGroups = (
 				5C9B8D792CEB692B0053A484 /* MAIApp */,
-				AA60EC092D660F7A00CA850A /* MaiMap */,
 			);
 			name = MAIApp;
 			packageProductDependencies = (

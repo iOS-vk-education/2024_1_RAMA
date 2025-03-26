@@ -2,7 +2,8 @@ import SwiftUI
 
 struct OneGroupView: View {
     let group: String
-    var isSelected: Bool 
+    var isSelected: Bool
+    
     var body: some View {
         Text(group)
             .padding(8)

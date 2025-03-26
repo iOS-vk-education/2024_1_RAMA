@@ -1,23 +1,25 @@
 import SwiftUI
 
 struct CourseView: View {
-    @EnvironmentObject var groupSelectionModel: GroupSelectionModel
+    @ObservedObject var groupSelectionViewModel: GroupSelectionViewModel
     @Environment(\.colorScheme) var colorScheme
+    
     let course: String
+    
     var body: some View {
         NavigationStack {
             HStack {
-                if !groupSelectionModel.selectedFaculty.isEmpty {
+                if !groupSelectionViewModel.selectedFaculty.isEmpty {
                     
-                    NavigationLink(destination: ChooseCourseView()) {
+                    NavigationLink(destination: ChooseCourseView(groupSelectionViewModel: groupSelectionViewModel)) {
                         VStack(alignment: .leading) {
                             Text("курс")
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                             
-                            Text(groupSelectionModel.selectedCourse.isEmpty
+                            Text(groupSelectionViewModel.selectedCourse.isEmpty
                                  ? "Не выбран"
-                                 : groupSelectionModel.selectedCourse)
+                                 : groupSelectionViewModel.selectedCourse)
                             .font(.headline)
                             
                             

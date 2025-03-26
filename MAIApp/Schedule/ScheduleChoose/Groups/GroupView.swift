@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct GroupView: View {
-    @EnvironmentObject var groupSelectionModel: GroupSelectionModel
+    @ObservedObject var groupSelectionViewModel: GroupSelectionViewModel
     @Environment(\.colorScheme) var colorScheme
     
     let group: String
@@ -12,9 +12,9 @@ struct GroupView: View {
                 Text("группа")
                     .font(.caption)
                     .foregroundStyle(.secondary)
-                Text(groupSelectionModel.selectedGroup == ""
+                Text(groupSelectionViewModel.selectedGroup == ""
                      ? "Не выбрана"
-                     : groupSelectionModel.selectedGroup
+                     : groupSelectionViewModel.selectedGroup
                     )
                     .font(.headline)
             }

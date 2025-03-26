@@ -1,8 +1,7 @@
 import SwiftUI
 
-
 struct ChooseCourseView: View {
-    @EnvironmentObject var groupSelectionModel: GroupSelectionModel
+    @ObservedObject var groupSelectionViewModel: GroupSelectionViewModel
     @Environment(\.dismiss) private var dismiss
     @Environment(\.colorScheme) var colorScheme
     
@@ -17,9 +16,9 @@ struct ChooseCourseView: View {
                 .navigationBarTitleDisplayMode(.inline)
             }
         }
-        .onChange(of: groupSelectionModel.selectedCourse) { _, _ in
+        .onChange(of: groupSelectionViewModel.selectedCourse) { _, _ in
             dismiss()
-            groupSelectionModel.selectedLevel = ""
+            groupSelectionViewModel.selectedLevel = ""
         }
     }
 }

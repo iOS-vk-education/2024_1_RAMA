@@ -2,7 +2,7 @@ import SwiftUI
 
 struct ChooseLevelView: View {
     @Environment(\.dismiss) private var dismiss
-    @EnvironmentObject var groupSelectionModel: GroupSelectionModel
+    @ObservedObject var groupSelectionViewModel: GroupSelectionViewModel
     
     var body: some View {
         NavigationStack {
@@ -15,7 +15,7 @@ struct ChooseLevelView: View {
                 .navigationBarTitleDisplayMode(.inline)
             }
         }
-        .onChange(of: groupSelectionModel.selectedLevel) { _, _ in
+        .onChange(of: groupSelectionViewModel.selectedLevel) { _, _ in
             dismiss()
         }
     }
