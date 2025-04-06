@@ -1,24 +1,38 @@
-//
-//  ContentView.swift
-//  MAIApp
-//
-//  Created by Андрей  Насибулин  on 13.11.2024.
-//
-
 import SwiftUI
 
 struct ContentView: View {
+    @ObservedObject private var groupSelectionViewModel = GroupSelectionViewModel()
+    @ObservedObject private var weekViewModel = WeekViewModel()
+    @StateObject private var profileVM = ProfileViewModel()
+    @State private var showAuth = true
+    @Environment(\.colorScheme) var colorScheme
+    @AppStorage("theme") var selectedTheme: Theme = .system
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        TabView {
+            MainView()
+                .tabItem {
+                    Label("Главная", systemImage: "house")
+                }
+            MapView()
+                .tabItem {
+                    Label("Карта", systemImage: "map.circle.fill")
+                }
+            ScheduleView(groupSelectionViewModel: groupSelectionViewModel, weekViewModel: weekViewModel)
+                .environmentObject(groupSelectionViewModel)
+                .tabItem {
+                    Label("Расписание", systemImage: "calendar")
+                }
+            DeadlinesView()
+                .tabItem {
+                    Label("Дедлайны", systemImage: "flame")
+                }
+            ProfileAuthView()
+                .environmentObject(profileVM)
+                .tabItem {
+                    Label("Профиль", systemImage: "person.circle.fill")
+                }
+            
         }
-        .padding()
+        .preferredColorScheme(selectedTheme.colorScheme)
     }
-}
-
-#Preview {
-    ContentView()
 }
