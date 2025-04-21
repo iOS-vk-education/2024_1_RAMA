@@ -27,12 +27,11 @@ class MapViewModel: ObservableObject {
         points.removeAll()
         verticalConnections.removeAll()
 
-        // Загрузка вертикальных соединений
         if let connections: [VerticalConnection] = JSONLoader.load("all_vertical_connections.json") {
             verticalConnections = connections
         }
+        
 
-        // Загрузка данных для всех этажей
         let fileNames = ["test_map1.json", "test_map2.json", "test_map3.json", "test_map4.json", "test_map5.json", "test_map6.json"]
         for (index, fileName) in fileNames.enumerated() {
             if let floorData: FloorData = JSONLoader.load(fileName) {
@@ -70,15 +69,12 @@ class MapViewModel: ObservableObject {
     }
     
     func officesForFloor(_ floor: Int) -> [Office] {
-        // Находим все точки (Point) для указанного этажа
         let pointsForFloor = points.filter { $0.floor == floor }
         
-        // Извлекаем имена или идентификаторы офисов из точек
         let officeIds = pointsForFloor
-            .filter { $0.type == "room" || $0.type == "elevator" || $0.type == "stairs" } // Фильтруем только нужные типы
-            .map { $0.id.replacingOccurrences(of: "office_", with: "") } // Убираем префикс "office_" для соответствия имени
+            .filter { $0.type == "room" || $0.type == "elevator" || $0.type == "stairs" }
+            .map { $0.id.replacingOccurrences(of: "office_", with: "") }
         
-        // Фильтруем офисы, чьи имена соответствуют точкам на этаже
         return offices.filter { office in
             officeIds.contains { id in
                 office.name.lowercased().contains(id.lowercased()) || office.name == id

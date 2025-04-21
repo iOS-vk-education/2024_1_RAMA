@@ -7,7 +7,6 @@ final class GroupSelectionViewModel: ObservableObject {
     @Published var selectedCourse: String = ""
     @Published var selectedLevel: String = ""
     @Published var selectedGroup: String = ""
-    
     @Published var isLoading = false
     
     func loadDecodedGroups() {
@@ -17,7 +16,7 @@ final class GroupSelectionViewModel: ObservableObject {
             }
             
             isLoading = true
-            self.allGroups = try await ScheduleManager.shared.loadGroups()
+            self.allGroups = try await ScheduleManager.loadGroups()
             self.logAvailableData()
         }
     }

@@ -1,41 +1,23 @@
 import SwiftUI
-
-struct Deadline: Identifiable {
-    let id = UUID()
-    let priority: Priority
-    let title: String
-    let description: String
-    let date: Date
-}
-
-func filterDeadlinesByDay(deadlines: [Deadline], date: Date) -> [Deadline] {
-    let calendar = Calendar.current
-
-    return deadlines.filter { deadline in
-        calendar.isDate(deadline.date, inSameDayAs: date)
-    }
-}
+import SwiftData
 
 struct DeadlinesView: View {
-    @State private var deadlines = [
-        Deadline(priority: Priority.low, title: "низкий приоритет", description: "Низкий", date: Date.now),
-        Deadline(priority: Priority.normal, title: "средний приоритет", description: "Средний", date: Date.now),
-        Deadline(priority: Priority.high, title: "высокий приоритет", description: "Высокий", date: Date.now)
-    ]
+    @Environment(\.modelContext) private var modelContext
+    @Query(sort: \Deadline.date) private var deadlines: [Deadline]
+    @State private var selectedDate = Date()
     @State private var isOpened = false
-    @State var date = Date()
-    
+
     var body: some View {
         NavigationStack {
             
                 VStack {
-                    CalendarView(date: $date)
+                    CalendarView(date: $selectedDate)
                     ScrollView {
-                        ForEach(filterDeadlinesByDay(deadlines: deadlines, date: date)) { deadline in
-                            DeadlineTitleView(deadline: deadline, deadlines: $deadlines)
-                        }            
+                        ForEach(filteredDeadlines) { deadline in
+                            DeadlineTitleView(deadline: deadline)
+                        }
                         Spacer()
-                    }
+                        }
                 }
                 .padding()
                 .navigationTitle("Дедлайны")
@@ -50,11 +32,16 @@ struct DeadlinesView: View {
                     }
                 }
                 .sheet(isPresented: $isOpened) {
-                    CreateDeadlineView(deadlines: $deadlines)
+                    CreateDeadlineView(selectedDate: $selectedDate)
                 }
             
             
         }
     }
+    private var filteredDeadlines: [Deadline] {
+        deadlines.filter { Calendar.current.isDate($0.date, inSameDayAs: selectedDate) }
+    }
 }
+
+
 

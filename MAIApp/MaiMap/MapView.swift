@@ -26,7 +26,7 @@ struct MapKitView: UIViewControllerRepresentable {
 }
 
 struct MapView: View {
-    @StateObject private var viewModel = MapViewModel()
+    @ObservedObject private var viewModel = MapViewModel()
     @State var currentFloor: Int = 1
     @State var fromRoom: String = ""
     @State var toRoom: String = ""
@@ -195,5 +195,9 @@ struct MapView: View {
     }
 
 
+
+#Preview {
+    MapView()
+}
 
 

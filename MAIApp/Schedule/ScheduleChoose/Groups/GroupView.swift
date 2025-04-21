@@ -17,13 +17,20 @@ struct GroupView: View {
                      : groupSelectionViewModel.selectedGroup
                     )
                     .font(.headline)
+                    
             }
             Spacer()
         }
         .padding(.horizontal)
         .padding(.vertical, 12)
+        .padding(.leading, 4)
         .frame(maxWidth: .infinity)
     }
         
 }
 
+#Preview {
+    GroupView(
+        groupSelectionViewModel: GroupSelectionViewModel(), group: "М8О-101БВ-24"
+    )
+}

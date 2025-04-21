@@ -3,7 +3,7 @@ import Foundation
 class JSONLoader {
     static func load<T: Decodable>(_ filename: String) -> T? {
         guard let url = Bundle.main.url(forResource: filename, withExtension: nil) else {
-            print("Файл \(filename) не найден в бандле")
+//            print("Файл \(filename) не найден в бандле")
             return nil
         }
         

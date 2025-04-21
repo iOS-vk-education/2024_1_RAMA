@@ -8,7 +8,7 @@ struct BadgeComponentView: View {
             .padding(.vertical, 4)
             .padding(.horizontal, 8)
             .background(.gray.opacity(0.1))
-            .clipShape(RoundedRectangle(cornerRadius: 8))
+            .clipShape(RoundedRectangle(cornerRadius: 6))
     }
 }
 

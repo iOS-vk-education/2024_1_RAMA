@@ -6,106 +6,93 @@
 //
 
 import Foundation
-
-final class WeekViewModel: ObservableObject {
-    func weekRange(for weekNumber: Int) -> String {
-        var calendar = Calendar.current
-        calendar.locale = Locale(identifier: "ru_RU")
-        calendar.firstWeekday = 2 //понедельник как первый день недели
-        
-        let currentYear = calendar.component(.year, from: Date())
-        
-        //1 января текущего года
-        guard let startOfYear = calendar.date(from: DateComponents(year: currentYear, month: 1, day: 1)) else {
-            return ""
-        }
-        
-        //первый понедельник года
-        var firstMonday = startOfYear
-        while calendar.component(.weekday, from: firstMonday) != calendar.firstWeekday {
-            firstMonday = calendar.date(byAdding: .day, value: 1, to: firstMonday)!
-        }
-        
-        //переходим к нужной неделе
-        let daysToAdd = (weekNumber - 1) * 7
-        guard let startOfWeek = calendar.date(byAdding: .day, value: daysToAdd, to: firstMonday) else {
-            return ""
-        }
-        
-        //конец недели (воскресенье)
-        guard let endOfWeek = calendar.date(byAdding: .day, value: 6, to: startOfWeek) else {
-            return ""
-        }
-        
-        //форматирование даты
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd.MM"
-        
-        let startDateString = dateFormatter.string(from: startOfWeek)
-        let endDateString = dateFormatter.string(from: endOfWeek)
-        
-        return "\(startDateString) – \(endDateString)"
+class WeekViewModel: ObservableObject {
+    @Published var selectedWeek: Int = 0
+    @Published var selectedDate: Date = Date()
+    @Published private(set) var allWeeks: [WeekData] = []
+    @Published private(set) var groupSchedule: GroupSchedule?
+    @Published private(set) var isLoading = false
+    private var dataTask: URLSessionDataTask?
+    private let scheduleManager: ScheduleManagerDescription
+    
+    init(
+        scheduleManager: ScheduleManagerDescription
+    ) {
+        self.scheduleManager = scheduleManager
     }
     
-    func allWeeksInYear() -> [WeekData] {
-        var calendar = Calendar.current
-        calendar.locale = Locale(identifier: "ru_RU")
-        calendar.firstWeekday = 2
+    var selectedWeekRange: String {
+        allWeeks.first { $0.number == selectedWeek }?.displayText ?? "Не выбрана"
+    }
+    
+    private let calendar: Calendar = {
+        var cal = Calendar.current
+        cal.locale = Locale(identifier: "ru_RU")
+        cal.firstWeekday = 2
+        return cal
+    }()
+    
+    private let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd.MM.yyyy"
+        return formatter
+    }()
+    
+    func getWeekNumber(from date: Date = Date()) -> Int {
+        let calendar = Calendar.current
+        return calendar.component(.weekOfYear, from: date) - 1
+    }
+    
+    func loadWeeks(from schedule: GroupSchedule) {
+        let dates = schedule.schedule.keys.compactMap { dateFormatter.date(from: $0) }
         
-        let currentYear = calendar.component(.year, from: Date())
+        let groupedDates = Dictionary(
+            grouping: dates,
+            by: { calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: $0) }
+        )
+        
         var weeks: [WeekData] = []
         
-        guard let startOfYear = calendar.date(from: DateComponents(year: currentYear, month: 1, day: 1)) else {
-            return []
-        }
-        
-        var firstMonday = startOfYear
-        while calendar.component(.weekday, from: firstMonday) != calendar.firstWeekday {
-            guard let nextDay = calendar.date(byAdding: .day, value: 1, to: firstMonday) else { break }
-            firstMonday = nextDay
-        }
-        
-        var currentMonday = firstMonday
-        var weekNumber = 1
-        
-        while calendar.component(.year, from: currentMonday) == currentYear {
-            guard let endDate = calendar.date(byAdding: .day, value: 6, to: currentMonday) else { break }
+        for (components, datesInGroup) in groupedDates {
+            guard let startDate = calendar.date(from: components),
+                  let endDate = calendar.date(byAdding: .day, value: 6, to: startDate) else { continue }
             
-            let week = WeekData(
+            let weekDates = (0..<7).compactMap {
+                calendar.date(byAdding: .day, value: $0, to: startDate)
+            }
+            
+            let weekNumber = components.weekOfYear ?? 0
+            let weekData = WeekData(
                 number: weekNumber,
-                startDate: currentMonday,
-                endDate: endDate
+                startDate: startDate,
+                endDate: endDate,
+                dates: weekDates
             )
             
-            weeks.append(week)
-            weekNumber += 1
-            
-            guard let nextMonday = calendar.date(byAdding: .weekOfYear, value: 1, to: currentMonday) else { break }
-            currentMonday = nextMonday
+            weeks.append(weekData)
         }
         
-        return weeks
+        DispatchQueue.main.async {
+            self.allWeeks = weeks.sorted { $0.startDate < $1.startDate }
+            self.selectedWeek = self.allWeeks.first?.number ?? 0
+            self.selectedDate = self.allWeeks.first?.startDate ?? Date()
+        }
     }
     
-    func daysOfWeek(for weekNumber: Int) -> [Date] {
-        var calendar = Calendar.current
-        calendar.locale = Locale(identifier: "ru_RU")
-        calendar.firstWeekday = 2
-        
-        let currentYear = calendar.component(.year, from: Date())
-        
-        var components = DateComponents()
-        components.year = currentYear
-        components.weekOfYear = weekNumber
-        components.weekday = calendar.firstWeekday
-        
-        guard let firstDayOfWeek = calendar.date(from: components) else {
-            return []
-        }
-        
-        return (0..<7).compactMap { i in
-            calendar.date(byAdding: .day, value: i, to: firstDayOfWeek)
+    
+    
+    // MARK: - Public Methods
+    func loadWeeksForGroup(for group: String) {
+        Task(priority: .high) { @MainActor in
+            defer {
+                isLoading = false
+            }
+            
+            isLoading = true
+            let schedule = try await scheduleManager.loadSchedule(for: group)
+            //            self.groupSchedule = schedule
+            self.loadWeeks(from: schedule)
         }
     }
-
+    
 }

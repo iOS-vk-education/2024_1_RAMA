@@ -1,9 +1,13 @@
 import SwiftUI
 
 struct ContentView: View {
-    @ObservedObject private var groupSelectionViewModel = GroupSelectionViewModel()
-    @ObservedObject private var weekViewModel = WeekViewModel()
+    @StateObject private var groupSelectionViewModel = GroupSelectionViewModel()
+    @StateObject private var weekViewModel = WeekViewModel(scheduleManager: ScheduleManager())
     @StateObject private var profileVM = ProfileViewModel()
+    @StateObject private var scheduleModeViewModel = ScheduleModeViewModel()
+    @StateObject private var lessonViewModel = LessonViewModel()
+    
+    
     @State private var showAuth = true
     @Environment(\.colorScheme) var colorScheme
     @AppStorage("theme") var selectedTheme: Theme = .system
@@ -17,7 +21,7 @@ struct ContentView: View {
                 .tabItem {
                     Label("Карта", systemImage: "map.circle.fill")
                 }
-            ScheduleView(groupSelectionViewModel: groupSelectionViewModel, weekViewModel: weekViewModel)
+            ScheduleView(groupSelectionViewModel: groupSelectionViewModel, weekViewModel: weekViewModel, scheduleModeViewModel: scheduleModeViewModel, lessonViewModel: lessonViewModel)
                 .environmentObject(groupSelectionViewModel)
                 .tabItem {
                     Label("Расписание", systemImage: "calendar")
@@ -31,6 +35,11 @@ struct ContentView: View {
                 .tabItem {
                     Label("Профиль", systemImage: "person.circle.fill")
                 }
+//            ProfileView(profileVM: profileVM, groupSelectionViewModel: groupSelectionViewModel)
+//                .environmentObject(profileVM)
+//                .tabItem {
+//                    Label("Профиль", systemImage: "person.circle.fill")
+//                }
             
         }
         .preferredColorScheme(selectedTheme.colorScheme)

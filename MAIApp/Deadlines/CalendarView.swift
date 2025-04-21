@@ -16,6 +16,4 @@ struct CalendarView: View {
     }
 }
 
-//#Preview {
-//    CalendarView(date: .constant(Date()))
-//}
+

@@ -11,28 +11,44 @@ struct GroupAndWeekView: View {
     var body: some View {
         NavigationStack {
             HStack(spacing: 0) {
-                NavigationLink(destination: ChooseGroupView(groupSelectionViewModel: groupSelectionViewModel)) {
+                NavigationLink(destination: ChooseGroupView(groupSelectionViewModel: groupSelectionViewModel, weekViewModel: weekViewModel)) {
                     GroupView(groupSelectionViewModel: groupSelectionViewModel, group: groupSelectionViewModel.selectedGroup)
                 }
                 .foregroundStyle(colorScheme == .dark ? .white : .black)
-                Rectangle()
-                    .fill(.gray)
-                    .opacity(0.25)
-                    .frame(width: 1)
+//                Rectangle()
+//                    .fill(.gray)
+//                    .opacity(0.25)
+//                    .frame(width: 1)
                 NavigationLink(destination: ChooseWeekView(weekViewModel: weekViewModel, weekNumber: $weekNumber, selectedDay: $selectedDay)) {
                     WeekView(weekNumber: $weekNumber, weekViewModel: weekViewModel)
                 }
+                .foregroundColor(groupSelectionViewModel.selectedGroup.isEmpty ? .gray : .white)
+                .disabled(groupSelectionViewModel.selectedGroup.isEmpty)
                 .foregroundStyle(colorScheme == .dark ? .white : .black)
             }
             .frame(maxWidth: .infinity)
             .fixedSize(horizontal: false, vertical: true)
-            .overlay(
-                    RoundedRectangle(cornerRadius: 12)
-                        .stroke(.gray, lineWidth: 1)
-                        .opacity(0.25)
-                    )
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Color.cardBackground)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                
+            )
+
+            
+        }
+        .onAppear {
+            print("📱 GroupAndWeekView появился, weekNumber: \(weekNumber), selectedDay: \(selectedDay)")
         }
     }
+    
 }
 
-
+//#Preview {
+//    GroupAndWeekView(
+//        weekNumber: .constant(1),
+//        selectedDay: .constant(Date()),
+//        groupSelectionViewModel: GroupSelectionViewModel(),
+//        weekViewModel: WeekViewModel()
+//    )
+//}

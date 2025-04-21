@@ -7,6 +7,8 @@ struct ScheduleView: View {
     @State private var isMenuOpen = false
     @ObservedObject var groupSelectionViewModel: GroupSelectionViewModel
     @ObservedObject var weekViewModel: WeekViewModel
+    @ObservedObject var scheduleModeViewModel: ScheduleModeViewModel
+    @ObservedObject var lessonViewModel: LessonViewModel
     
     @Environment(\.colorScheme) var colorScheme
     
@@ -26,11 +28,11 @@ struct ScheduleView: View {
                     GroupAndWeekView(weekNumber: $weekNumber, selectedDay: $selectedDay, groupSelectionViewModel: groupSelectionViewModel, weekViewModel: weekViewModel)
                     
                     DatePickerView(selectedDay: $selectedDay, weekNumber: $weekNumber)
-                    
+                    ScheduleModeView(viewModel: scheduleModeViewModel)
                     LessonsView(
                         selectedDay: $selectedDay,
                         selectedGroup: $groupSelectionViewModel.selectedGroup,
-                        viewModel: LessonViewModel()
+                        viewModel: lessonViewModel
                     )
                     
                     Spacer()
@@ -40,13 +42,14 @@ struct ScheduleView: View {
                 
                 else if scheduleMode == .week {
                     
-                    GroupAndWeekView(weekNumber: $weekNumber, selectedDay: $selectedDay, groupSelectionViewModel: groupSelectionViewModel, weekViewModel: weekViewModel)
+                    GroupAndWeekView(weekNumber: $weekViewModel.selectedWeek, selectedDay: $selectedDay, groupSelectionViewModel: groupSelectionViewModel, weekViewModel: weekViewModel)
                     
-                    LessonsView(
-                        selectedDay: $selectedDay,
-                        selectedGroup: $groupSelectionViewModel.selectedGroup,
-                        viewModel: LessonViewModel()
-                    )
+//                    WeekLessonsView(
+//                        selectedDay: $selectedDay,
+//                        selectedGroup: $groupSelectionViewModel.selectedGroup,
+//                        viewModel: lessonViewModel,
+//                        scheduleModeViewModel: scheduleModeViewModel
+//                    )
                     
                     Spacer()
                 }
@@ -54,42 +57,42 @@ struct ScheduleView: View {
             .padding()
             .navigationTitle("Расписание")
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Menu {
-                        Picker("Режим", selection: $scheduleMode) {
-                            ForEach(ScheduleMode.allCases, id: \.self) { mode in
-                                HStack(spacing: 12) {
-                                    Image(iconName(for: mode))
-                                        .resizable()
-                                        .frame(width: 20, height: 20)
-                                    Text(mode.rawValue)
-                                }
-                                .tag(mode)
-                            }
-                        }
-                    } label: {
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 15)
-                                .frame(width: 40, height: 40)
-                                .foregroundColor(isMenuOpen ? .blue : Color(.systemGray5))
-                            
-                            if isMenuOpen {
-                                Image(systemName: "xmark")
-                                    .foregroundColor(.white)
-                                    .font(.system(size: 20, weight: .bold))
-                            } else {
-                                Image(iconName(for: scheduleMode))
-                                    .resizable()
-                                    .frame(width: 24, height: 24)
-                                    .foregroundColor(.primary)
-                            }
-                        }
-                        .animation(.easeInOut(duration: 0.2), value: isMenuOpen)
-                    }
-                    .onTapGesture { isMenuOpen.toggle() }
-                }
-            }
+//            .toolbar {
+//                ToolbarItem(placement: .topBarTrailing) {
+//                    Menu {
+//                        Picker("Режим", selection: $scheduleMode) {
+//                            ForEach(ScheduleMode.allCases, id: \.self) { mode in
+//                                HStack(spacing: 12) {
+//                                    Image(iconName(for: mode))
+//                                        .resizable()
+//                                        .frame(width: 20, height: 20)
+//                                    Text(mode.rawValue)
+//                                }
+//                                .tag(mode)
+//                            }
+//                        }
+//                    } label: {
+//                        ZStack {
+//                            RoundedRectangle(cornerRadius: 15)
+//                                .frame(width: 40, height: 40)
+//                                .foregroundColor(isMenuOpen ? .blue : Color(.systemGray5))
+//                            
+//                            if isMenuOpen {
+//                                Image(systemName: "xmark")
+//                                    .foregroundColor(.white)
+//                                    .font(.system(size: 20, weight: .bold))
+//                            } else {
+//                                Image(iconName(for: scheduleMode))
+//                                    .resizable()
+//                                    .frame(width: 24, height: 24)
+//                                    .foregroundColor(.primary)
+//                            }
+//                        }
+//                        .animation(.easeInOut(duration: 0.2), value: isMenuOpen)
+//                    }
+//                    .onTapGesture { isMenuOpen.toggle() }
+//                }
+//            }
         }
     }
 }

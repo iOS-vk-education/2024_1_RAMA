@@ -1,39 +1,24 @@
-//
-//  UpdateDeadlineView.swift
-//  MAIApp
-//
-//  Created by Андрей  Насибулин  on 10.12.2024.
-//
-
+import Foundation
 import SwiftUI
+import SwiftData
 
 struct UpdateDeadlineView: View {
     @Environment(\.dismiss) private var dismiss
-    var deadline: Deadline
-    @Binding var deadlines: [Deadline]
-    
-    @State private var title: String
-    @State private var description: String
-    @State private var date: Date
-    @State private var priority: Priority
-    
+    @Bindable var deadline: Deadline
+    @Environment(\.modelContext) private var modelContext
     @State private var isEditable = false
+    @State private var draftDate: Date
     
-    
-    init(deadline: Deadline, deadlines: Binding<[Deadline]>) {
+    init(deadline: Deadline) {
         self.deadline = deadline
-        _deadlines = deadlines
-        _title = State(initialValue: deadline.title)
-        _description = State(initialValue: deadline.description)
-        _date = State(initialValue: deadline.date)
-        _priority = State(initialValue: deadline.priority)
+        self._draftDate = State(initialValue: deadline.date)
     }
-    
+
     var body: some View {
         NavigationView {
             Form {
                 Section {
-                    Picker("Приоритет", selection: $priority) {
+                    Picker("Приоритет", selection: $deadline.priority) {
                         ForEach(Priority.allCases, id: \.self) { level in
                             Text(level.rawValue)
                         }
@@ -42,24 +27,30 @@ struct UpdateDeadlineView: View {
                 }
                 
                 Section {
-                    TextField("Название", text: $title)
+                    TextField("Название", text: $deadline.title)
                         .scrollDismissesKeyboard(.interactively)
                         .disabled(!isEditable)
-                    TextField("Заметки", text: $description, axis: .vertical)
+                    TextField("Заметки", text: $deadline.details, axis: .vertical)
                         .disabled(!isEditable)
                 }
                 
                 Section {
-                    DatePicker("Дата", selection: $date)
+                    DatePicker("Дата", selection: $draftDate)
                         .environment(\.locale, Locale.init(identifier: "ru_RU"))
                         .disabled(!isEditable)
                 }
                 
                 Section {
-                    Button("Удалить дедлайн", role: .destructive) {
-                        deleteDeadline()
+                    withAnimation {
+                        Button("Удалить дедлайн", role: .destructive) {
+                            modelContext.delete(deadline)
+                            
+                        }
                     }
+                    
+                    
                 }
+                
             }
             .navigationTitle("Просмотр")
             .navigationBarTitleDisplayMode(.inline)
@@ -72,12 +63,16 @@ struct UpdateDeadlineView: View {
                 ToolbarItem(placement: .topBarTrailing) {
                     if (!isEditable) {
                         Button("Изменить") {
-                            isEditable = true;
+                            isEditable = true
                         }
                         .fontWeight(.semibold)
                     } else {
                         Button("Сохранить") {
-                            saveChanges()
+                            dismiss()
+                            deadline.date = draftDate
+                            try? modelContext.save()
+                            isEditable = false
+                            
                         }
                         .fontWeight(.semibold)
                     }
@@ -85,39 +80,7 @@ struct UpdateDeadlineView: View {
             }
         }
     }
-    private func deleteDeadline() {
-        dismiss()
-        deadlines.removeAll{
-            $0.id == deadline.id
-        }
-        
-    }
-    
-    private func saveChanges() {
-        isEditable = false
-        if let i = deadlines.firstIndex(where: { $0.id == deadline.id }) {
-            deadlines[i] = Deadline(priority: priority, title: title, description: description, date: date)
-            print("обновлен дедлайн: \(deadlines[i])")
-        }
-        else {
-            print("ошибка")
-        }
-    }
-//    private func saveChanges() {
-//        if let index = deadlines.firstIndex(where: {
-//            $0.id == deadline.id
-//            }
-//        )
-//        {
-//            deadlines[index] = deadline
-//        }
-//        isEditable = false
-//    }
+
 }
 
 
-
-
-//#Preview {
-//    UpdateDeadlineView(deadline: Deadline(priority: Priority.low, title: "Title", description: "Desc", date: Date.now))
-//}

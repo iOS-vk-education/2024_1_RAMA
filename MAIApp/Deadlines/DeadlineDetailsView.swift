@@ -1,29 +1,17 @@
 import SwiftUI
+import SwiftData
 
 struct DeadlineDetailsView: View {
+    @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
-    @State private var taskDescription: String = ""
-    @State private var endDate: Date = Date()
-    @State private var priority: Priority = .normal
+    @Bindable var deadline: Deadline
     @State private var isDatePickerVisible: Bool = false
-    @Binding var deadlines: [Deadline]
-    var deadline: Deadline
-    
-    
-    init(deadlines: Binding<[Deadline]>, deadline: Deadline) {
-            _deadlines = deadlines
-            self.deadline = deadline
-            _taskDescription = State(initialValue: deadline.description)
-            _endDate = State(initialValue: deadline.date)
-            _priority = State(initialValue: deadline.priority)
-        }
-    
-    
+
     var body: some View {
         NavigationView {
             Form {
                 Section(header: Text("Описание задачи")) {
-                    TextEditor(text: $taskDescription)
+                    TextEditor(text: $deadline.details)
                         .frame(height: 100)
                         .padding(4)
                         .overlay(
@@ -41,19 +29,19 @@ struct DeadlineDetailsView: View {
                             Text("Выбранная дата:")
                                 .font(.subheadline)
                             Spacer()
-                            Text(endDate, style: .date)
+                            Text(deadline.date, style: .date)
                                 .font(.headline)
                                 .foregroundColor(.blue)
                         }
                     }
                     if isDatePickerVisible {
-                        DatePicker("Выберите дату", selection: $endDate, displayedComponents: [.date])
+                        DatePicker("Выберите дату", selection: $deadline.date, displayedComponents: [.date])
                             .datePickerStyle(WheelDatePickerStyle())
                     }
                 }
                 
                 Section(header: Text("Приоритет")) {
-                    Picker("Приоритет", selection: $priority) {
+                    Picker("Приоритет", selection: $deadline.priority) {
                         ForEach(Priority.allCases, id: \.self) { level in
                             Text(level.rawValue)
                         }
@@ -62,38 +50,15 @@ struct DeadlineDetailsView: View {
                 }
                 
                 Button(action: {
-                    deleteDeadline()
+                    modelContext.delete(deadline)
+                    dismiss()
                     }, label: {
                         Text("Delete")
-                 }
+                    }
                 )
             }
 
         }
     }
-    func deleteDeadline() {
-            // Находим индекс дедлайна
-            if let index = deadlines.firstIndex(where: { $0.id == deadline.id }) {
-                deadlines.remove(at: index) 
-            }
-            dismiss() // Закрываем экран
-        }
 }
 
-enum Priority: String, CaseIterable {
-    case low = "Низкий"
-    case normal = "Средний"
-    case high = "Высокий"
-    
-    var color: Color {
-        switch self {
-        case .low: return .green
-        case .normal: return .orange
-        case .high: return .red
-        }
-    }
-}
-
-//#Preview {
-//    DeadlineDetailsView()
-//}

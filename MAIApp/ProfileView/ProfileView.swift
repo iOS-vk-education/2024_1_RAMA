@@ -5,6 +5,7 @@ struct ProfileView: View {
 //    @State var group: String = "Группа не указана"
     @StateObject var profileVM: ProfileViewModel
     @ObservedObject var groupSelectionViewModel: GroupSelectionViewModel
+    @ObservedObject var weekViewModel: WeekViewModel
 //    @StateObject private var profileData = ProfileData()
     
     
@@ -32,7 +33,7 @@ struct ProfileView: View {
                         NavigationLink(destination: ChooseAppIconView()) {
                             ListItemView(title: "Изменить иконку приложения")
                         }
-                        NavigationLink(destination: ChooseGroupView(groupSelectionViewModel: groupSelectionViewModel)) {
+                        NavigationLink(destination: ChooseGroupView(groupSelectionViewModel: groupSelectionViewModel, weekViewModel: weekViewModel)) {
                             ListItemView(title: "Изменить группу")
                         }
                     }
@@ -47,7 +48,7 @@ struct ProfileView: View {
                     Button {
                         
                     } label: {
-                        Text("получить группы")
+                        Image(systemName: "bell")
                     }
                 }
             }

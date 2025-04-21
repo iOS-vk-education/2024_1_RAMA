@@ -11,8 +11,7 @@ struct LessonView: View {
             HStack (spacing: 4){
                 BadgeComponentView(content: timeRange)
                 Spacer()
-                BadgeComponentView(content: classroom)
-                BadgeComponentView(content: lessonType)
+                BadgeComponentForPlaceTypeView(type: lessonType, place: classroom)
             }
             VStack(alignment: .leading, spacing: 4) {
                 Text(lessonName)

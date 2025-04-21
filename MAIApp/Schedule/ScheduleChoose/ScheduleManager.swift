@@ -14,7 +14,7 @@ extension Sequence where Iterator.Element: Hashable {
 }
 
 protocol ScheduleManagerDescription {
-    func loadGroups() async throws -> [Group]
+    static func loadGroups() async throws -> [Group]
     func loadSchedule(for group: String) async throws -> GroupSchedule
 }
 
@@ -25,32 +25,25 @@ enum ScheduleManagerError: Error {
 
 final class ScheduleManager: ScheduleManagerDescription {
     
-    static let shared: ScheduleManagerDescription = ScheduleManager()
+//    static let shared: ScheduleManagerDescription = ScheduleManager()
     
-    // MARK: - Data Loading
-    func loadGroups() async throws -> [Group] {
+    static func loadGroups() async throws -> [Group] {
         //            let urlBackend = "https://public.mai.ru/schedule/data/groups.json"
         let urlBase = "https://public.mai.ru/schedule/data/groups.json"
         
         guard let url = URL(string: urlBase) else {
-            print("❌ [ERROR] Invalid URL")
-            return []
+            throw ScheduleManagerError.invalidUrl
         }
         
         do {
-            print("⏳ [NETWORK] Starting data download...")
             let (data, response) = try await URLSession.shared.data(from: url)
             
             // HTTP Status Check
             _ = response as? HTTPURLResponse
             
-            
-            // Raw Data Logging
-            print("📥 [DATA] Received \(data.count) bytes")
+//            print("📥 [DATA] Received \(data.count) bytes")
             _ = String(data: data, encoding: .utf8)
             
-            // Decoding
-            print("🔨 [DECODE] Starting JSON decoding...")
             let decoder = JSONDecoder()
             let decodedGroups = try decoder.decode([Group].self, from: data)
             
@@ -58,13 +51,12 @@ final class ScheduleManager: ScheduleManagerDescription {
         }
         catch {
             print("❌ [ERROR] \(error)")
-            return []
+            throw error
         }
     }
     
     private var dataTask: URLSessionDataTask?
     
-    // MARK: - Public Methods
     func loadSchedule(for group: String) async throws -> GroupSchedule {
         guard !group.isEmpty else {
             throw ScheduleManagerError.invalidData

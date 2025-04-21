@@ -9,12 +9,12 @@ import SwiftUI
 
 struct CreateDeadlineView: View {
     @Environment(\.dismiss) private var dismiss
-    @Binding var deadlines: [Deadline]
-    
-    @State private var title: String = ""
-    @State private var description: String = ""
-    @State private var date: Date = Date()
-    @State private var priority: Priority = .normal
+    @Environment(\.modelContext) private var modelContext
+    @Binding var selectedDate: Date
+    @State private var title = ""
+    @State private var details = ""
+    @State private var date = Date()
+    @State private var priority: Priority = .low
 
     var body: some View {
         NavigationView {
@@ -25,36 +25,17 @@ struct CreateDeadlineView: View {
                             Text(level.rawValue)
                         }
                     }
-                    
                 }
                 
                 Section {
                     TextField("Название", text: $title)
                         .scrollDismissesKeyboard(.interactively)
-                    TextField("Заметки", text: $description, axis: .vertical)
+                    TextField("Заметки", text: $details, axis: .vertical)
                 }
                 
                 Section {
-//                    Button(action: {
-//                        isDatePickerVisible.toggle()
-//                    }) {
-//                        HStack {
-//                            Text("Срок:")
-//                                .font(.subheadline)
-//                            Spacer()
-//                            Text(endDate, style: .date)
-//                                .font(.headline)
-//                                .foregroundColor(.blue)
-//                        }
-//                    }
-//                    if isDatePickerVisible {
-//                        DatePicker("Выберите дату", selection: $endDate, displayedComponents: [.date])
-//                            .datePickerStyle(WheelDatePickerStyle())
-//                    }
-                    
-                    DatePicker("Дата", selection: $date)
+                    DatePicker("Дата", selection: $selectedDate, in: Date()...)
                         .environment(\.locale, Locale.init(identifier: "ru_RU"))
-                
                 }
             }
             .navigationTitle("Создать")
@@ -68,29 +49,24 @@ struct CreateDeadlineView: View {
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Добавить") {
-                        let newDeadline = Deadline(
-                            priority: priority,
-                            title: title,
-                            description: description,
-                            date: date
-                        )
-                        deadlines.append(newDeadline)
-                        dismiss()
+                        saveDeadline()
                     }
                     .disabled(title.isEmpty)
                     .fontWeight(.semibold)
-//                    Button("Добавить") {
-//                        print("Новый дедлайн добавлен: \(title), \(taskDescription), \(endDate), \(priority.rawValue)")
-//                        dismiss()
-//                        
-//                    }
                 }
             }
         }
     }
+    private func saveDeadline() {
+        let newDeadline = Deadline(
+            priority: priority,
+            title: title,
+            details: details,
+            date: selectedDate
+        )
+        modelContext.insert(newDeadline)
+        dismiss()
+    }
 }
 
 
-#Preview {
-    CreateDeadlineView(deadlines: .constant([]))
-}

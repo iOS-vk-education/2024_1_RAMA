@@ -4,7 +4,9 @@ struct LessonsView: View {
     @Binding var selectedDay: Date
     @Binding var selectedGroup: String
     @ObservedObject var viewModel: LessonViewModel
+    
     @State private var error: Error?
+
 //    var scheduleMode: ScheduleMode
     
     var body: some View {
@@ -26,6 +28,7 @@ struct LessonsView: View {
         .onAppear {
             viewModel.loadScheduleForGroup(for: selectedGroup)
         }
+
     }
     
     // MARK: - View Components
@@ -47,7 +50,7 @@ struct LessonsView: View {
         }
     }
 
-    private func scheduleContent(for daySchedule: DaySchedule) -> some View {
+    func scheduleContent(for daySchedule: DaySchedule) -> some View {
         let allLessons = sortedTimes(in: daySchedule).flatMap { timeKey, pairs in
             sortedSubjects(in: pairs).map { subject, pair in
                 LessonItem(timeKey: timeKey, subject: subject, pair: pair)
@@ -77,6 +80,9 @@ struct LessonsView: View {
                 .stroke(.gray, lineWidth: 1)
                 .opacity(0.25)
         )
+        .onAppear {
+            print("LessonsView загружает расписание для \(selectedDay)")
+        }
     }
     
     // MARK: - Loading Skeleton
@@ -188,23 +194,23 @@ struct LessonsView: View {
     }
 }
 
-// MARK: - Extension
-extension String {
-    func toDate() -> Date? {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm:ss"
-        formatter.locale = Locale(identifier: "ru_RU")
-        return formatter.date(from: self)
-    }
-//Форматирует строку, делая первую букву каждого слова заглавной, остальные — строчными.
-    func toCapitalizedCase() -> String {
-        self
-            .lowercased()
-            .components(separatedBy: " ")
-            .map { $0.capitalized }
-            .joined(separator: " ")
-    }
-}
+//// MARK: - Extension
+//extension String {
+//    func toDate() -> Date? {
+//        let formatter = DateFormatter()
+//        formatter.dateFormat = "HH:mm:ss"
+//        formatter.locale = Locale(identifier: "ru_RU")
+//        return formatter.date(from: self)
+//    }
+////Форматирует строку, делая первую букву каждого слова заглавной, остальные — строчными.
+//    func toCapitalizedCase() -> String {
+//        self
+//            .lowercased()
+//            .components(separatedBy: " ")
+//            .map { $0.capitalized }
+//            .joined(separator: " ")
+//    }
+//}
 
 
 

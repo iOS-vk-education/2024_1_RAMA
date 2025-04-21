@@ -94,7 +94,7 @@ class MapViewController: UIViewController {
         let scene = SCNScene()
         scene.rootNode.enumerateChildNodes { (node, _) in
                 node.removeFromParentNode()
-        } //удаление старых нодов
+        }
         for office in offices {
             let box = SCNBox(
                 width: office.length,
@@ -118,11 +118,11 @@ class MapViewController: UIViewController {
             textGeometry.firstMaterial?.diffuse.contents = UIColor.black
             let textNode = SCNNode(geometry: textGeometry)
             textNode.position = SCNVector3(
-                0,                              // Центр по X
+                0,                                                  // Центр по X
                 office.coords[1] + office.width / 2 + 0.1,          // Над кубом (высота кабинета + отступ)
-                0                               // Центр по Z
+                0                                                   // Центр по Z
             )
-            textNode.scale = SCNVector3(0.015, 0.015, 0.015) // Масштаб текста
+            textNode.scale = SCNVector3(0.015, 0.015, 0.015)        // Масштаб текста
             
             textNode.eulerAngles = SCNVector3(Float(-Double.pi/2), 0, 0)
             
@@ -166,7 +166,6 @@ class MapViewController: UIViewController {
         }
         print("Scene cleaned, remaining nodes: \(scene.rootNode.childNodes.count)")
         
-        // Рендеринг офисов
         for office in offices {
             let box = SCNBox(
                 width: office.length,
@@ -174,44 +173,65 @@ class MapViewController: UIViewController {
                 length: office.height,
                 chamferRadius: 0
             )
-            box.firstMaterial?.diffuse.contents = UIColor(hex: office.color)
+            
+//            box.firstMaterial?.diffuse.contents = UIColor(hex: office.color)
+            let material = SCNMaterial()
+            material.diffuse.contents = UIColor(hex: office.color)
+            material.specular.contents = UIColor.white // Добавляем блики
+            material.specular.intensity = 0.2 // Не слишком яркие
+            material.roughness.contents = 0.7 // Немного шероховатости
+            material.lightingModel = .phong // Используем модель освещения Phong
+                
+            box.materials = [material]
+            
             let boxNode = SCNNode(geometry: box)
-            let officeId = office.name ?? "unknown"
+            let officeId = office.name
             boxNode.name = "office_\(officeId)"
+            
+            boxNode.castsShadow = true
             
             boxNode.position = SCNVector3(
                 CGFloat(office.coords[0]),
                 CGFloat(office.coords[1] + office.width / 2),
                 CGFloat(office.coords[2])
             )
-
-            // Создание текстового узла
+            
             let textGeometry = SCNText(string: office.name, extrusionDepth: 0.1)
-            textGeometry.font = UIFont.systemFont(ofSize: 12)
+            textGeometry.font = UIFont.systemFont(ofSize: 12) // Размер шрифта
             textGeometry.firstMaterial?.diffuse.contents = UIColor.black
             
+            textGeometry.alignmentMode = CATextLayerAlignmentMode.center.rawValue
+            
             let textNode = SCNNode(geometry: textGeometry)
-            textNode.position = SCNVector3(0, office.coords[1] + office.width / 2 + 0.1, 0)
-            textNode.scale = SCNVector3(0.01, 0.01, 0.01)
+        
+            
+            let centerOfBox = sqrt(pow(office.length, 2) + pow(office.height, 2)) / 2
+            print(centerOfBox, "office_\(officeId)")
+            
+            
+            textNode.position = SCNVector3(
+                0,                                                  // Центр по X
+                office.coords[1] + office.width / 2,                // Над кубом (высота кабинета + отступ)
+                0                                                   // Центр по Z
+            )
+//            let (_, maxBounds) = box.boundingBox
+//                textNode.position = SCNVector3(
+//                         0, // Центр по X относительно boxNode
+//                         maxBounds.y + 0.1, // Немного выше верхней грани boxNode
+//                         0 // Центр по Z относительно boxNode
+//            )
+            textNode.scale = SCNVector3(0.015, 0.015, 0.015)
+            
             textNode.eulerAngles = SCNVector3(Float(-Double.pi/2), 0, 0)
             
-            // Удаляем старый текст перед добавлением нового
-            boxNode.enumerateChildNodes { (child, _) in
-                if child.geometry is SCNText {
-                    child.removeFromParentNode()
-                }
-            }
+//            textNode.pivot = SCNMatrix4MakeTranslation(0.5, 0.5, 0)
+
             print("Text position for \(office.name): \(textNode.position)")
             
             // Добавляем новый текст
             boxNode.addChildNode(textNode)
-            
-            // Добавляем boxNode в сцену
-            if let name = boxNode.name, scene.rootNode.childNode(withName: name, recursively: false) == nil {
-                scene.rootNode.addChildNode(boxNode)
-            } else {
-                print("Skipping duplicate office node with name: \(boxNode.name ?? "nil")")
-            }
+            scene.rootNode.addChildNode(boxNode)
+
         }
         
         // Рендеринг точек
@@ -222,6 +242,7 @@ class MapViewController: UIViewController {
             node.geometry?.firstMaterial?.diffuse.contents = pointColor(for: point.type)
             let pointId = point.id ?? "unknown"
             node.name = "point_\(pointId)"
+            node.castsShadow = false
             
             if let name = node.name, scene.rootNode.childNode(withName: name, recursively: false) == nil {
                 scene.rootNode.addChildNode(node)
@@ -240,6 +261,21 @@ class MapViewController: UIViewController {
         
         scene3DView.scene = scene
         scene3DView.pointOfView = cameraNode
+        setupCameraConstraints()
+        
+    }
+    
+
+    
+    private func setupCameraConstraints() {
+        let cameraController = scene3DView.defaultCameraController
+            if currentMode == .mode2D {
+                cameraController.minimumVerticalAngle = 0
+                cameraController.maximumVerticalAngle = 0
+            } else {
+                cameraController.minimumVerticalAngle = Float.pi / 6
+//                cameraController.maximumVerticalAngle = -Float.pi / 6
+            }
     }
     
     private func setupCamera(for scene: SCNScene, mode: MapMode) -> SCNNode {
@@ -263,7 +299,7 @@ class MapViewController: UIViewController {
 
             scene.rootNode.addChildNode(cameraNode)
             return cameraNode
-        }
+    }
     
     private func setupLighting(scene: SCNScene, mode: MapMode) {
         scene.rootNode.childNodes.filter { $0.light != nil }.forEach { $0.removeFromParentNode() }
@@ -276,32 +312,50 @@ class MapViewController: UIViewController {
             ambientLightNode.light?.intensity = Double.pi / 2.0
             scene.rootNode.addChildNode(ambientLightNode)
         }
-        else {
-            let dirLight1 = SCNNode()
-            dirLight1.light = SCNLight()
-            dirLight1.light?.type = .directional
-            dirLight1.light?.color = UIColor.white
-            dirLight1.light?.intensity = 1000
-            dirLight1.light?.castsShadow = true
-            dirLight1.position = SCNVector3(-1, -1, -1)
-            dirLight1.look(at: SCNVector3(0, 0, 0))
-            scene.rootNode.addChildNode(dirLight1)
-            
-            let dirLight2 = SCNNode()
-            dirLight2.light = SCNLight()
-            dirLight2.light?.type = .directional
-            dirLight2.light?.color = UIColor.white
-            dirLight2.light?.intensity = 2000
-            dirLight2.light?.castsShadow = true
-            dirLight2.position = SCNVector3(1, 1, 1)
-            dirLight2.look(at: SCNVector3(0, 0, 0))
-            scene.rootNode.addChildNode(dirLight2)
-        }
         
-        scene3DView.scene?.rootNode.enumerateChildNodes { node, _ in
-            node.castsShadow = true
-        }
+        else {
+            let ambientLightNode = SCNNode()
+            ambientLightNode.light = SCNLight()
+            ambientLightNode.light?.type = .ambient
+            ambientLightNode.light?.color = UIColor(white: 0.3, alpha: 1.0) // Неяркий белый
+            ambientLightNode.light?.intensity = 1000 // Стандартная интенсивность
+            scene.rootNode.addChildNode(ambientLightNode)
+            
+            let directionalLight = SCNNode()
+            directionalLight.light = SCNLight()
+            directionalLight.light?.type = .directional
+            directionalLight.light?.color = UIColor(white: 0.8, alpha: 1.0)
+            directionalLight.light?.intensity = 1500
+            directionalLight.light?.castsShadow = true
+            
+            directionalLight.light?.shadowMode = .forward
+            directionalLight.light?.shadowMapSize = CGSize(width: 2048, height: 2048)
+            directionalLight.light?.shadowBias = 2.0
+            directionalLight.light?.maximumShadowDistance = 100
+            
+            directionalLight.position = SCNVector3(-15, 25, 15)
+            directionalLight.look(at: SCNVector3(0, 0, 0))
+            
+            
+            scene.rootNode.addChildNode(directionalLight)
+            
+//            let dirLight8 = SCNNode()
+//            dirLight8.light = SCNLight()
+//            dirLight8.light?.type = .directional
+//            dirLight8.light?.color = UIColor.white
+//            dirLight8.light?.intensity = 500
+//            dirLight8.light?.castsShadow = true
+//            dirLight8.position = SCNVector3(-20, -20, -20)
+//            dirLight8.look(at: SCNVector3(0, 0, 0))
+//            scene.rootNode.addChildNode(dirLight8)
+            
     }
+        
+        
+//        scene3DView.scene?.rootNode.enumerateChildNodes { node, _ in
+//            node.castsShadow = true
+//        }
+}
     
     private func renderPath(_ path: [String], in scene: SCNScene, mode: MapMode) {
 //        print("Rendering path: \(path)")
@@ -346,6 +400,7 @@ class MapViewController: UIViewController {
             // Создаем цилиндр для сегмента
             let tube = SCNCylinder(radius: 0.05, height: CGFloat(length))
             let tubeNode = SCNNode(geometry: tube)
+            tubeNode.castsShadow = false
             
             // Устанавливаем цвет и свойства материала
             let material = SCNMaterial()
@@ -385,6 +440,7 @@ class MapViewController: UIViewController {
             // Начинаем с нулевой прозрачности для анимации
             tubeNode.geometry?.firstMaterial?.transparency = 0.0
             
+            tubeNode.castsShadow = false
             pathContainer.addChildNode(tubeNode)
         }
         
@@ -588,6 +644,7 @@ class MapViewController: UIViewController {
     }
     
     @objc private func resetCamera() {
+        
         if currentMode == .mode3D {
             scene3DView.pointOfView?.position = SCNVector3(x: 0, y: 30, z: 15)
             scene3DView.pointOfView?.eulerAngles = SCNVector3(-Float.pi / 4, 0, 0)
@@ -619,4 +676,6 @@ extension MapViewController {
         }
     }
 }
+
+
 

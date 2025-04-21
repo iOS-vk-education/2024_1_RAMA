@@ -4,7 +4,7 @@ import Foundation
 struct WeekView: View {
     @Binding var weekNumber: Int
     @ObservedObject var weekViewModel: WeekViewModel
-    
+
 //    var isActive: Bool
     var body: some View {
         HStack {
@@ -12,7 +12,7 @@ struct WeekView: View {
                 Text("неделя")
                     .font(.caption)
                     .foregroundStyle(.secondary)
-                Text(weekViewModel.weekRange(for: weekNumber))
+                Text(weekViewModel.selectedWeek.description)
                     .font(.headline)
             }
 //            .foregroundColor(.black)

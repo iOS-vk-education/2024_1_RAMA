@@ -17,8 +17,8 @@ final class ProfileViewModel: ObservableObject {
     @Published var accessToken: String = ""
     @Published var refreshToken: String = ""
     
-    @Published var name: String = ""
-    @Published var group: String = ""
+    @Published var name: String = "Михаил Рахимов"
+    @Published var group: String = "М8О-101БВ-24"
     
     private let apiService = APIService()
     

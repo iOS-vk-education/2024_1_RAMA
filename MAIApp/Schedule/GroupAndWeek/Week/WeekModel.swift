@@ -1,9 +1,11 @@
 import Foundation
 
-struct WeekData {
-    let number: Int       // Номер недели (1, 2, 3...)
-    let startDate: Date   // Понедельник недели
-    let endDate: Date     // Воскресенье недели
+struct WeekData: Identifiable {
+    let id = UUID()
+    let number: Int
+    let startDate: Date   // Понедельник
+    let endDate: Date     // Воскресенье
+    let dates: [Date]
     var displayText: String {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd.MM"

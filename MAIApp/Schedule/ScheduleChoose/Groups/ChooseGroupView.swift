@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ChooseGroupView: View {
     @ObservedObject var groupSelectionViewModel: GroupSelectionViewModel
+    @ObservedObject var weekViewModel: WeekViewModel 
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.colorScheme) var colorScheme
     
@@ -33,6 +34,7 @@ struct ChooseGroupView: View {
                     }
                     .onChange(of: groupSelectionViewModel.selectedGroup) {_, newGroup in
                         if !newGroup.isEmpty {
+                            weekViewModel.loadWeeksForGroup(for: newGroup)
                             self.presentationMode.wrappedValue.dismiss()
                         }
                     }

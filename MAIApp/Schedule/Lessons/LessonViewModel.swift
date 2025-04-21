@@ -1,26 +1,43 @@
 import Foundation
 import Combine
 
-final class LessonViewModel: ObservableObject {
-    @Published var groupSchedule: GroupSchedule?
-    @Published var error: Error?
-    @Published var isLoading = false
+enum loadingStates: String, CaseIterable {
+    case loaded
+    case loading
+    case error
+}
 
-    private var dataTask: URLSessionDataTask?
-    let scheduleManager = ScheduleManager()
+class LessonViewModel: ObservableObject {
+    @Published private(set) var groupSchedule: GroupSchedule?
+    @Published private(set) var error: Error?
+    @Published private(set) var isLoading = false
     
-    // MARK: - Public Methods
-    func loadScheduleForGroup(for group: String) {
-        Task(priority: .high) { @MainActor in
-            defer {
-                isLoading = false
-            }
-            
-            isLoading = true
-            let schedule = try await scheduleManager.loadSchedule(for: group)
-            self.groupSchedule = schedule
-        }
-    }
+    private var dataTask: URLSessionDataTask?
+    private let scheduleManager: ScheduleManagerDescription
+//    private let weekViewModel: WeekViewModel // Добавляем зависимость
+       
+       init(
+           scheduleManager: ScheduleManagerDescription = ScheduleManager()
+//           weekViewModel: WeekViewModel // Инициализируем зависимость
+       ) {
+           self.scheduleManager = scheduleManager
+//           self.weekViewModel = weekViewModel
+       }
+       
+       func loadScheduleForGroup(for group: String) {
+           Task { @MainActor in
+               defer { isLoading = false }
+               isLoading = true
+               
+               do {
+                   let schedule = try await scheduleManager.loadSchedule(for: group)
+                   self.groupSchedule = schedule
+                   
+               } catch {
+                   self.error = error
+               }
+           }
+       }
     
     // MARK: - Helpers
     func findLessonDay(for date: Date) -> DaySchedule? {
@@ -31,9 +48,7 @@ final class LessonViewModel: ObservableObject {
         let dateString = dateFormatter.string(from: date)
         return schedule.schedule[dateString]
     }
-}
-
-extension LessonViewModel {
+    
     func getSchedule(for date: Date) -> DaySchedule? {
         let dateString = DateFormatter.yyyyMMdd.string(from: date)
         
