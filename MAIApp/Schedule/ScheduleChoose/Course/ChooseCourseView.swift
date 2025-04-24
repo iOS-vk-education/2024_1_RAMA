@@ -9,7 +9,7 @@ struct ChooseCourseView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 8) {
-                    ManyCourseView()
+                    ManyCourseView(groupSelectionViewModel: groupSelectionViewModel)
                 }
                 .padding()
                 .navigationTitle("Курс")

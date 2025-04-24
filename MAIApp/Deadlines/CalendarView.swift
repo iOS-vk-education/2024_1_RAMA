@@ -2,7 +2,6 @@ import SwiftUI
 
 struct CalendarView: View {
     @Binding var date: Date
-    
     var body: some View {
         DatePicker(
             "",

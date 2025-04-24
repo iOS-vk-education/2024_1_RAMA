@@ -3,8 +3,6 @@ import SwiftUI
 struct GroupView: View {
     @ObservedObject var groupSelectionViewModel: GroupSelectionViewModel
     @Environment(\.colorScheme) var colorScheme
-    
-    let group: String
 
     var body: some View {
         HStack {
@@ -29,8 +27,4 @@ struct GroupView: View {
         
 }
 
-#Preview {
-    GroupView(
-        groupSelectionViewModel: GroupSelectionViewModel(), group: "М8О-101БВ-24"
-    )
-}
+

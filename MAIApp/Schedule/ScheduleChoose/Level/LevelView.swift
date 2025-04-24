@@ -2,7 +2,7 @@ import SwiftUI
 
 struct LevelView: View {
     @Environment(\.colorScheme) var colorScheme
-    @EnvironmentObject var groupSelectionViewModel: GroupSelectionViewModel
+    @ObservedObject var groupSelectionViewModel: GroupSelectionViewModel
     var body: some View {
         NavigationStack {
             HStack {

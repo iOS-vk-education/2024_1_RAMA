@@ -20,7 +20,6 @@ struct DayView: View {
         return Calendar.current.component(.day, from: day)
     }
     
-    
     var body: some View {
         ZStack{
             if isActive {

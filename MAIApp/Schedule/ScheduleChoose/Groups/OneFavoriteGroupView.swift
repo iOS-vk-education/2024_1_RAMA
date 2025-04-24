@@ -1,10 +1,18 @@
+//
+//  OneFavoriteGroupView.swift
+//  MAIApp
+//
+//  Created by Михаил Рахимов on 24.04.2025.
+//
+
 import SwiftUI
 
-struct OneGroupView: View {
+struct OneFavoriteGroupView: View {
+    @ObservedObject var vm: GroupSelectionViewModel
     let group: String
     var isSelected: Bool
-    let isFavorite: Bool
-    let onToggle: () -> Void
+//    let isFavorite: Bool
+//    let onToggle: () -> Void
     
     var body: some View {
         ZStack(alignment: .topTrailing){
@@ -18,8 +26,8 @@ struct OneGroupView: View {
                 )
                 .font(.subheadline)
             
-            Button(action: onToggle) {
-                Image(systemName: isFavorite ? "heart.fill" : "heart")
+            Button(action: { vm.toggleFavorite(group) }) {
+                Image(systemName: vm.isFavorite(group) ? "heart.fill" : "heart")
                     .foregroundColor(.red)
                     .padding(8)
                     .background(Color.white.opacity(0.8))
@@ -29,5 +37,3 @@ struct OneGroupView: View {
         }
     }
 }
-
-

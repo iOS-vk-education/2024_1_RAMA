@@ -1,13 +1,9 @@
 import SwiftUI
 
 struct ProfileView: View {
-//    @State var name: String = "Имя не указано"
-//    @State var group: String = "Группа не указана"
     @StateObject var profileVM: ProfileViewModel
     @ObservedObject var groupSelectionViewModel: GroupSelectionViewModel
-    @ObservedObject var weekViewModel: WeekViewModel
-//    @StateObject private var profileData = ProfileData()
-    
+    @ObservedObject var weekViewModel: DateViewModel
     
     var body: some View {
         NavigationStack{
@@ -33,7 +29,7 @@ struct ProfileView: View {
                         NavigationLink(destination: ChooseAppIconView()) {
                             ListItemView(title: "Изменить иконку приложения")
                         }
-                        NavigationLink(destination: ChooseGroupView(groupSelectionViewModel: groupSelectionViewModel, weekViewModel: weekViewModel)) {
+                        NavigationLink(destination: ChooseGroupView(groupSelectionViewModel: groupSelectionViewModel, dateViewModel: weekViewModel)) {
                             ListItemView(title: "Изменить группу")
                         }
                     }

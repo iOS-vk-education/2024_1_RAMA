@@ -2,7 +2,7 @@ import SwiftUI
 
 struct ProfileAuthView: View {
     @Environment(\.colorScheme) var colorScheme
-    @EnvironmentObject var profileVM: ProfileViewModel
+    @ObservedObject var profileVM: ProfileViewModel
     @State private var isRegistration = false
     
     var body: some View {

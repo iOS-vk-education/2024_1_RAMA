@@ -133,7 +133,7 @@ class RouteCalculator {
             guard let currentNode = points.first(where: { $0.id == currentNodeId }) else { continue }
 
             if i == path.count - 1 {
-                instructions.append("Вы прибыли в \(currentNode.name ?? "пункт назначения")")
+                instructions.append("Вы прибыли в \(currentNode.name ?? "пункт назначения") ")
                 break
             }
 

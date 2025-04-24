@@ -2,20 +2,18 @@ import SwiftUI
 import Foundation
 
 struct WeekView: View {
-    @Binding var weekNumber: Int
-    @ObservedObject var weekViewModel: WeekViewModel
-
-//    var isActive: Bool
+    @ObservedObject var weekViewModel: DateViewModel
+    @Environment(\.colorScheme) var colorScheme
     var body: some View {
         HStack {
             VStack(alignment: .leading) {
                 Text("неделя")
                     .font(.caption)
                     .foregroundStyle(.secondary)
-                Text(weekViewModel.selectedWeek.description)
+                Text(weekViewModel.selectedWeekRange)
                     .font(.headline)
             }
-//            .foregroundColor(.black)
+            .foregroundColor(colorScheme == .dark ? .white : .black)
             Spacer()
         }
         .padding(.horizontal)

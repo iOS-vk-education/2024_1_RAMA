@@ -5,11 +5,4 @@ struct Group: Decodable {
     let course: String
 }
 
-struct selectedGroup: Decodable {
-    var allGroups: [Group]
-    var selectedFaculty: String
-    var selectedCourse: String
-    var selectedLevel: String
-    var selectedGroup: String
-    var facultyIsSelected: String
-}
+

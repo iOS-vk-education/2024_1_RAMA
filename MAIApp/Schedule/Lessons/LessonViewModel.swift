@@ -13,32 +13,30 @@ class LessonViewModel: ObservableObject {
     @Published private(set) var isLoading = false
     
     private var dataTask: URLSessionDataTask?
-    private let scheduleManager: ScheduleManagerDescription
-//    private let weekViewModel: WeekViewModel // Добавляем зависимость
-       
-       init(
-           scheduleManager: ScheduleManagerDescription = ScheduleManager()
-//           weekViewModel: WeekViewModel // Инициализируем зависимость
-       ) {
-           self.scheduleManager = scheduleManager
-//           self.weekViewModel = weekViewModel
-       }
-       
-       func loadScheduleForGroup(for group: String) {
-           Task { @MainActor in
-               defer { isLoading = false }
-               isLoading = true
-               
-               do {
-                   let schedule = try await scheduleManager.loadSchedule(for: group)
-                   self.groupSchedule = schedule
-                   
-               } catch {
-                   self.error = error
-               }
-           }
-       }
+    private let scheduleManager: ScheduleManagerProtocol
     
+    init(
+        scheduleManager: ScheduleManagerProtocol = ScheduleManager()
+    ) {
+        self.scheduleManager = scheduleManager
+    }
+    
+    
+    func loadScheduleForGroup(for group: String) {
+        Task { @MainActor in
+            defer { isLoading = false }
+            isLoading = true
+            
+            do {
+                let schedule = try await scheduleManager.loadSchedule(for: group)
+                self.groupSchedule = schedule
+                
+            } catch {
+                self.error = error
+            }
+           }
+    }
+
     // MARK: - Helpers
     func findLessonDay(for date: Date) -> DaySchedule? {
         guard let schedule = groupSchedule else { return nil }

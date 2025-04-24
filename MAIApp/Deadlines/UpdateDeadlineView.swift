@@ -35,7 +35,7 @@ struct UpdateDeadlineView: View {
                 }
                 
                 Section {
-                    DatePicker("Дата", selection: $draftDate)
+                    DatePicker("Дата", selection: $draftDate, in: Date()...)
                         .environment(\.locale, Locale.init(identifier: "ru_RU"))
                         .disabled(!isEditable)
                 }

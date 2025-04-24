@@ -9,21 +9,21 @@
 import SwiftUI
 
 struct ScheduleModeView: View {
-    @ObservedObject var viewModel: ScheduleModeViewModel
+    @ObservedObject var contentViewModel: ContentViewModel
     @Namespace private var animationModeNamespace
     @Environment(\.colorScheme) var colorScheme
     var body: some View {
         HStack(spacing: 0) {
-            ForEach(viewModel.availableModes, id: \.self) { mode in
+            ForEach(contentViewModel.availableModes, id: \.self) { mode in
                 Button(action: {
                     withAnimation(.spring(response: 0.3)) {
-                        viewModel.selectMode(mode)
+                        contentViewModel.selectMode(mode)
                     }
                 } )
                 
                 {
                     OneScheduleModeView(mode: mode.rawValue,
-                                        isActive: viewModel.selectedMode.rawValue == mode.rawValue,
+                                        isActive: contentViewModel.selectedMode.rawValue == mode.rawValue,
                                         namespace: animationModeNamespace
                     )
                 }
@@ -38,6 +38,4 @@ struct ScheduleModeView: View {
     }
 }
 
-#Preview {
-    ScheduleModeView(viewModel: .init())
-}
+

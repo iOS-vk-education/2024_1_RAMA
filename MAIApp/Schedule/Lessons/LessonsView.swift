@@ -1,19 +1,19 @@
 import SwiftUI
 
 struct LessonsView: View {
-    @Binding var selectedDay: Date
-    @Binding var selectedGroup: String
     @ObservedObject var viewModel: LessonViewModel
+    @ObservedObject var dateViewModel: DateViewModel
     
-    @State private var error: Error?
+//    @Binding var selectedDay: Date
+    @Binding var selectedGroup: String
 
-//    var scheduleMode: ScheduleMode
+    @State private var error: Error?
     
     var body: some View {
         ScrollView {
             VStack {
                 if viewModel.groupSchedule != nil {
-                    if let selectedLessonDay = viewModel.findLessonDay(for: selectedDay) {
+                    if let selectedLessonDay = viewModel.findLessonDay(for: dateViewModel.selectedDay) {
                         scheduleContent(for: selectedLessonDay)
                     } else {
                         placeholderView
@@ -80,9 +80,9 @@ struct LessonsView: View {
                 .stroke(.gray, lineWidth: 1)
                 .opacity(0.25)
         )
-        .onAppear {
-            print("LessonsView загружает расписание для \(selectedDay)")
-        }
+//        .onAppear {
+//            print("LessonsView загружает расписание для \(dateViewModel.selectedDay)")
+//        }
     }
     
     // MARK: - Loading Skeleton
@@ -194,23 +194,6 @@ struct LessonsView: View {
     }
 }
 
-//// MARK: - Extension
-//extension String {
-//    func toDate() -> Date? {
-//        let formatter = DateFormatter()
-//        formatter.dateFormat = "HH:mm:ss"
-//        formatter.locale = Locale(identifier: "ru_RU")
-//        return formatter.date(from: self)
-//    }
-////Форматирует строку, делая первую букву каждого слова заглавной, остальные — строчными.
-//    func toCapitalizedCase() -> String {
-//        self
-//            .lowercased()
-//            .components(separatedBy: " ")
-//            .map { $0.capitalized }
-//            .joined(separator: " ")
-//    }
-//}
 
 
 

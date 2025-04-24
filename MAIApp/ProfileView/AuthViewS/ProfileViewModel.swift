@@ -48,20 +48,15 @@ final class ProfileViewModel: ObservableObject {
     }
     
     func getUserInfo() {
-            // Проверяем, что токен не пустой
             guard !accessToken.isEmpty else {
                 print("Токен не найден")
                 return
             }
             
-            // Вызываем метод получения информации о пользователе из APIService
             apiService.getUserInfo(token: accessToken) { [weak self] result in
-                // Выполняем код в основном потоке
                 DispatchQueue.main.async {
-                    // Обрабатываем результат
                     switch result {
                     case .success(let json):
-                        // Обрабатываем информацию о пользователе
                         if let name = json["name"] as? String {
                             self?.name = name
                         }

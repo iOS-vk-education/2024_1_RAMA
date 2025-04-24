@@ -1,15 +1,16 @@
 import SwiftUI
 
 struct WeekLessonsView: View {
-    @Binding var selectedDay: Date
-    @Binding var selectedGroup: String
+    @ObservedObject var dateViewModel: DateViewModel
+    @ObservedObject var groupSelectionViewModel: GroupSelectionViewModel
     @ObservedObject var viewModel: LessonViewModel
+    
     @State private var error: Error?
     var scheduleMode: ScheduleMode
     
     private var weekDays: [Date] {
         let calendar = Calendar.current
-        let startOfWeek = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: selectedDay))!
+        let startOfWeek = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: dateViewModel.selectedDay))!
         return (0..<7).compactMap { calendar.date(byAdding: .day, value: $0, to: startOfWeek) }
     }
     
@@ -74,7 +75,7 @@ struct WeekLessonsView: View {
         ScrollView {
             VStack {
                 if viewModel.groupSchedule != nil {
-                    if let selectedLessonDay = viewModel.findLessonDay(for: selectedDay) {
+                    if let selectedLessonDay = viewModel.findLessonDay(for: dateViewModel.selectedDay) {
                         scheduleContent(for: selectedLessonDay)
                     } else {
                         placeholderView
@@ -87,7 +88,7 @@ struct WeekLessonsView: View {
             }
         }
         .onAppear {
-            viewModel.loadScheduleForGroup(for: selectedGroup)
+            viewModel.loadScheduleForGroup(for: groupSelectionViewModel.selectedGroup)
         }
     }
     

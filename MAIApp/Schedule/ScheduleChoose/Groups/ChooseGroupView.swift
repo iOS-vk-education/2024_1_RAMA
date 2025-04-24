@@ -2,7 +2,7 @@ import SwiftUI
 
 struct ChooseGroupView: View {
     @ObservedObject var groupSelectionViewModel: GroupSelectionViewModel
-    @ObservedObject var weekViewModel: WeekViewModel 
+    @ObservedObject var dateViewModel: DateViewModel
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.colorScheme) var colorScheme
     
@@ -12,7 +12,7 @@ struct ChooseGroupView: View {
                         FacultyAndCourseView(groupSelectionViewModel: groupSelectionViewModel)
                             .foregroundStyle(colorScheme == .dark ? .white : .black)
                         Spacer().frame(height: 2)
-                        LevelView()
+                        LevelView(groupSelectionViewModel: groupSelectionViewModel)
                             .foregroundStyle(colorScheme == .dark ? .white : .black)
                         Spacer().frame(height: 2)
                         ScrollView{
@@ -34,14 +34,31 @@ struct ChooseGroupView: View {
                     }
                     .onChange(of: groupSelectionViewModel.selectedGroup) {_, newGroup in
                         if !newGroup.isEmpty {
-                            weekViewModel.loadWeeksForGroup(for: newGroup)
+                            dateViewModel.loadWeeksForGroup(for: newGroup)
                             self.presentationMode.wrappedValue.dismiss()
                         }
                     }
                     .padding()
                     .navigationTitle("Группа")
                     .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            Button(action: {
+                                resetGroupSelection()
+                                self.presentationMode.wrappedValue.dismiss()
+                            }) {
+                                Text("Сбросить группу")
+                            }
+                        }
+                    }
         }
+    }
+    fileprivate func resetGroupSelection() {
+        groupSelectionViewModel.selectedFaculty = ""
+        groupSelectionViewModel.selectedCourse = ""
+        groupSelectionViewModel.selectedLevel = ""
+        groupSelectionViewModel.selectedGroup = ""
+        dateViewModel.selectedWeek = 0
     }
 }
 

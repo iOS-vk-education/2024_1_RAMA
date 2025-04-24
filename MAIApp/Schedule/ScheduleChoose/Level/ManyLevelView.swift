@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct ManyLevelView: View {
-    @EnvironmentObject var groupSelectionViewModel: GroupSelectionViewModel
+    @ObservedObject var groupSelectionViewModel: GroupSelectionViewModel
     
     var body: some View {
         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {

@@ -8,7 +8,7 @@ struct ChooseLevelView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 8) {
-                    ManyLevelView()
+                    ManyLevelView(groupSelectionViewModel: groupSelectionViewModel)
                 }
                 .padding()
                 .navigationTitle("Тип образования")

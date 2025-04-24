@@ -240,7 +240,7 @@ class MapViewController: UIViewController {
             let node = SCNNode(geometry: sphere)
             node.position = SCNVector3(point.x, point.y + 0.5, point.z)
             node.geometry?.firstMaterial?.diffuse.contents = pointColor(for: point.type)
-            let pointId = point.id ?? "unknown"
+            let pointId = point.id
             node.name = "point_\(pointId)"
             node.castsShadow = false
             
@@ -431,7 +431,7 @@ class MapViewController: UIViewController {
             // Если направление в основном горизонтальное, используем другой метод ориентации
             if abs(direction.y) < 0.001 {
                 // Определяем ось поворота (перпендикулярную к горизонтальному направлению)
-                let rotationAxis = SCNVector3(0, 1, 0)
+                _ = SCNVector3(0, 1, 0)
                 // Угол поворота в горизонтальной плоскости
                 let angle = atan2(direction.x, direction.z)
                 tubeNode.eulerAngles = SCNVector3(0, angle, .pi/2)

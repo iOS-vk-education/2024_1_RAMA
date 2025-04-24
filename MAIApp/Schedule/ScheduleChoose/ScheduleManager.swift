@@ -13,7 +13,7 @@ extension Sequence where Iterator.Element: Hashable {
     }
 }
 
-protocol ScheduleManagerDescription {
+protocol ScheduleManagerProtocol {
     static func loadGroups() async throws -> [Group]
     func loadSchedule(for group: String) async throws -> GroupSchedule
 }
@@ -23,9 +23,7 @@ enum ScheduleManagerError: Error {
     case invalidUrl
 }
 
-final class ScheduleManager: ScheduleManagerDescription {
-    
-//    static let shared: ScheduleManagerDescription = ScheduleManager()
+final class ScheduleManager: ScheduleManagerProtocol {
     
     static func loadGroups() async throws -> [Group] {
         //            let urlBackend = "https://public.mai.ru/schedule/data/groups.json"
@@ -54,8 +52,6 @@ final class ScheduleManager: ScheduleManagerDescription {
             throw error
         }
     }
-    
-    private var dataTask: URLSessionDataTask?
     
     func loadSchedule(for group: String) async throws -> GroupSchedule {
         guard !group.isEmpty else {

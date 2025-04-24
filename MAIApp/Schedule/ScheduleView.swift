@@ -1,15 +1,17 @@
 import SwiftUI
 
 struct ScheduleView: View {
-    @State var weekNumber = getWeekNumber()
-    @State private var selectedDay: Date = Date()
-    @State private var scheduleMode: ScheduleMode = .day
-    @State private var isMenuOpen = false
     @ObservedObject var groupSelectionViewModel: GroupSelectionViewModel
-    @ObservedObject var weekViewModel: WeekViewModel
-    @ObservedObject var scheduleModeViewModel: ScheduleModeViewModel
+    @ObservedObject var dateViewModel: DateViewModel
+    @ObservedObject var contentViewModel: ContentViewModel
     @ObservedObject var lessonViewModel: LessonViewModel
     
+
+    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) private var dismiss
+    @State private var scheduleMode: ScheduleMode = .day
+    @State private var isMenuOpen = false
+
     @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
@@ -17,7 +19,7 @@ struct ScheduleView: View {
             VStack(spacing: 8) {
                 if groupSelectionViewModel.selectedGroup == "" {
                     
-                    GroupAndWeekView(weekNumber: $weekNumber, selectedDay: $selectedDay, groupSelectionViewModel: groupSelectionViewModel, weekViewModel: weekViewModel)
+                    GroupAndWeekView(groupSelectionViewModel: groupSelectionViewModel, dateViewModel: dateViewModel)
                     
                     ErrorGroupView()
                     
@@ -25,14 +27,14 @@ struct ScheduleView: View {
                 
                 else if scheduleMode == .day {
                     
-                    GroupAndWeekView(weekNumber: $weekNumber, selectedDay: $selectedDay, groupSelectionViewModel: groupSelectionViewModel, weekViewModel: weekViewModel)
+                    GroupAndWeekView(groupSelectionViewModel: groupSelectionViewModel, dateViewModel: dateViewModel)
                     
-                    DatePickerView(selectedDay: $selectedDay, weekNumber: $weekNumber)
-                    ScheduleModeView(viewModel: scheduleModeViewModel)
+                    DatePickerView(dateViewModel: dateViewModel)
+                    ScheduleModeView(contentViewModel: contentViewModel)
                     LessonsView(
-                        selectedDay: $selectedDay,
-                        selectedGroup: $groupSelectionViewModel.selectedGroup,
-                        viewModel: lessonViewModel
+                        viewModel: lessonViewModel,
+                        dateViewModel: dateViewModel,
+                        selectedGroup: $groupSelectionViewModel.selectedGroup
                     )
                     
                     Spacer()
@@ -42,14 +44,8 @@ struct ScheduleView: View {
                 
                 else if scheduleMode == .week {
                     
-                    GroupAndWeekView(weekNumber: $weekViewModel.selectedWeek, selectedDay: $selectedDay, groupSelectionViewModel: groupSelectionViewModel, weekViewModel: weekViewModel)
-                    
-//                    WeekLessonsView(
-//                        selectedDay: $selectedDay,
-//                        selectedGroup: $groupSelectionViewModel.selectedGroup,
-//                        viewModel: lessonViewModel,
-//                        scheduleModeViewModel: scheduleModeViewModel
-//                    )
+                    GroupAndWeekView(groupSelectionViewModel: groupSelectionViewModel, dateViewModel: dateViewModel)
+                
                     
                     Spacer()
                 }
@@ -57,8 +53,15 @@ struct ScheduleView: View {
             .padding()
             .navigationTitle("Расписание")
             .navigationBarTitleDisplayMode(.inline)
-//            .toolbar {
-//                ToolbarItem(placement: .topBarTrailing) {
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    NavigationLink("Избранные", destination: FavoritesScreen(groupSelectionViewModel: groupSelectionViewModel))
+                        .onChange(of: groupSelectionViewModel.selectedGroup) {_, newGroup in
+                            if !newGroup.isEmpty {
+                                dateViewModel.loadWeeksForGroup(for: newGroup)
+                            }
+                        }
+                    
 //                    Menu {
 //                        Picker("Режим", selection: $scheduleMode) {
 //                            ForEach(ScheduleMode.allCases, id: \.self) { mode in
@@ -91,19 +94,13 @@ struct ScheduleView: View {
 //                        .animation(.easeInOut(duration: 0.2), value: isMenuOpen)
 //                    }
 //                    .onTapGesture { isMenuOpen.toggle() }
-//                }
-//            }
+                }
+            }
         }
     }
 }
 
 // MARK: Functions
-
-func getWeekNumber(from date: Date = Date()) -> Int {
-    let calendar = Calendar.current
-    return calendar.component(.weekOfYear, from: date) - 1
-}
-
 func iconName(for mode: ScheduleMode) -> String {
     switch mode {
     case .day: return "DaySelected"

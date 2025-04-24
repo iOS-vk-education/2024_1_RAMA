@@ -33,6 +33,7 @@ struct BadgeComponentForPlaceTypeView: View {
 
 
 struct BadgeComponentForPlaceView: View {
+    @Environment(\.colorScheme) var colorScheme
     let place: String
     var body: some View {
             Text(place)
