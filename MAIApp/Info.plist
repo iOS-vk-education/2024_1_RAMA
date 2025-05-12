@@ -36,9 +36,6 @@
 			<string>UINewsstandBindingTypeMagazine</string>
 		</dict>
 	</dict>
-	<key>CFBundleIdentifier</key>
-	<!-- Make sure this matches EXACTLY with your Firebase console configuration -->
-	<string>com.yourcompany.MAIApp</string> <!-- UPDATE THIS -->
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

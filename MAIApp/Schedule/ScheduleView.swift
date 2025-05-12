@@ -55,7 +55,7 @@ struct ScheduleView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    NavigationLink("Избранные", destination: FavoritesScreen(groupSelectionViewModel: groupSelectionViewModel))
+                    NavigationLink("Избранное", destination: FavoritesScreen(groupSelectionViewModel: groupSelectionViewModel))
                         .onChange(of: groupSelectionViewModel.selectedGroup) {_, newGroup in
                             if !newGroup.isEmpty {
                                 dateViewModel.loadWeeksForGroup(for: newGroup)
