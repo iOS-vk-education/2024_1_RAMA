@@ -30,10 +30,25 @@ struct ContentView: View {
                 .tabItem {
                     Label("Дедлайны", systemImage: "flame")
                 }
-            ProfileAuthView(profileVM: profileVM)
-                .tabItem {
-                    Label("Профиль", systemImage: "person.circle.fill")
-                }
+
+            if profileVM.isLoggedIn {
+                ProfileView(profileVM: profileVM, groupSelectionViewModel: groupSelectionViewModel, weekViewModel: weekViewModel)
+                    .tabItem {
+                        Label("Профиль", systemImage: "person.circle.fill")
+                    }
+            } else {
+                AuthContainerView(profileVM: profileVM)
+                    .tabItem {
+                        Label("Профиль", systemImage: "person.circle.fill")
+                    }
+            }
+
+                        
+            
+//            ProfileAuthView(profileVM: profileVM)
+//                .tabItem {
+//                    Label("Профиль", systemImage: "person.circle.fill")
+//                }
 //            ProfileView(profileVM: profileVM, groupSelectionViewModel: groupSelectionViewModel, weekViewModel: weekViewModel)
 //                .environmentObject(profileVM)
 //                .tabItem {

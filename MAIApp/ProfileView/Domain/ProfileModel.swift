@@ -25,7 +25,9 @@ struct User: Codable {
     var id: Int
 }
 
-struct AuthBody: Codable {
-    var email: String
-    var password: String
+struct UserData: Identifiable {
+    var id: String = UUID().uuidString
+    let email: String
+    let password: String
+    var name: String? = nil
 }

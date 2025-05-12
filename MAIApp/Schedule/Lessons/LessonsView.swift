@@ -3,9 +3,9 @@ import SwiftUI
 struct LessonsView: View {
     @ObservedObject var viewModel: LessonViewModel
     @ObservedObject var dateViewModel: DateViewModel
-    
-//    @Binding var selectedDay: Date
-    @Binding var selectedGroup: String
+    @ObservedObject var groupSelectionViewModel: GroupSelectionViewModel
+
+//    @Binding var selectedGroup: String
 
     @State private var error: Error?
     
@@ -26,7 +26,7 @@ struct LessonsView: View {
             }
         }
         .onAppear {
-            viewModel.loadScheduleForGroup(for: selectedGroup)
+            viewModel.loadScheduleForGroup(for: groupSelectionViewModel.selectedGroup)
         }
 
     }

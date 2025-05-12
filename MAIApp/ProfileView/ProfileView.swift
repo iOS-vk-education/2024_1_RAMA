@@ -15,11 +15,9 @@ struct ProfileView: View {
                             .frame(width: 80, height: 80)
                             .foregroundColor(.customGray)
                         
-                        Text(profileVM.name)
+                        Text(profileVM.email)
                             .font(.title2)
                         
-                        Text(profileVM.group)
-                            .foregroundColor(.gray)
                     }
                     .padding()
                     
@@ -32,6 +30,16 @@ struct ProfileView: View {
                         NavigationLink(destination: ChooseGroupView(groupSelectionViewModel: groupSelectionViewModel, dateViewModel: weekViewModel)) {
                             ListItemView(title: "Изменить группу")
                         }
+                        Button(action: {
+                            profileVM.logoutUser()
+                            // После этого profileVM.isLoggedIn сfalse,
+                            // и ContentView автоматически переклюна AuthContainerView
+                        }) {
+                            ListItemView(title: "Выйти из аккаунта")
+                                .foregroundColor(.red)
+                        }
+                        
+                        
                     }
                     
                 }

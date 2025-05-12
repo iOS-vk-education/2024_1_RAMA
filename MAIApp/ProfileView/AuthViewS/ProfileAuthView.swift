@@ -6,14 +6,14 @@ struct ProfileAuthView: View {
     @State private var isRegistration = false
     
     var body: some View {
-        NavigationStack {
-            if isRegistration {
-                RegView(isRegistration: $isRegistration)
-            } else {
-                AuthView(isRegistration: $isRegistration)
-            }
-        }
-        .environmentObject(profileVM)
+//        NavigationStack {
+//            if isRegistration {
+//                RegView(isRegistration: $isRegistration)
+//            } else {
+//                AuthView(isRegistration: $isRegistration)
+//            }
+//        }
+//        .environmentObject(profileVM)
     }
 }
 

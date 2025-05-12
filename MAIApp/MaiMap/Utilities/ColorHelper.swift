@@ -38,3 +38,22 @@ extension UIColor {
         self.init(red: r, green: g, blue: b, alpha: a)
     }
 }
+
+extension MapViewController {
+    func pointColor(for type: String) -> UIColor {
+        switch type {
+        case "elevator":
+            return .systemBlue
+        case "stairs":
+            return .systemGreen
+        case "room":
+            return .systemOrange
+        case "corridor":
+            return .systemGray
+        case "entrance":
+            return .systemRed
+        default:
+            return .systemPurple
+        }
+    }
+}

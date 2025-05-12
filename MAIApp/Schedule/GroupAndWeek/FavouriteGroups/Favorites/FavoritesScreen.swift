@@ -25,8 +25,6 @@ struct FavoritesScreen: View {
                             vm: groupSelectionViewModel,
                                         group: group.name,
                                          isSelected: group.name == groupSelectionViewModel.selectedGroup
-//                                         isFavorite: groupSelectionViewModel.isFavorite(group.name),
-//                                         onToggle: { groupSelectionViewModel.toggleFavorite(group.name) }
                             )
                         .onTapGesture {
                             groupSelectionViewModel.selectedFaculty = group.fac

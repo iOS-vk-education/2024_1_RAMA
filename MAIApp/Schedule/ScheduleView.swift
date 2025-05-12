@@ -34,7 +34,7 @@ struct ScheduleView: View {
                     LessonsView(
                         viewModel: lessonViewModel,
                         dateViewModel: dateViewModel,
-                        selectedGroup: $groupSelectionViewModel.selectedGroup
+                        groupSelectionViewModel: groupSelectionViewModel
                     )
                     
                     Spacer()
