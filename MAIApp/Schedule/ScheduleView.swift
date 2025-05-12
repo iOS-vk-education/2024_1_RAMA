@@ -36,6 +36,51 @@ struct ScheduleView: View {
                         dateViewModel: dateViewModel,
                         groupSelectionViewModel: groupSelectionViewModel
                     )
+                    .gesture(
+                        DragGesture()
+                            .onEnded { value in
+                                guard abs(value.translation.width) > 50 else { return }
+
+                                let calendar = Calendar.current
+                                let selected = dateViewModel.selectedDay
+                                let currentWeek = calendar.component(.weekOfYear, from: selected)
+
+                                let days = dateViewModel.daysOfWeek(for: currentWeek)
+                                    .filter { calendar.component(.weekday, from: $0) != 1 } // нафиг воскресенье
+
+                                guard let index = days.firstIndex(where: { calendar.isDate($0, inSameDayAs: selected) }) else { return }
+
+                                withAnimation(.easeInOut(duration: 0.15)) { // добавляем анимацию
+                                    if value.translation.width < 0 {
+                                        // свайп налево - идем вперед
+                                        if index < days.count - 1 {
+                                            dateViewModel.selectedDay = days[index + 1]
+                                        } else {
+                                            let nextWeek = currentWeek + 1
+                                            let nextDays = dateViewModel.daysOfWeek(for: nextWeek)
+                                                .filter { calendar.component(.weekday, from: $0) != 1 }
+                                            if let monday = nextDays.first {
+                                                dateViewModel.selectedWeek = nextWeek
+                                                dateViewModel.selectedDay = monday
+                                            }
+                                        }
+                                    } else {
+                                        // свайп направо - идем назад
+                                        if index > 0 {
+                                            dateViewModel.selectedDay = days[index - 1]
+                                        } else {
+                                            let prevWeek = currentWeek - 1
+                                            let prevDays = dateViewModel.daysOfWeek(for: prevWeek)
+                                                .filter { calendar.component(.weekday, from: $0) != 1 }
+                                            if let saturday = prevDays.last {
+                                                dateViewModel.selectedWeek = prevWeek
+                                                dateViewModel.selectedDay = saturday
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                    )
                     
                     Spacer()
                     
