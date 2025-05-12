@@ -4,6 +4,7 @@ import SwiftData
 @main
 struct MAIAppApp: App {
     @Environment(\.colorScheme) var colorScheme
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([

@@ -1,10 +1,3 @@
-//
-//  NetworkSchedule.swift
-//  MAIApp
-//
-//  Created by Михаил Рахимов on 02.02.2025.
-//
-
 import Foundation
 
 extension Sequence where Iterator.Element: Hashable {

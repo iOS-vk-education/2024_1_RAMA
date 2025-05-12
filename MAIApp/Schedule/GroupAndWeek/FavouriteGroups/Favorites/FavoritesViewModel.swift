@@ -1,10 +1,3 @@
-//
-//  FavoritesViewModel.swift
-//  Cats
-//
-//  Created by Oleg Gibadulin on 22.04.2025.
-//
-
 import Foundation
 import Combine
 

@@ -15,30 +15,29 @@ class APIService {
     
     @EnvironmentObject var profileVM: ProfileViewModel
     
-    private let baseURL = "https://mai-students.ru/api"
+//    private let baseURL = "https://mai-students.ru/api"
+    private let baseUrl = "http://127.0.0.1:8000/api"
+
+
     
     func register(email: String, password: String, completion: @escaping (Result<TokenInfo, Error>) -> Void) {
         // Создаем URL для запроса
-        guard let url = URL(string: "\(baseURL)/v1/auth/register") else {
+        guard let url = URL(string: "\(baseUrl)/v1/auth/register") else {
             completion(.failure(NSError(domain: "APIService", code: 0, userInfo: [NSLocalizedDescriptionKey: "Неверный URL"])))
             return
         }
         
-        // Создаем параметры запроса
         let parameters = ["email": email, "password": password]
         
-        // Создаем запрос
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         
-        // Преобразуем параметры в JSON
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: parameters)
             request.httpBody = jsonData
             
-            // Выводим отправляемые данные для отладки
             if let jsonString = String(data: jsonData, encoding: .utf8) {
                 print("Отправляемые данные: \(jsonString)")
             }
@@ -47,9 +46,7 @@ class APIService {
             return
         }
         
-        // Выполняем запрос
         URLSession.shared.dataTask(with: request) { data, response, error in
-            // Проверяем наличие ошибки
             if let error = error {
                 print("Ошибка запроса: \(error.localizedDescription)")
                 completion(.failure(error))
@@ -109,7 +106,7 @@ class APIService {
     
     // Функция для получения информации о пользователе
     func getUserInfo(token: String, completion: @escaping (Result<[String: Any], Error>) -> Void) {
-        guard let url = URL(string: "\(baseURL)/v1/auth/me") else {
+        guard let url = URL(string: "\(baseUrl)/v1/auth/me") else {
             completion(.failure(NSError(domain: "APIService", code: 0, userInfo: [NSLocalizedDescriptionKey: "Неверный URL"])))
             return
         }

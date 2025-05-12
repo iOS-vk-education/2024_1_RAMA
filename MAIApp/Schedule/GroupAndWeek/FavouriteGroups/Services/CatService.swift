@@ -8,18 +8,11 @@
 import Foundation
 
 protocol GroupServiceProtocol {
-//    func fetchGroups() async -> [Group]
     func likeGroup(id: String) async
     func unlikeGroup(id: String) async
 }
 
 final class GroupService: GroupServiceProtocol {
-    
-//    func fetchGroups() async -> [Group] {
-//        // network manager
-//        let group = [] as! [Group]
-//        return group
-//    }
 
     func likeGroup(id: String) async {
         try? await Task.sleep(nanoseconds: 200_000_000)

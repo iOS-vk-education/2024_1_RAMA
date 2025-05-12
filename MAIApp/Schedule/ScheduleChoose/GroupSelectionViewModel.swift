@@ -3,7 +3,6 @@ import SwiftUI
 import Combine
 
 protocol GroupSelectionProtocol {
-//    func fetchGroups() async -> [Group]
     func likeGroup(id: String) async
     func unlikeGroup(id: String) async
 }
@@ -30,7 +29,6 @@ final class GroupSelectionViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .assign(to: &$favoriteIDs)
     }
-    
     
     // MARK: Favourite Groups
     func isFavorite(_ group: String) -> Bool {

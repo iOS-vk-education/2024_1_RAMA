@@ -33,7 +33,6 @@ struct MapView: View {
     @State var fromFloor: Int = 1
     @State var toFloor: Int = 2
     @Environment(\.colorScheme) var colorScheme
-
     
     var body: some View {
         NavigationStack {

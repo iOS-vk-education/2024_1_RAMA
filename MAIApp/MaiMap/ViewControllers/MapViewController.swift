@@ -14,14 +14,14 @@ class MapViewController: UIViewController {
     var offices: [Office] = []
     var points: [Point] = []
     var verticalConnections: [VerticalConnection] = []
-    var path: [String]? // Добавляем путь для отрисовки
+    var path: [String]?
     var cameraScale: Double = 10.0
     var cameraPosition: SCNVector3 = SCNVector3(0, 20, 0)
     
     private var routeCalculator: RouteCalculator?
-    private var pathAnimationProgress: CGFloat = 0.0 // Прогресс анимации пути
-    private var pathAnimationTimer: CADisplayLink? // Таймер для анимации
-    private var pathNode: SCNNode? // Узел для линии пути
+    private var pathAnimationProgress: CGFloat = 0.0
+    private var pathAnimationTimer: CADisplayLink?
+    private var pathNode: SCNNode?
     
     // MARK: - UI Components
     let scene3DView: SCNView = {
@@ -42,10 +42,18 @@ class MapViewController: UIViewController {
         return view
     }()
     
-    // MARK: - Lifecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        
+        scene3DView.allowsCameraControl = true
+        if #available(iOS 11.0, *) {
+            scene3DView.defaultCameraController.interactionMode      = .orbitTurntable
+            scene3DView.defaultCameraController.minimumVerticalAngle = -Float.pi/3
+            scene3DView.defaultCameraController.maximumVerticalAngle =  Float.pi/3
+        }
+        
         loadData()
         setupGestures()
         updateViewForCurrentMode()
@@ -53,8 +61,9 @@ class MapViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        stopPathAnimation() // Останавливаем анимацию при уходе с экрана
+        stopPathAnimation() 
     }
+
     
     // MARK: - UI Setup
     private func setupUI() {
@@ -77,19 +86,22 @@ class MapViewController: UIViewController {
     
     // MARK: - Scene Management
     func updateViewForCurrentMode() {
-        print("Updating view for mode: \(currentMode) at \(Date())")
+        print("Вывод карты для режима: \(currentMode) время: \(Date())")
         switch currentMode {
         case .mode2D:
             scene2DView.isHidden = false
             scene3DView.isHidden = true
+            scene2DView.gestureRecognizers?.forEach { $0.isEnabled = true }
             render2DMap()
         case .mode3D:
             scene2DView.isHidden = true
             scene3DView.isHidden = false
+            scene2DView.gestureRecognizers?.forEach { $0.isEnabled = false }
             render3DMap()
         }
     }
     
+
     private func render2DMap() {
         let scene = SCNScene()
         scene.rootNode.enumerateChildNodes { (node, _) in
@@ -106,7 +118,7 @@ class MapViewController: UIViewController {
             box.firstMaterial?.diffuse.contents = UIColor(hex: office.color)
             let boxNode = SCNNode(geometry: box)
             
-            // Позиционирование кабинета в пространстве
+    
             boxNode.position = SCNVector3(
                 CGFloat(office.coords[0]),
                 CGFloat(office.coords[1] + office.width / 2),
@@ -114,7 +126,7 @@ class MapViewController: UIViewController {
             )
 
             let textGeometry = SCNText(string: office.name, extrusionDepth: 0.1)
-            textGeometry.font = UIFont.systemFont(ofSize: 12) // Размер шрифта
+            textGeometry.font = UIFont.systemFont(ofSize: 12)
             textGeometry.firstMaterial?.diffuse.contents = UIColor.black
             let textNode = SCNNode(geometry: textGeometry)
             textNode.position = SCNVector3(
@@ -158,6 +170,7 @@ class MapViewController: UIViewController {
 
     }
     
+  
     private func render3DMap() {
         let scene = SCNScene()
         print("Cleaning scene, removing \(scene.rootNode.childNodes.count) nodes")
@@ -177,10 +190,10 @@ class MapViewController: UIViewController {
 //            box.firstMaterial?.diffuse.contents = UIColor(hex: office.color)
             let material = SCNMaterial()
             material.diffuse.contents = UIColor(hex: office.color)
-            material.specular.contents = UIColor.white // Добавляем блики
-            material.specular.intensity = 0.2 // Не слишком яркие
-            material.roughness.contents = 0.7 // Немного шероховатости
-            material.lightingModel = .phong // Используем модель освещения Phong
+            material.specular.contents = UIColor.white
+            material.specular.intensity = 0.2
+            material.roughness.contents = 0.7
+            material.lightingModel = .phong
                 
             box.materials = [material]
             
@@ -214,12 +227,6 @@ class MapViewController: UIViewController {
                 office.coords[1] + office.width / 2,                // Над кубом (высота кабинета + отступ)
                 0                                                   // Центр по Z
             )
-//            let (_, maxBounds) = box.boundingBox
-//                textNode.position = SCNVector3(
-//                         0, // Центр по X относительно boxNode
-//                         maxBounds.y + 0.1, // Немного выше верхней грани boxNode
-//                         0 // Центр по Z относительно boxNode
-//            )
             textNode.scale = SCNVector3(0.015, 0.015, 0.015)
             
             textNode.eulerAngles = SCNVector3(Float(-Double.pi/2), 0, 0)
@@ -258,24 +265,28 @@ class MapViewController: UIViewController {
         
         setupLighting(scene: scene, mode: .mode3D)
         let cameraNode = setupCamera(for: scene, mode: .mode3D)
-        
         scene3DView.scene = scene
+        
+        
         scene3DView.pointOfView = cameraNode
         setupCameraConstraints()
-        
+       
     }
     
-
+    private func setup3DCamera() {
+        let cameraNode = SCNNode()
+        cameraNode.camera = SCNCamera()
+        cameraNode.position = SCNVector3(x: 0, y: 15, z: 15)
+        cameraNode.eulerAngles = SCNVector3(-Float.pi/4, 0, 0)
+        scene3DView.scene?.rootNode.addChildNode(cameraNode)
+    }
     
     private func setupCameraConstraints() {
-        let cameraController = scene3DView.defaultCameraController
-            if currentMode == .mode2D {
-                cameraController.minimumVerticalAngle = 0
-                cameraController.maximumVerticalAngle = 0
-            } else {
-                cameraController.minimumVerticalAngle = Float.pi / 6
-//                cameraController.maximumVerticalAngle = -Float.pi / 6
-            }
+        scene3DView.allowsCameraControl = true
+        scene3DView.defaultCameraController.interactionMode = .orbitTurntable
+        scene3DView.defaultCameraController.minimumVerticalAngle = -Float.pi/3
+        scene3DView.defaultCameraController.maximumVerticalAngle =  Float.pi/3
+
     }
     
     private func setupCamera(for scene: SCNScene, mode: MapMode) -> SCNNode {
@@ -290,11 +301,16 @@ class MapViewController: UIViewController {
                 cameraNode.position = SCNVector3(sceneCenter.x, sceneCenter.y + 20, sceneCenter.z)
                 cameraNode.eulerAngles = SCNVector3(-CGFloat.pi / 2, 0, 0)
                 cameraNode.camera?.usesOrthographicProjection = true
-                cameraNode.camera?.orthographicScale = 10.0
+                cameraNode.camera?.orthographicScale = 20.0
             } else {
-                cameraNode.position = SCNVector3(sceneCenter.x, sceneCenter.y + 15, sceneCenter.z + 15)
-                cameraNode.eulerAngles = SCNVector3(-CGFloat.pi / 4, 0, 0)
+                cameraNode.position = SCNVector3(sceneCenter.x + 10, sceneCenter.y + 10, sceneCenter.z + 10)
+                
+                cameraNode.look(at: sceneCenter)
+                cameraNode.camera?.orthographicScale = 30.0
                 cameraNode.camera?.usesOrthographicProjection = false
+//                
+//                cameraNode.camera?.zNear = 1
+//                cameraNode.camera?.zFar = 100000
             }
 
             scene.rootNode.addChildNode(cameraNode)
@@ -339,30 +355,12 @@ class MapViewController: UIViewController {
             
             scene.rootNode.addChildNode(directionalLight)
             
-//            let dirLight8 = SCNNode()
-//            dirLight8.light = SCNLight()
-//            dirLight8.light?.type = .directional
-//            dirLight8.light?.color = UIColor.white
-//            dirLight8.light?.intensity = 500
-//            dirLight8.light?.castsShadow = true
-//            dirLight8.position = SCNVector3(-20, -20, -20)
-//            dirLight8.look(at: SCNVector3(0, 0, 0))
-//            scene.rootNode.addChildNode(dirLight8)
-            
     }
-        
-        
-//        scene3DView.scene?.rootNode.enumerateChildNodes { node, _ in
-//            node.castsShadow = true
-//        }
 }
     
     private func renderPath(_ path: [String], in scene: SCNScene, mode: MapMode) {
-//        print("Rendering path: \(path)")
-        // Удаляем предыдущие узлы пути
         scene.rootNode.childNodes.filter { $0.name == "path" }.forEach { $0.removeFromParentNode() }
         
-        // Получаем точки маршрута
         var routePoints: [SCNVector3] = []
         for nodeId in path {
             if let node = points.first(where: { $0.id == nodeId }) {
@@ -489,7 +487,6 @@ class MapViewController: UIViewController {
         pathAnimationTimer?.invalidate()
         pathAnimationTimer = nil
         
-        // Устанавливаем полную непрозрачность для всех дочерних узлов
         pathNode?.childNodes.forEach { node in
             node.geometry?.firstMaterial?.transparency = 1.0
         }
@@ -507,10 +504,80 @@ class MapViewController: UIViewController {
             stopPathAnimation()
         }
     }
-    
 
+ 
     
-
+    // MARK: - Gestures
+    private func setupGestures() {
+        // Масштабирование
+        let pinchGesture = UIPinchGestureRecognizer(target: self, action: #selector(handlePinch(_:)))
+        scene2DView.addGestureRecognizer(pinchGesture)
+       
+        
+        // Перемещение
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
+        scene2DView.addGestureRecognizer(panGesture)
+    }
+    
+    @objc private func handlePinch(_ gesture: UIPinchGestureRecognizer) {
+        let scale = Float(gesture.scale)
+        
+ 
+        guard let camera = scene2DView.pointOfView?.camera else { return }
+        let currentScale = camera.orthographicScale
+        let newScale = currentScale / Double(scale)
+        
+        SCNTransaction.begin()
+        SCNTransaction.animationDuration = 0.1
+        SCNTransaction.animationTimingFunction = CAMediaTimingFunction(name: .easeOut)
+        
+        camera.orthographicScale = max(min(newScale, 20.0), 3.0)
+        
+        SCNTransaction.commit()
+        
+        
+        gesture.scale = 1.0
+    }
+    
+    @objc private func handlePan(_ gesture: UIPanGestureRecognizer) {
+        let translation = gesture.translation(in: scene2DView)
+        var sensitivity: Float = 0.01
+        
+       
+        guard let currentPosition = scene2DView.pointOfView?.position else { return }
+        sensitivity = 0.04
+        
+        let newPosition = SCNVector3(
+            x: currentPosition.x - Float(translation.x) * sensitivity,
+            y: currentPosition.y,
+            z: currentPosition.z - Float(translation.y) * sensitivity
+        )
+        
+        SCNTransaction.begin()
+        SCNTransaction.animationDuration = 0.15
+        SCNTransaction.animationTimingFunction = CAMediaTimingFunction(name: .easeOut)
+        
+        scene2DView.pointOfView?.position = newPosition
+        
+        SCNTransaction.commit()
+        
+        
+        gesture.setTranslation(.zero, in: view)
+    }
+    
+    @objc private func resetCamera() {
+        
+        if currentMode == .mode3D {
+            scene3DView.pointOfView?.position = SCNVector3(x: 0, y: 30, z: 15)
+            scene3DView.pointOfView?.eulerAngles = SCNVector3(-Float.pi / 4, 0, 0)
+            scene3DView.pointOfView?.scale = SCNVector3(1, 1, 1)
+        } else {
+            scene2DView.pointOfView?.position = SCNVector3(x: 0, y: 20, z: 0)
+            scene2DView.pointOfView?.eulerAngles = SCNVector3(-Float.pi / 2, 0, 0)
+            scene2DView.pointOfView?.camera?.orthographicScale = 10
+        }
+    }
+    
     
     // MARK: - Data Loading
     func loadData() {
@@ -566,116 +633,10 @@ class MapViewController: UIViewController {
         }
     }
     
-    // MARK: - Gestures
-    private func setupGestures() {
-        // Масштабирование
-        let pinchGesture = UIPinchGestureRecognizer(target: self, action: #selector(handlePinch(_:)))
-        view.addGestureRecognizer(pinchGesture)
-        
-        // Перемещение
-        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
-        view.addGestureRecognizer(panGesture)
-    }
     
-    @objc private func handlePinch(_ gesture: UIPinchGestureRecognizer) {
-        let scale = Float(gesture.scale)
-        
-        if currentMode == .mode3D {
-            let currentScale = scene3DView.pointOfView?.scale.x ?? 1.0
-            let newScale = currentScale * scale
-            
-            scene3DView.pointOfView?.scale = SCNVector3(
-                x: max(min(newScale, 3.0), 0.5),
-                y: max(min(newScale, 3.0), 0.5),
-                z: max(min(newScale, 3.0), 0.5)
-            )
-        } else {
-            guard let camera = scene2DView.pointOfView?.camera else { return }
-            let currentScale = camera.orthographicScale
-            let newScale = currentScale / Double(scale)
-            
-            SCNTransaction.begin()
-            SCNTransaction.animationDuration = 0.3
-            SCNTransaction.animationTimingFunction = CAMediaTimingFunction(name: .linear)
-            
-            camera.orthographicScale = max(min(newScale, 20.0), 5.0)
-            
-            SCNTransaction.commit()
-        }
-        
-        gesture.scale = 1.0
-    }
-    
-    @objc private func handlePan(_ gesture: UIPanGestureRecognizer) {
-        let translation = gesture.translation(in: view)
-        var sensitivity: Float = 0.01
-        
-        if currentMode == .mode3D {
-            guard let camera = scene3DView.pointOfView else { return }
-            let currentPosition = camera.position
-            
-            var newPosition = SCNVector3(
-                currentPosition.x + Float(translation.x) * sensitivity,
-                currentPosition.y,
-                currentPosition.z - Float(translation.y) * sensitivity
-            )
-            newPosition.y = max(newPosition.y, 5.0)
-            camera.position = newPosition
-        } else {
-            guard let currentPosition = scene2DView.pointOfView?.position else { return }
-            sensitivity = 0.04
-            
-            let newPosition = SCNVector3(
-                x: currentPosition.x - Float(translation.x) * sensitivity,
-                y: currentPosition.y,
-                z: currentPosition.z - Float(translation.y) * sensitivity
-            )
-            
-            SCNTransaction.begin()
-            SCNTransaction.animationDuration = 0.15
-            SCNTransaction.animationTimingFunction = CAMediaTimingFunction(name: .easeOut)
-            
-            scene2DView.pointOfView?.position = newPosition
-            
-            SCNTransaction.commit()
-        }
-        
-        gesture.setTranslation(.zero, in: view)
-    }
-    
-    @objc private func resetCamera() {
-        
-        if currentMode == .mode3D {
-            scene3DView.pointOfView?.position = SCNVector3(x: 0, y: 30, z: 15)
-            scene3DView.pointOfView?.eulerAngles = SCNVector3(-Float.pi / 4, 0, 0)
-            scene3DView.pointOfView?.scale = SCNVector3(1, 1, 1)
-        } else {
-            scene2DView.pointOfView?.position = SCNVector3(x: 0, y: 20, z: 0)
-            scene2DView.pointOfView?.eulerAngles = SCNVector3(-Float.pi / 2, 0, 0)
-            scene2DView.pointOfView?.camera?.orthographicScale = 10
-        }
-    }
 }
 
-// MARK: - Color Helpers
-extension MapViewController {
-    func pointColor(for type: String) -> UIColor {
-        switch type {
-        case "elevator":
-            return .systemBlue
-        case "stairs":
-            return .systemGreen
-        case "room":
-            return .systemOrange
-        case "corridor":
-            return .systemGray
-        case "entrance":
-            return .systemRed
-        default:
-            return .systemPurple
-        }
-    }
-}
+
 
 
 

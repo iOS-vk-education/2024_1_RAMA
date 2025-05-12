@@ -1,10 +1,3 @@
-//
-//  CatRepository.swift
-//  Cats
-//
-//  Created by Oleg Gibadulin on 22.04.2025.
-//
-
 import Foundation
 import Combine
 
@@ -21,17 +14,27 @@ final class FavoritesManager: FavoritesManagerProtocol {
     @Published private(set) var favoriteIDs: Set<String> = []
     private let storage: FavoritesStorageProtocol
     private let service: GroupServiceProtocol
+    
 
     var favoriteIDsPublisher: Published<Set<String>>.Publisher { $favoriteIDs }
 
     init(storage: FavoritesStorageProtocol = FavoritesStorage(),
          service: GroupServiceProtocol = GroupService()) {
+        
         self.storage = storage
         self.service = service
+        Task { await self.loadFavorites() }
+        
     }
 
+//    func loadFavorites() async {
+//        favoriteIDs = await storage.getFavoriteIDs()
+//    }
     func loadFavorites() async {
-        favoriteIDs = await storage.getFavoriteIDs()
+        let ids = await storage.getFavoriteIDs()
+        await MainActor.run {
+            favoriteIDs = ids
+        }
     }
 
     func isFavorite(id: String) -> Bool {

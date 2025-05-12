@@ -5,7 +5,6 @@
 //  Created by Михаил Рахимов on 05.04.2025.
 //
 
-
 import SwiftUI
 
 struct ScheduleModeView: View {
@@ -13,15 +12,13 @@ struct ScheduleModeView: View {
     @Namespace private var animationModeNamespace
     @Environment(\.colorScheme) var colorScheme
     var body: some View {
-        HStack(spacing: 0) {
+        HStack(spacing: 12) { 
             ForEach(contentViewModel.availableModes, id: \.self) { mode in
                 Button(action: {
                     withAnimation(.spring(response: 0.3)) {
                         contentViewModel.selectMode(mode)
                     }
-                } )
-                
-                {
+                }) {
                     OneScheduleModeView(mode: mode.rawValue,
                                         isActive: contentViewModel.selectedMode.rawValue == mode.rawValue,
                                         namespace: animationModeNamespace
@@ -37,5 +34,3 @@ struct ScheduleModeView: View {
         .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 }
-
-

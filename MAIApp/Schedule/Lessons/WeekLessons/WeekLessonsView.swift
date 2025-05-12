@@ -8,11 +8,11 @@ struct WeekLessonsView: View {
     @State private var error: Error?
     var scheduleMode: ScheduleMode
     
-    private var weekDays: [Date] {
-        let calendar = Calendar.current
-        let startOfWeek = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: dateViewModel.selectedDay))!
-        return (0..<7).compactMap { calendar.date(byAdding: .day, value: $0, to: startOfWeek) }
-    }
+//    private var weekDays: [Date] {
+//        let calendar = Calendar.current
+//        let startOfWeek = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: dateViewModel.selectedDay))!
+//        return (0..<7).compactMap { calendar.date(byAdding: .day, value: $0, to: startOfWeek) }
+//    }
     
     private let headerDateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -26,6 +26,15 @@ struct WeekLessonsView: View {
         return formatter
     }()
     
+    
+//    private func weekLessons() -> some View {
+//        LazyVGrid(columns: Array(repeating: GridItem(.flexible(minimum: 150)), count: 1), spacing: 10) {
+//            ForEach(dateViewModel.daysOfWeek, id: ) { day in
+//                dayScheduleSection(for: day)
+//            }
+//        }
+//    }
+//    
     // MARK: - Секция для одного дня
     private func dayScheduleSection(for date: Date) -> some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -94,7 +103,7 @@ struct WeekLessonsView: View {
     
     
     
-    // MARK: - View Components
+//    // MARK: - View Components
     private struct LessonRow: View {
         let pair: Pair
         let subject: String
@@ -113,7 +122,7 @@ struct WeekLessonsView: View {
         }
     }
 
-    private func scheduleContent(for daySchedule: DaySchedule) -> some View {
+    func scheduleContent(for daySchedule: DaySchedule) -> some View {
         let allLessons = sortedTimes(in: daySchedule).flatMap { timeKey, pairs in
             sortedSubjects(in: pairs).map { subject, pair in
                 LessonItem(timeKey: timeKey, subject: subject, pair: pair)
@@ -143,7 +152,10 @@ struct WeekLessonsView: View {
                 .stroke(.gray, lineWidth: 1)
                 .opacity(0.25)
         )
-    }
+//        .onAppear {
+//            print("LessonsView загружает расписание для \(dateViewModel.selectedDay)")
+//        }
+}
     
     // MARK: - Loading Skeleton
     private var loadingSkeleton: some View {
