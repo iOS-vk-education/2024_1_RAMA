@@ -8,12 +8,12 @@
 import SwiftUI
 
 struct AuthView: View {
-    @State private var isDarkMode = false
-    @State private var email: String = ""
-    @State private var password: String = ""
     @Binding var isRegistration: Bool
-    @AppStorage("theme") var selectedTheme: Theme = .light
+    @EnvironmentObject var profileVM: ProfileViewModel
+    @AppStorage("theme") var selectedTheme: Theme = .system
     @AppStorage("lang") var selectedLang: Lang = .ru
+    @Environment(\.colorScheme) var colorScheme
+
     
     var body: some View {
         VStack {
@@ -23,7 +23,8 @@ struct AuthView: View {
                     .padding(.top, 100)
                 
                 VStack (spacing: 45){
-                    TextField("Электронная почта", text: $email)
+                    TextField("Электронная почта", text: $profileVM.email)
+
                         .padding()
                     
                         .foregroundColor(Color.gray)
@@ -32,7 +33,9 @@ struct AuthView: View {
                         .frame(width: 300, height: 20)
                     
                         
-                    SecureField("Пароль", text: $password)
+
+                    SecureField("Пароль", text: $profileVM.password)
+
                         .padding()
                         .background(RoundedRectangle(cornerRadius: 10).stroke(Color.gray, lineWidth: 1))
                         .frame(width: 300, height: 20)
@@ -41,7 +44,8 @@ struct AuthView: View {
                 .padding(.top, 20)
                 
                 Button{
-                    
+                    /// post запрос на сервак
+
                 } label: {
                     Text("Войти")
                         .bold()
@@ -104,7 +108,8 @@ struct AuthView: View {
                     .toolbar {
                         ToolbarItem(placement: .topBarLeading) {
                             HStack {
-                                Image(selectedTheme == .light ? "MAI_LIGHT" : "MAI_DARK")
+                                Image(colorScheme == .light ? "MAI_LIGHT" : "MAI_DARK")
+
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: 60, height: 60)
@@ -122,15 +127,17 @@ struct AuthView: View {
                         }
                         
                         ToolbarItem(placement: .topBarTrailing) {
-                            Picker("Theme", selection: $selectedTheme) {
-                                Image(systemName: "sun.max.fill").tag(Theme.light)
-                                Image(systemName: "moon.fill").tag(Theme.dark)
-                            }.pickerStyle(SegmentedPickerStyle())
-            
-                        }
+
+                                        Picker("Theme", selection: $selectedTheme) {
+                                            Image(systemName: "circle.lefthalf.filled").tag(Theme.system)
+                                            Image(systemName: "sun.max.fill").tag(Theme.light)
+                                            Image(systemName: "moon.fill").tag(Theme.dark)
+                                        }.pickerStyle(SegmentedPickerStyle())
+                                    }
                         
                     }
-                    .preferredColorScheme(selectedTheme == .light ? .light : .dark)
+//                    .preferredColorScheme(colorScheme == .light ? .light : .dark)
+
                     
                 Spacer()
             

@@ -3,6 +3,7 @@ import SwiftUI
 struct OneFacultyView: View {
     let faculty: String;
     let isSelected: Bool
+    
     var body: some View {
         VStack {
             Text(faculty)

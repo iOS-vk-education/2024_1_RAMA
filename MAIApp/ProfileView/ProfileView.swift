@@ -2,6 +2,8 @@
 import SwiftUI
 
 struct ProfileView: View {
+    @ObservedObject var profileVM: ProfileViewModel
+    @ObservedObject var groupSelectionViewModel: GroupSelectionViewModel
     var body: some View {
         NavigationStack{
             ScrollView{
@@ -12,10 +14,11 @@ struct ProfileView: View {
                             .frame(width: 80, height: 80)
                             .foregroundColor(.customGray)
                         
-                        Text("Михаил Рахимов")
+                        Text(profileVM.name)
                             .font(.title2)
                         
-                        Text("М8О-101БВ-24")
+                        Text(profileVM.group)
+
                             .foregroundColor(.gray)
                     }
                     .padding()
@@ -26,34 +29,30 @@ struct ProfileView: View {
                         NavigationLink(destination: ChooseAppIconView()) {
                             ListItemView(title: "Изменить иконку приложения")
                         }
+                        NavigationLink(destination: ChooseGroupView(groupSelectionViewModel: groupSelectionViewModel)) {
+                            ListItemView(title: "Изменить группу")
+                        }
+
                     }
                     
                 }
                 .padding()
                 .navigationTitle("Профиль")
                 .navigationBarTitleDisplayMode(.inline)
+
+            }
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        
+                    } label: {
+                        Text("получить группы")
+                    }
+                }
             }
         }
     }
 }
 
-struct ListItemView: View {
-    let title: String
-    
-    var body: some View {
-        HStack {
-            Text(title)
-                .foregroundColor(.black)
-            Spacer()
-            Image(systemName: "chevron.right")
-                .foregroundColor(.gray)
-        }
-        .padding()
-        .background(Color(.customGray))
-        .cornerRadius(15)
-    }
-}
 
-#Preview {
-    ProfileView()
-}
+

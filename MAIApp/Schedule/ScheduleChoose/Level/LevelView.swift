@@ -1,29 +1,40 @@
-//
-//  TypeOfStudyView.swift
-//  MAIApp
-//
-//  Created by Руслан on 24.12.2024.
-//
-
 import SwiftUI
 
 struct LevelView: View {
-    @EnvironmentObject var groupSelectionModel: GroupSelectionModel
+    @Environment(\.colorScheme) var colorScheme
+    @EnvironmentObject var groupSelectionViewModel: GroupSelectionViewModel
     var body: some View {
         NavigationStack {
             HStack {
-                NavigationLink(destination: ChooseLevelView()) {
+                if !groupSelectionViewModel.selectedCourse.isEmpty {
+                    NavigationLink(destination: ChooseLevelView(groupSelectionViewModel: groupSelectionViewModel)) {
+                        VStack(alignment: .leading) {
+                            Text("тип образования")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                            
+                            Text(groupSelectionViewModel.selectedLevel.isEmpty
+                                 ? "Не выбран"
+                                 : groupSelectionViewModel.selectedLevel)
+                            .font(.headline)
+                            
+                            
+                        }
+                        .foregroundStyle(colorScheme == .dark ? .white : .black)
+                        Spacer()
+                    }
+                }
+                
+                else {
                     VStack(alignment: .leading) {
                         Text("тип образования")
                             .font(.caption)
                             .foregroundStyle(.secondary)
-                        Text(groupSelectionModel.selectedLevel.isEmpty
-                             ? "Не выбран"
-                             : groupSelectionModel.selectedLevel)
+                        Text("Выберите курс")
                             .font(.headline)
-
+                            .foregroundStyle(.secondary)
                     }
-                    .foregroundColor(.black)
+                    .foregroundStyle(colorScheme == .dark ? .white : .black)
                     Spacer()
                 }
             }
@@ -38,37 +49,3 @@ struct LevelView: View {
         }
     }
 }
-//struct TypeOfStudyView: View {
-//    @Binding var selectedTypeOfStudy: TypeOfStudy
-//    let level: String
-//    
-//    var body: some View {
-//        NavigationStack {
-//            HStack {
-//                NavigationLink(destination: ChooseTypeOfStudyView(selectedTypeOfStudy: $selectedTypeOfStudy)) {
-//                    VStack(alignment: .leading) {
-//                        Text("тип образования")
-//                            .font(.caption)
-//                            .foregroundStyle(.secondary)
-//                        Text(selectedTypeOfStudy.name)
-//                            .font(.headline)
-//                    }
-//                    .foregroundColor(.black)
-//                    Spacer()
-//                }
-//            }
-//            .padding(.horizontal)
-//            .padding(.vertical, 12)
-//            .frame(maxWidth: .infinity)
-//            .overlay(
-//                    RoundedRectangle(cornerRadius: 12)
-//                        .stroke(.gray, lineWidth: 1)
-//                        .opacity(0.25)
-//                    )
-//        }
-//    }
-//}
-
-//#Preview {
-//    TypeOfStudyView()
-//}

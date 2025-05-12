@@ -1,10 +1,3 @@
-//
-//  ErrorGroupView.swift
-//  MAIApp
-//
-//  Created by Михаил Рахимов on 10.01.2025.
-//
-
 import SwiftUI
 
 struct ErrorGroupView: View {
@@ -24,7 +17,4 @@ struct ErrorGroupView: View {
         } .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
-//
-//#Preview {
-//    ErrorGroupView()
-//}
+

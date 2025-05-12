@@ -1,15 +1,9 @@
-//
-//  OneTypeOfStudyView.swift
-//  MAIApp
-//
-//  Created by Руслан on 24.12.2024.
-//
-
 import SwiftUI
 
 struct OneLevelView: View {
     let level: String
     let isSelected: Bool
+    
     var body: some View {
         VStack {
             Text(level)
@@ -25,6 +19,3 @@ struct OneLevelView: View {
     }
 }
 
-//#Preview {
-//    OneTypeOfStudyView(type: "Бакалавриат")
-//}

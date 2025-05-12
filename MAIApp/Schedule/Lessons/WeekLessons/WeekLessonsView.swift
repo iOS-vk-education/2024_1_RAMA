@@ -15,13 +15,17 @@ struct WeekLessonsView: View {
     
     private let headerDateFormatter: DateFormatter = {
         let formatter = DateFormatter()
-        formatter.dateFormat = "d MMMM" // Пример: "5 июня"
+
+        formatter.dateFormat = "d MMMM"
+
         return formatter
     }()
 
     private let weekdayFormatter: DateFormatter = {
         let formatter = DateFormatter()
-        formatter.dateFormat = "EEEE" // Полное название дня недели: "Понедельник"
+
+        formatter.dateFormat = "EEEE"
+
         return formatter
     }()
     
@@ -29,8 +33,6 @@ struct WeekLessonsView: View {
     private func dayScheduleSection(for date: Date) -> some View {
         VStack(alignment: .leading, spacing: 10) {
             dayHeader(for: date)
-            
-            // Убираем $ перед viewModel
             if let daySchedule = viewModel.getSchedule(for: date) {
                 scheduleContent(for: daySchedule)
             } else {
@@ -88,7 +90,10 @@ struct WeekLessonsView: View {
             }
         }
         .onAppear {
-            viewModel.loadSchedule(for: selectedGroup)
+
+            viewModel.loadScheduleForGroup(for: selectedGroup)
+
+
         }
     }
     

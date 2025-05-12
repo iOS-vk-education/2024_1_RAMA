@@ -1,22 +1,30 @@
 import SwiftUI
 
 struct FacultyAndCourseView: View {
-    @EnvironmentObject var groupSelectionModel: GroupSelectionModel
+    @ObservedObject var groupSelectionViewModel: GroupSelectionViewModel
     @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
         HStack(spacing: 0) {
-            NavigationLink(destination: ChooseFacultyView()) {
-                FacultyView(faculty: groupSelectionModel.selectedFaculty)
+            
+            NavigationLink(destination: ChooseFacultyView(groupSelectionViewModel: groupSelectionViewModel)) {
+                FacultyView(faculty: groupSelectionViewModel.selectedFaculty)
             }
             Rectangle()
                 .fill(.gray)
                 .opacity(0.25)
                 .frame(width: 1)
-            NavigationLink(destination: ChooseCourseView()) {
-                CourseView(course: groupSelectionModel.selectedCourse)
-            }
             
+            
+            if !groupSelectionViewModel.selectedFaculty.isEmpty {
+                NavigationLink(destination: ChooseCourseView(groupSelectionViewModel: groupSelectionViewModel)) {
+                    CourseView(groupSelectionViewModel: groupSelectionViewModel, course: groupSelectionViewModel.selectedCourse)
+                            }
+            } else {
+                CourseView(groupSelectionViewModel: groupSelectionViewModel, course: groupSelectionViewModel.selectedCourse)
+                    .disabled(true)
+                    .opacity(0.5)
+            }
         }
         .frame(maxWidth: .infinity)
         .fixedSize(horizontal: false, vertical: true)
@@ -25,15 +33,7 @@ struct FacultyAndCourseView: View {
                     .stroke(.gray, lineWidth: 1)
                     .opacity(0.25)
                 )
-        .onChange(of: groupSelectionModel.selectedFaculty) { _, newFaculty in
-                    if groupSelectionModel.selectedFaculty != newFaculty {
-                        groupSelectionModel.selectedCourse = ""
-                    }
-                    groupSelectionModel.selectedFaculty = newFaculty
-                }
     }
 }
 
-//#Preview {
-//    FacultyAndCourseView(selectedCourse: selectedCourse)
-//}
+

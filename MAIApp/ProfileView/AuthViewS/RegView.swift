@@ -1,19 +1,12 @@
-//
-//  RegView.swift
-//  MAIApp
-//
-//  Created by Михаил Рахимов on 11.01.2025.
-//
-
 import SwiftUI
 
 struct RegView: View {
     @State private var isDarkMode = false
-    @State private var email: String = ""
-    @State private var password: String = ""
-    @State var passwordVerifiсation = ""
+
+    @EnvironmentObject var profileVM: ProfileViewModel
     @Binding var isRegistration: Bool
-    @AppStorage("theme") var selectedTheme: Theme = .light
+    @AppStorage("theme") var selectedTheme: Theme = .system
+
     @AppStorage("lang") var selectedLang: Lang = .ru
     @Environment(\.colorScheme) var colorScheme
     
@@ -26,38 +19,38 @@ struct RegView: View {
                     .padding(.top, 100)
                 
                 VStack (spacing: 45){
-                    TextField("Электронная почта", text: $email)
+                    TextField("Электронная почта", text: $profileVM.email)
+
                         .padding()
                         .foregroundColor(Color.gray)
                         .background(RoundedRectangle(cornerRadius: 10).stroke(Color.gray, lineWidth: 1))
                     
                         .frame(width: 300, height: 20)
                     
-                    
-                    SecureField("Пароль", text: $password)
+
+                    SecureField("Пароль", text: $profileVM.password)
                         .padding()
                         .background(RoundedRectangle(cornerRadius: 10).stroke(Color.gray, lineWidth: 1))
                         .frame(width: 300, height: 20)
                         .textContentType(.newPassword)
-                    
-                    SecureField("Пароль еще раз", text: $passwordVerifiсation)
-                        .padding()
-                        .background(RoundedRectangle(cornerRadius: 10).stroke(Color.gray, lineWidth: 1))
-                        .frame(width: 300, height: 20)
-                    
+                
                 }
                 .padding(.top, 20)
                 
-                Button{
-                    
+                Button {
+                    profileVM.register()
                 } label: {
-                    Text("Зарегистрироваться")
+                    Text(profileVM.isLoading ? "Загрузка..." : "Зарегистрироваться")
+
                         .bold()
                         .frame(width: 300, height: 40)
                         .foregroundColor(Color.white)
                         .background(Color.customBlue)
                         .cornerRadius(10)
                 }
+
+                .disabled(profileVM.isLoading)
+
             }
             .padding()
             VStack (spacing: 10){
@@ -112,7 +105,8 @@ struct RegView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     HStack {
-                        Image(selectedTheme == .light ? "MAI_LIGHT" : "MAI_DARK")
+                        Image(colorScheme == .light ? "MAI_LIGHT" : "MAI_DARK")
+
                             .resizable()
                             .scaledToFit()
                             .frame(width: 60, height: 60)
@@ -130,15 +124,17 @@ struct RegView: View {
                 }
                 
                 ToolbarItem(placement: .topBarTrailing) {
-                    Picker("Theme", selection: $selectedTheme) {
-                        Image(systemName: "sun.max.fill").tag(Theme.light)
-                        Image(systemName: "moon.fill").tag(Theme.dark)
-                    }.pickerStyle(SegmentedPickerStyle())
-    
-                }
+
+                                Picker("Theme", selection: $selectedTheme) {
+                                    Image(systemName: "circle.lefthalf.filled").tag(Theme.system)
+                                    Image(systemName: "sun.max.fill").tag(Theme.light)
+                                    Image(systemName: "moon.fill").tag(Theme.dark)
+                                }.pickerStyle(SegmentedPickerStyle())
+                            }
                 
             }
-            .preferredColorScheme(selectedTheme == .light ? .light : .dark)
+            .preferredColorScheme(colorScheme == .light ? .light : .dark)
+
             
         Spacer()
     

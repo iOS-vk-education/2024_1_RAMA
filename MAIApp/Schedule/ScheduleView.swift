@@ -5,29 +5,33 @@ struct ScheduleView: View {
     @State private var selectedDay: Date = Date()
     @State private var scheduleMode: ScheduleMode = .day
     @State private var isMenuOpen = false
-    @EnvironmentObject var groupSelectionModel: GroupSelectionModel
+    @ObservedObject var groupSelectionViewModel: GroupSelectionViewModel
+    @ObservedObject var weekViewModel: WeekViewModel
+    
     @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
         NavigationStack {
             VStack(spacing: 8) {
-                if groupSelectionModel.selectedGroup == "" {
+                if groupSelectionViewModel.selectedGroup == "" {
                     
-                    GroupAndWeekView(weekNumber: $weekNumber, selectedDay: $selectedDay)
+                    GroupAndWeekView(weekNumber: $weekNumber, selectedDay: $selectedDay, groupSelectionViewModel: groupSelectionViewModel, weekViewModel: weekViewModel)
+
+
                     
                     ErrorGroupView()
                     
                 }
                 
                 else if scheduleMode == .day {
-                    
-                    GroupAndWeekView(weekNumber: $weekNumber, selectedDay: $selectedDay)
-                    
+
+                    GroupAndWeekView(weekNumber: $weekNumber, selectedDay: $selectedDay, groupSelectionViewModel: groupSelectionViewModel, weekViewModel: weekViewModel)
+
                     DatePickerView(selectedDay: $selectedDay, weekNumber: $weekNumber)
                     
                     LessonsView(
                         selectedDay: $selectedDay,
-                        selectedGroup: $groupSelectionModel.selectedGroup,
+                        selectedGroup: $groupSelectionViewModel.selectedGroup,
                         viewModel: LessonViewModel()
                     )
                     
@@ -38,11 +42,13 @@ struct ScheduleView: View {
                 
                 else if scheduleMode == .week {
                     
-                    GroupAndWeekView(weekNumber: $weekNumber, selectedDay: $selectedDay)
+
+                    GroupAndWeekView(weekNumber: $weekNumber, selectedDay: $selectedDay, groupSelectionViewModel: groupSelectionViewModel, weekViewModel: weekViewModel)
                     
                     LessonsView(
                         selectedDay: $selectedDay,
-                        selectedGroup: $groupSelectionModel.selectedGroup,
+                        selectedGroup: $groupSelectionViewModel.selectedGroup,
+
                         viewModel: LessonViewModel()
                     )
                     
@@ -107,10 +113,4 @@ func iconName(for mode: ScheduleMode) -> String {
     }
 }
 
-// MARK: Enum for mode
-enum ScheduleMode: String, CaseIterable {
-    case day = "День"
-    case week = "Неделя"
-    case calendar = "Календарь"
-}
 

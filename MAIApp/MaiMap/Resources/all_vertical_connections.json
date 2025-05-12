@@ -1,0 +1,20 @@
+[
+  {
+    "type": "elevator",
+    "name": "Центральный лифт",
+    "nodes": [
+      "elevator_1",
+      "elevator_2"
+    ],
+    "weight": 2
+  },
+  {
+    "type": "stairs",
+    "name": "Лестница",
+    "nodes": [
+      "stairs_11",
+      "stairs_21"
+    ],
+    "weight": 2
+  }
+]

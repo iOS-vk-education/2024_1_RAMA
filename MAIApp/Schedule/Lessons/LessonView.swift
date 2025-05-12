@@ -1,11 +1,11 @@
 import SwiftUI
 
 struct LessonView: View {
-    let timeRange: String;
-    let classroom: String;
-    let lessonType: String;
-    let lessonName: String;
-    let lector: String;
+    let timeRange: String
+    let classroom: String
+    let lessonType: String
+    let lessonName: String
+    let lector: String
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack (spacing: 4){
@@ -33,6 +33,3 @@ struct LessonView: View {
     }
 }
 
-//#Preview {
-//    LessonView(timeRange: "xx:xx – xx:xx", classroom: "XXXX", lessonType: "XX", lessonName: "Название дисциплины", teacher: "Фамилия Имя Отчество")
-//}
