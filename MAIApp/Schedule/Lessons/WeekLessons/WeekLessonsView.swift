@@ -1,227 +1,154 @@
 import SwiftUI
 
 struct WeekLessonsView: View {
+    @ObservedObject var viewModel: LessonViewModel
     @ObservedObject var dateViewModel: DateViewModel
     @ObservedObject var groupSelectionViewModel: GroupSelectionViewModel
-    @ObservedObject var viewModel: LessonViewModel
-    
-    @State private var error: Error?
-    var scheduleMode: ScheduleMode
-    
-//    private var weekDays: [Date] {
-//        let calendar = Calendar.current
-//        let startOfWeek = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: dateViewModel.selectedDay))!
-//        return (0..<7).compactMap { calendar.date(byAdding: .day, value: $0, to: startOfWeek) }
-//    }
-    
-    private let headerDateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "d MMMM"
-        return formatter
-    }()
-
-    private let weekdayFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "EEEE"
-        return formatter
-    }()
-    
-    
-//    private func weekLessons() -> some View {
-//        LazyVGrid(columns: Array(repeating: GridItem(.flexible(minimum: 150)), count: 1), spacing: 10) {
-//            ForEach(dateViewModel.daysOfWeek, id: ) { day in
-//                dayScheduleSection(for: day)
-//            }
-//        }
-//    }
-//    
-    // MARK: - Секция для одного дня
-    private func dayScheduleSection(for date: Date) -> some View {
-        VStack(alignment: .leading, spacing: 10) {
-            dayHeader(for: date)
-
-            if let daySchedule = viewModel.getSchedule(for: date) {
-                scheduleContent(for: daySchedule)
-            } else {
-                Text("Нет занятий")
-                    .foregroundColor(.gray)
-                    .padding()
-                    .frame(maxWidth: .infinity)
-            }
-        }
-        .padding()
-        .background(Color(.systemBackground))
-        .cornerRadius(12)
-        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
-    }
-    
-    // MARK: - Заголовок дня
-       private func dayHeader(for date: Date) -> some View {
-           HStack {
-               VStack(alignment: .leading) {
-                   Text(DateFormatter.headerDate.string(from: date))
-                       .font(.headline)
-                   
-                   Text(DateFormatter.weekday.string(from: date))
-                       .font(.subheadline)
-                       .foregroundColor(.secondary)
-               }
-               
-               Spacer()
-               
-               if Calendar.current.isDate(date, inSameDayAs: Date()) {
-                   Text("Сегодня")
-                       .font(.caption)
-                       .foregroundColor(.white)
-                       .padding(5)
-                       .background(Capsule().fill(Color.blue))
-               }
-           }
-           .padding(.bottom, 8)
-       }
     
     var body: some View {
         ScrollView {
-            VStack {
-                if viewModel.groupSchedule != nil {
-                    if let selectedLessonDay = viewModel.findLessonDay(for: dateViewModel.selectedDay) {
-                        scheduleContent(for: selectedLessonDay)
-                    } else {
-                        placeholderView
+            VStack(alignment: .leading, spacing: 24) {
+                ForEach(weekDays, id: \.self) { day in
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text(formattedDate(day))
+                            .font(.headline)
+                            .padding(.horizontal)
+                        
+                        if let daySchedule = viewModel.findLessonDay(for: day) {
+                            LessonsList(daySchedule: daySchedule)
+                        } else {
+                            Text("Нет занятий")
+                                .foregroundColor(.gray)
+                                .padding(.horizontal)
+                        }
                     }
-                } else if error != nil {
-                    placeholderView
-                } else {
-                    loadingSkeleton
                 }
             }
+            .padding(.vertical)
         }
         .onAppear {
             viewModel.loadScheduleForGroup(for: groupSelectionViewModel.selectedGroup)
         }
     }
     
-    
-    
-//    // MARK: - View Components
-    private struct LessonRow: View {
-        let pair: Pair
-        let subject: String
-        let formatTime: (String) -> String
-        
-        var body: some View {
-            VStack {
-                LessonView(
-                    timeRange: "\(formatTime(pair.timeStart)) – \(formatTime(pair.timeEnd))",
-                    classroom: pair.room.values.first ?? "не указана",
-                    lessonType: pair.type.keys.first ?? "не указан",
-                    lessonName: subject,
-                    lector: pair.lector.values.first?.toCapitalizedCase() ?? "не указан"
-                )
-            }
-        }
+    private var weekDays: [Date] {
+        Array(dateViewModel.daysOfWeek(for: dateViewModel.selectedWeek).prefix(6))
     }
+    
+    private func formattedDate(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "ru_RU")
+        formatter.dateFormat = "EEEE, d MMMM"
+        return formatter.string(from: date)
+    }
+}
 
-    func scheduleContent(for daySchedule: DaySchedule) -> some View {
-        let allLessons = sortedTimes(in: daySchedule).flatMap { timeKey, pairs in
-            sortedSubjects(in: pairs).map { subject, pair in
-                LessonItem(timeKey: timeKey, subject: subject, pair: pair)
+struct LessonsList: View {
+    let daySchedule: DaySchedule
+
+    var body: some View {
+        VStack(spacing: 0) {
+            let allLessons = sortedTimes(in: daySchedule).flatMap { timeKey, pairs in
+                sortedSubjects(in: pairs).map { subject, pair in
+                    LessonItem(timeKey: timeKey, subject: subject, pair: pair)
+                }
             }
-        }
-        
-        return VStack {
+            
             ForEach(allLessons) { lesson in
                 VStack {
-                    LessonRow(
-                        pair: lesson.pair,
-                        subject: lesson.subject,
-                        formatTime: formatTime
+                    LessonView(
+                        timeRange: "\(formatTime(lesson.pair.timeStart)) – \(formatTime(lesson.pair.timeEnd))",
+                        classroom: lesson.pair.room.values.first ?? "не указана",
+                        lessonType: lesson.pair.type.keys.first ?? "не указан",
+                        lessonName: lesson.subject,
+                        lector: lesson.pair.lector.values.first?.toCapitalizedCase() ?? "не указан"
                     )
                     
                     if lesson.id != allLessons.last?.id {
-                        Rectangle()
-                            .fill(.gray)
+                        Divider()
                             .opacity(0.25)
-                            .frame(height: 1)
                     }
                 }
             }
         }
         .overlay(
             RoundedRectangle(cornerRadius: 12)
-                .stroke(.gray, lineWidth: 1)
-                .opacity(0.25)
+                .stroke(Color.gray.opacity(0.25), lineWidth: 1)
         )
-//        .onAppear {
-//            print("LessonsView загружает расписание для \(dateViewModel.selectedDay)")
-//        }
+        .padding(.horizontal)
+    }
+
+    private func sortedTimes(in daySchedule: DaySchedule) -> [(key: String, value: [String: Pair])] {
+        daySchedule.pairs.sorted {
+            guard let t1 = $0.key.toDate(), let t2 = $1.key.toDate() else {
+                return $0.key < $1.key
+            }
+            return t1 < t2
+        }
+    }
+
+    private func sortedSubjects(in pairs: [String: Pair]) -> [(key: String, value: Pair)] {
+        pairs.sorted { $0.key < $1.key }
+    }
+
+    private func formatTime(_ string: String) -> String {
+        guard let date = string.toDate() else { return string }
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        return formatter.string(from: date)
+    }
+
+    private struct LessonItem: Identifiable {
+        let id: String
+        let timeKey: String
+        let subject: String
+        let pair: Pair
+
+        init(timeKey: String, subject: String, pair: Pair) {
+            self.timeKey = timeKey
+            self.subject = subject
+            self.pair = pair
+            self.id = "\(timeKey)-\(subject)-\(pair.timeStart)-\(pair.timeEnd)"
+        }
+    }
 }
-    
-    // MARK: - Loading Skeleton
-    private var loadingSkeleton: some View {
-        VStack(spacing: 16) {
-            ForEach(0..<5) { _ in
-                SkeletonView()
-                    .frame(height: 80)
-                    .cornerRadius(12)
+
+struct LessonsForDayView: View {
+    let daySchedule: DaySchedule
+
+    var body: some View {
+        VStack(spacing: 12) {
+            ForEach(allLessons) { lesson in
+                VStack(spacing: 8) {
+                    LessonView(
+                        timeRange: "\(formatTime(lesson.pair.timeStart)) – \(formatTime(lesson.pair.timeEnd))",
+                        classroom: lesson.pair.room.values.first ?? "не указана",
+                        lessonType: lesson.pair.type.keys.first ?? "не указан",
+                        lessonName: lesson.subject,
+                        lector: lesson.pair.lector.values.first?.toCapitalizedCase() ?? "не указан"
+                    )
+
+                    if lesson.id != allLessons.last?.id {
+                        Divider().opacity(0.25)
+                    }
+                }
             }
         }
         .padding()
-        .redacted(reason: .placeholder)
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+        )
     }
-    
-    private struct SkeletonView: View {
-        @State private var isAnimating = false
-        
-        var body: some View {
-            Rectangle()
-                .fill(
-                    LinearGradient(
-                        gradient: Gradient(colors: [
-                            Color.gray.opacity(0.1),
-                            Color.gray.opacity(0.3),
-                            Color.gray.opacity(0.1)
-                        ]),
-                        startPoint: .leading,
-                        endPoint: .trailing
-                    )
-                )
-                .opacity(isAnimating ? 1 : 0.5)
-                .animation(
-                    Animation.easeInOut(duration: 1.5)
-                        .repeatForever(autoreverses: true),
-                    value: isAnimating
-                )
-                .onAppear {
-                    isAnimating = true
-                }
-        }
-    }
-    
-    // MARK: - Placeholder View
-    private var placeholderView: some View {
-        VStack {
-            Spacer()
-            Image("error_schedule")
-                .padding(.top, 100)
-            Text("Данные не найдены :(")
-                .font(.system(size: 20, weight: .medium, design: .rounded))
-                .padding(.top, 15)
-            if let error = error {
-                Text("Ошибка: \(error.localizedDescription)")
-                    .foregroundColor(.red)
-                    .font(.system(size: 12, weight: .light, design: .rounded))
-            } else {
-                Text("Расписание ещё не выложили, либо в расписании ошибка.")
-                    .foregroundColor(.gray)
-                    .font(.system(size: 12, weight: .light, design: .rounded))
+
+    private var allLessons: [LessonItem] {
+        sortedTimes(in: daySchedule).flatMap { timeKey, pairs in
+            sortedSubjects(in: pairs).map { subject, pair in
+                LessonItem(timeKey: timeKey, subject: subject, pair: pair)
             }
-            Spacer()
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
-    
-    // MARK: - Sorting Helpers
+
     private func sortedTimes(in daySchedule: DaySchedule) -> [(key: String, value: [String: Pair])] {
         daySchedule.pairs.sorted {
             guard let time1 = $0.key.toDate(),
@@ -231,7 +158,7 @@ struct WeekLessonsView: View {
             return time1 < time2
         }
     }
-    
+
     private func sortedSubjects(in pairs: [String: Pair]) -> [(key: String, value: Pair)] {
         pairs.sorted {
             if $0.key == $1.key {
@@ -241,16 +168,16 @@ struct WeekLessonsView: View {
             }
         }
     }
-    
+
     private func formatTime(_ timeString: String) -> String {
         guard let date = timeString.toDate() else {
             return timeString
         }
-        let outputFormatter = DateFormatter()
-        outputFormatter.dateFormat = "HH:mm"
-        return outputFormatter.string(from: date)
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        return formatter.string(from: date)
     }
-    
+
     private struct LessonItem: Identifiable {
         let id: String
         let timeKey: String
@@ -266,25 +193,10 @@ struct WeekLessonsView: View {
     }
 }
 
-
 extension DateFormatter {
     static let yyyyMMdd: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
-        formatter.locale = Locale(identifier: "ru_RU")
-        return formatter
-    }()
-    
-    static let headerDate: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "d MMMM"
-        formatter.locale = Locale(identifier: "ru_RU")
-        return formatter
-    }()
-    
-    static let weekday: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "EEEE"
         formatter.locale = Locale(identifier: "ru_RU")
         return formatter
     }()
