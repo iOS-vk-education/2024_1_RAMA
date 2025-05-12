@@ -39,7 +39,7 @@ struct FavoritesScreen: View {
                 }
                 .padding(.all, 8)
             }
-            .navigationTitle("Favorites")
+            .navigationTitle("Избранные группы")
             .onAppear { vm.loadData() }
         }
     }

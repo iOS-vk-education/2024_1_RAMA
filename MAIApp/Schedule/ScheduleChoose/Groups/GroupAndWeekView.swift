@@ -13,10 +13,7 @@ struct GroupAndWeekView: View {
                     GroupView(groupSelectionViewModel: groupSelectionViewModel)
                 }
                 .foregroundStyle(colorScheme == .dark ? .white : .black)
-//                Rectangle()
-//                    .fill(.gray)
-//                    .opacity(0.25)
-//                    .frame(width: 1)
+                
                 NavigationLink(destination: ChooseWeekView(dateViewModel: dateViewModel)) {
                     WeekView(weekViewModel: dateViewModel)
                 }
@@ -30,14 +27,14 @@ struct GroupAndWeekView: View {
                 RoundedRectangle(cornerRadius: 12)
                     .fill(Color.cardBackground)
                     .clipShape(RoundedRectangle(cornerRadius: 10))
-                
             )
         }
-//        .onAppear {
-//            print("GroupAndWeekView появился, weekNumber: \($dateViewModel.selectedWeek), selectedDay: \($dateViewModel.selectedDay)")
-//        }
+        .onChange(of: dateViewModel.selectedWeek) { _, newWeek in
+            // Проверяем, входит ли текущий выбранный день в новую неделю
+            let newWeekDates = dateViewModel.daysOfWeek(for: newWeek)
+            if !newWeekDates.contains(where: { Calendar.current.isDate($0, inSameDayAs: dateViewModel.selectedDay) }) {
+                dateViewModel.updateSelectedDayForWeek(newWeek)
+            }
+        }
     }
-    
 }
-
-

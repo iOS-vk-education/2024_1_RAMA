@@ -25,10 +25,9 @@ struct ScheduleView: View {
                     
                 }
                 
-                else if scheduleMode == .day {
+                else if contentViewModel.selectedMode == .day {
                     
                     GroupAndWeekView(groupSelectionViewModel: groupSelectionViewModel, dateViewModel: dateViewModel)
-                    
                     DatePickerView(dateViewModel: dateViewModel)
                     ScheduleModeView(contentViewModel: contentViewModel)
                     LessonsView(
@@ -36,26 +35,106 @@ struct ScheduleView: View {
                         dateViewModel: dateViewModel,
                         groupSelectionViewModel: groupSelectionViewModel
                     )
+                    .gesture(
+                        DragGesture()
+                            .onEnded { value in
+                                guard abs(value.translation.width) > 50 else { return }
+
+                                let calendar = Calendar.current
+                                let selected = dateViewModel.selectedDay
+                                let currentWeek = calendar.component(.weekOfYear, from: selected)
+
+                                let days = dateViewModel.daysOfWeek(for: currentWeek)
+                                    .filter { calendar.component(.weekday, from: $0) != 1 } // нафиг воскресенье
+
+                                guard let index = days.firstIndex(where: { calendar.isDate($0, inSameDayAs: selected) }) else { return }
+
+                                withAnimation(.easeInOut(duration: 0.15)) { // добавляем анимацию
+                                    if value.translation.width < 0 {
+                                        // свайп налево - идем вперед
+                                        if index < days.count - 1 {
+                                            dateViewModel.selectedDay = days[index + 1]
+                                        } else {
+                                            let nextWeek = currentWeek + 1
+                                            let nextDays = dateViewModel.daysOfWeek(for: nextWeek)
+                                                .filter { calendar.component(.weekday, from: $0) != 1 }
+                                            if let monday = nextDays.first {
+                                                dateViewModel.selectedWeek = nextWeek
+                                                dateViewModel.selectedDay = monday
+                                            }
+                                        }
+                                    } else {
+                                        // свайп направо - идем назад
+                                        if index > 0 {
+                                            dateViewModel.selectedDay = days[index - 1]
+                                        } else {
+                                            let prevWeek = currentWeek - 1
+                                            let prevDays = dateViewModel.daysOfWeek(for: prevWeek)
+                                                .filter { calendar.component(.weekday, from: $0) != 1 }
+                                            if let saturday = prevDays.last {
+                                                dateViewModel.selectedWeek = prevWeek
+                                                dateViewModel.selectedDay = saturday
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                    )
                     
-                    Spacer()
                     
                 }
                 
                 
-                else if scheduleMode == .week {
-                    
+                else if contentViewModel.selectedMode == .week {
                     GroupAndWeekView(groupSelectionViewModel: groupSelectionViewModel, dateViewModel: dateViewModel)
-                
+                    ScheduleModeView(contentViewModel: contentViewModel)
                     
-                    Spacer()
+                    WeekLessonsView(
+                        viewModel: lessonViewModel,
+                        dateViewModel: dateViewModel,
+                        groupSelectionViewModel: groupSelectionViewModel
+                    )
+                    .gesture(
+                        DragGesture()
+                            .onEnded { value in
+                                guard abs(value.translation.width) > 50 else { return }
+                                
+                                let currentWeek = dateViewModel.selectedWeek
+                                let calendar = Calendar.current
+
+                                withAnimation(.easeInOut(duration: 0.15)) {
+                                    if value.translation.width < 0 {
+                                        // свайп влево — вперёд
+                                        let nextWeek = currentWeek + 1
+                                        dateViewModel.selectedWeek = nextWeek
+                                        if let firstDay = dateViewModel.daysOfWeek(for: nextWeek).first(where: {
+                                            calendar.component(.weekday, from: $0) != 1 // исключить воскресенье
+                                        }) {
+                                            dateViewModel.selectedDay = firstDay
+                                        }
+                                    } else {
+                                        // свайп вправо — назад
+                                        let prevWeek = currentWeek - 1
+                                        dateViewModel.selectedWeek = prevWeek
+                                        if let firstDay = dateViewModel.daysOfWeek(for: prevWeek).first(where: {
+                                            calendar.component(.weekday, from: $0) != 1
+                                        }) {
+                                            dateViewModel.selectedDay = firstDay
+                                        }
+                                    }
+                                }
+                            }
+                    )
                 }
+                
+                
             }
             .padding()
             .navigationTitle("Расписание")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    NavigationLink("Избранные", destination: FavoritesScreen(groupSelectionViewModel: groupSelectionViewModel))
+                    NavigationLink("Избранное", destination: FavoritesScreen(groupSelectionViewModel: groupSelectionViewModel))
                         .onChange(of: groupSelectionViewModel.selectedGroup) {_, newGroup in
                             if !newGroup.isEmpty {
                                 dateViewModel.loadWeeksForGroup(for: newGroup)
@@ -108,5 +187,3 @@ func iconName(for mode: ScheduleMode) -> String {
     case .calendar: return "MonthSelected"
     }
 }
-
-
