@@ -8,14 +8,12 @@
 import SwiftUI
 
 struct AuthView: View {
-//    @State private var email: String = ""
-//    @State private var password: String = ""
     @Binding var isRegistration: Bool
-    
     @EnvironmentObject var profileVM: ProfileViewModel
     @AppStorage("theme") var selectedTheme: Theme = .system
     @AppStorage("lang") var selectedLang: Lang = .ru
     @Environment(\.colorScheme) var colorScheme
+
     
     var body: some View {
         VStack {
@@ -26,6 +24,7 @@ struct AuthView: View {
                 
                 VStack (spacing: 45){
                     TextField("Электронная почта", text: $profileVM.email)
+
                         .padding()
                     
                         .foregroundColor(Color.gray)
@@ -34,7 +33,9 @@ struct AuthView: View {
                         .frame(width: 300, height: 20)
                     
                         
+
                     SecureField("Пароль", text: $profileVM.password)
+
                         .padding()
                         .background(RoundedRectangle(cornerRadius: 10).stroke(Color.gray, lineWidth: 1))
                         .frame(width: 300, height: 20)
@@ -44,6 +45,7 @@ struct AuthView: View {
                 
                 Button{
                     /// post запрос на сервак
+
                 } label: {
                     Text("Войти")
                         .bold()
@@ -107,6 +109,7 @@ struct AuthView: View {
                         ToolbarItem(placement: .topBarLeading) {
                             HStack {
                                 Image(colorScheme == .light ? "MAI_LIGHT" : "MAI_DARK")
+
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: 60, height: 60)
@@ -124,6 +127,7 @@ struct AuthView: View {
                         }
                         
                         ToolbarItem(placement: .topBarTrailing) {
+
                                         Picker("Theme", selection: $selectedTheme) {
                                             Image(systemName: "circle.lefthalf.filled").tag(Theme.system)
                                             Image(systemName: "sun.max.fill").tag(Theme.light)
@@ -133,6 +137,7 @@ struct AuthView: View {
                         
                     }
 //                    .preferredColorScheme(colorScheme == .light ? .light : .dark)
+
                     
                 Spacer()
             

@@ -1,22 +1,12 @@
-//
-//  RegView.swift
-//  MAIApp
-//
-//  Created by Михаил Рахимов on 11.01.2025.
-//
-
 import SwiftUI
 
 struct RegView: View {
     @State private var isDarkMode = false
+
     @EnvironmentObject var profileVM: ProfileViewModel
-//    private let apiService = APIService()
-    
-//    @State private var email: String = ""
-//    @State private var password: String = ""
-//    @State var passwordVerifiсation = ""
     @Binding var isRegistration: Bool
     @AppStorage("theme") var selectedTheme: Theme = .system
+
     @AppStorage("lang") var selectedLang: Lang = .ru
     @Environment(\.colorScheme) var colorScheme
     
@@ -30,13 +20,14 @@ struct RegView: View {
                 
                 VStack (spacing: 45){
                     TextField("Электронная почта", text: $profileVM.email)
+
                         .padding()
                         .foregroundColor(Color.gray)
                         .background(RoundedRectangle(cornerRadius: 10).stroke(Color.gray, lineWidth: 1))
                     
                         .frame(width: 300, height: 20)
                     
-                    
+
                     SecureField("Пароль", text: $profileVM.password)
                         .padding()
                         .background(RoundedRectangle(cornerRadius: 10).stroke(Color.gray, lineWidth: 1))
@@ -50,13 +41,16 @@ struct RegView: View {
                     profileVM.register()
                 } label: {
                     Text(profileVM.isLoading ? "Загрузка..." : "Зарегистрироваться")
+
                         .bold()
                         .frame(width: 300, height: 40)
                         .foregroundColor(Color.white)
                         .background(Color.customBlue)
                         .cornerRadius(10)
                 }
+
                 .disabled(profileVM.isLoading)
+
             }
             .padding()
             VStack (spacing: 10){
@@ -112,6 +106,7 @@ struct RegView: View {
                 ToolbarItem(placement: .topBarLeading) {
                     HStack {
                         Image(colorScheme == .light ? "MAI_LIGHT" : "MAI_DARK")
+
                             .resizable()
                             .scaledToFit()
                             .frame(width: 60, height: 60)
@@ -129,6 +124,7 @@ struct RegView: View {
                 }
                 
                 ToolbarItem(placement: .topBarTrailing) {
+
                                 Picker("Theme", selection: $selectedTheme) {
                                     Image(systemName: "circle.lefthalf.filled").tag(Theme.system)
                                     Image(systemName: "sun.max.fill").tag(Theme.light)
@@ -138,6 +134,7 @@ struct RegView: View {
                 
             }
             .preferredColorScheme(colorScheme == .light ? .light : .dark)
+
             
         Spacer()
     

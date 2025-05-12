@@ -1,0 +1,347 @@
+{
+  "offices": [
+    {
+      "desc": "",
+      "type": "elevator",
+      "name": "Лифт",
+      "color": "#555555",
+      "length": 1,
+      "width": 1,
+      "height": 1,
+      "coords": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "desc": "",
+      "name": "Коридор",
+      "color": "#555555",
+      "length": 1,
+      "width": 1,
+      "height": 14.2,
+      "coords": [
+        1.1,
+        0,
+        0
+      ]
+    },
+    {
+      "desc": "",
+      "name": "202",
+      "color": "#555555",
+      "length": 1,
+      "width": 1,
+      "height": 2,
+      "coords": [
+        2.2,
+        0,
+        0
+      ]
+    },
+    {
+      "desc": "",
+      "name": "203",
+      "color": "#555555",
+      "length": 1,
+      "width": 1,
+      "height": 3,
+      "coords": [
+        0,
+        0,
+        2.1
+      ]
+    },
+    {
+      "desc": "",
+      "name": "205",
+      "color": "#555555",
+      "length": 1,
+      "width": 1,
+      "height": 1,
+      "coords": [
+        0,
+        0,
+        4.2
+      ]
+    },
+    {
+      "desc": "",
+      "name": "204",
+      "color": "#555555",
+      "length": 3,
+      "width": 2,
+      "height": 6,
+      "coords": [
+        3.2,
+        0,
+        4.1
+      ]
+    },
+    {
+      "desc": "",
+      "name": "207",
+      "color": "#555555",
+      "length": 1,
+      "width": 1,
+      "height": 2.2,
+      "coords": [
+        0,
+        0,
+        6
+      ]
+    },
+    {
+      "desc": "",
+      "name": "Лестница",
+      "type": "stairs",
+      "color": "#555555",
+      "length": 2,
+      "width": 1,
+      "height": 6,
+      "coords": [
+        -0.5,
+        0,
+        -4.1
+      ]
+    },
+    {
+      "desc": "",
+      "name": "206",
+      "color": "#555555",
+      "length": 1,
+      "width": 1,
+      "height": 4,
+      "coords": [
+        2.2,
+        0,
+        -4
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "connections": [
+        "coridor_21_1"
+      ],
+      "floor": 2,
+      "id": "elevator_2",
+      "type": "elevator",
+      "landmarks": [
+        "Лифт"
+      ],
+      "name": "Лифт"
+    },
+    {
+      "x": 1.1,
+      "y": 0,
+      "z": 0,
+      "connections": [
+        "coridor_21_2",
+        "office_202",
+        "elevator_2",
+        "coridor_21_5"
+      ],
+      "floor": 2,
+      "id": "coridor_21_1",
+      "type": "corridor",
+      "landmarks": [
+        ""
+      ],
+      "name": "Коридор"
+    },
+    {
+      "x": 2.2,
+      "y": 0,
+      "z": 0,
+      "connections": [
+        "coridor_21_1"
+      ],
+      "floor": 2,
+      "id": "office_202",
+      "type": "room",
+      "landmarks": [
+        "Кабинет 202"
+      ],
+      "name": "Кабинет 202"
+    },
+    {
+      "x": 0,
+      "y": 0,
+      "z": 2.1,
+      "connections": [
+        "coridor_21_2"
+      ],
+      "floor": 2,
+      "id": "office_203",
+      "type": "room",
+      "landmarks": [
+        "Кабинет 203"
+      ],
+      "name": "Кабинет 203"
+    },
+    {
+      "x": 0,
+      "y": 0,
+      "z": 4.2,
+      "connections": [
+        "coridor_21_3"
+      ],
+      "floor": 2,
+      "id": "office_205",
+      "type": "room",
+      "landmarks": [
+        "Кабинет 205"
+      ],
+      "name": "Кабинет 205"
+    },
+    {
+      "x": 3.2,
+      "y": 0,
+      "z": 4.1,
+      "connections": [
+        "coridor_21_3"
+      ],
+      "floor": 2,
+      "id": "office_204",
+      "type": "room",
+      "landmarks": [
+        "Кабинет 204"
+      ],
+      "name": "Кабинет 204"
+    },
+    {
+      "x": 0,
+      "y": 0,
+      "z": 6,
+      "connections": [
+        "coridor_21_4"
+      ],
+      "floor": 2,
+      "id": "office_207",
+      "type": "room",
+      "landmarks": [
+        "Кабинет 207"
+      ],
+      "name": "Кабинет 207"
+    },
+    {
+      "x": -0.5,
+      "y": 0,
+      "z": -4.1,
+      "connections": [
+        "coridor_21_5"
+      ],
+      "floor": 2,
+      "id": "stairs_21",
+      "type": "stairs",
+      "landmarks": [
+        "Лестница"
+      ],
+      "name": "Лестница"
+    },
+    {
+      "x": 2.2,
+      "y": 0,
+      "z": -4,
+      "connections": [
+        "coridor_21_5"
+      ],
+      "floor": 2,
+      "id": "office_206",
+      "type": "room",
+      "landmarks": [
+        "Кабинет 206"
+      ],
+      "name": "Кабинет 206"
+    },
+    {
+      "x": 1.1,
+      "y": 0,
+      "z": 2,
+      "connections": [
+        "office_203",
+        "coridor_21_3",
+        "coridor_21_1"
+      ],
+      "floor": 2,
+      "id": "coridor_21_2",
+      "type": "corridor",
+      "landmarks": [
+        ""
+      ],
+      "name": "Коридор"
+    },
+    {
+      "x": 1.1,
+      "y": 0,
+      "z": 4,
+      "connections": [
+        "office_205",
+        "office_204",
+        "coridor_21_4",
+        "coridor_21_2"
+      ],
+      "floor": 2,
+      "id": "coridor_21_3",
+      "type": "corridor",
+      "landmarks": [
+        ""
+      ],
+      "name": "Коридор"
+    },
+    {
+      "x": 1.1,
+      "y": 0,
+      "z": 6,
+      "connections": [
+        "office_207",
+        "coridor_21_3"
+      ],
+      "floor": 2,
+      "id": "coridor_21_4",
+      "type": "corridor",
+      "landmarks": [
+        ""
+      ],
+      "name": "Коридор"
+    },
+    {
+      "x": 1.1,
+      "y": 0,
+      "z": -4,
+      "connections": [
+        "coridor_21_1",
+        "stairs_21",
+        "office_206",
+        "coridor_21_6"
+      ],
+      "floor": 2,
+      "id": "coridor_21_5",
+      "type": "corridor",
+      "landmarks": [
+        ""
+      ],
+      "name": "Коридор"
+    },
+    {
+      "x": 1.1,
+      "y": 0,
+      "z": -6.6,
+      "connections": [
+        "coridor_21_5"
+      ],
+      "floor": 2,
+      "id": "coridor_21_6",
+      "type": "corridor",
+      "landmarks": [
+        ""
+      ],
+      "name": "Коридор"
+    }
+  ]
+}

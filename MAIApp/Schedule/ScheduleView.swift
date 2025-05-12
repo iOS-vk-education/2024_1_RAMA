@@ -16,15 +16,17 @@ struct ScheduleView: View {
                 if groupSelectionViewModel.selectedGroup == "" {
                     
                     GroupAndWeekView(weekNumber: $weekNumber, selectedDay: $selectedDay, groupSelectionViewModel: groupSelectionViewModel, weekViewModel: weekViewModel)
+
+
                     
                     ErrorGroupView()
                     
                 }
                 
                 else if scheduleMode == .day {
-                    
+
                     GroupAndWeekView(weekNumber: $weekNumber, selectedDay: $selectedDay, groupSelectionViewModel: groupSelectionViewModel, weekViewModel: weekViewModel)
-                    
+
                     DatePickerView(selectedDay: $selectedDay, weekNumber: $weekNumber)
                     
                     LessonsView(
@@ -40,11 +42,13 @@ struct ScheduleView: View {
                 
                 else if scheduleMode == .week {
                     
+
                     GroupAndWeekView(weekNumber: $weekNumber, selectedDay: $selectedDay, groupSelectionViewModel: groupSelectionViewModel, weekViewModel: weekViewModel)
                     
                     LessonsView(
                         selectedDay: $selectedDay,
                         selectedGroup: $groupSelectionViewModel.selectedGroup,
+
                         viewModel: LessonViewModel()
                     )
                     

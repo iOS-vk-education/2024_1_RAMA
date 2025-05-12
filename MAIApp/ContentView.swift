@@ -27,7 +27,9 @@ struct ContentView: View {
                     Label("Дедлайны", systemImage: "flame")
                 }
             ProfileAuthView()
+
                 .environmentObject(profileVM)
+
                 .tabItem {
                     Label("Профиль", systemImage: "person.circle.fill")
                 }

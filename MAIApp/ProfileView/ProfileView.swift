@@ -1,13 +1,9 @@
+
 import SwiftUI
 
 struct ProfileView: View {
-//    @State var name: String = "Имя не указано"
-//    @State var group: String = "Группа не указана"
-    @StateObject var profileVM: ProfileViewModel
+    @ObservedObject var profileVM: ProfileViewModel
     @ObservedObject var groupSelectionViewModel: GroupSelectionViewModel
-//    @StateObject private var profileData = ProfileData()
-    
-    
     var body: some View {
         NavigationStack{
             ScrollView{
@@ -22,6 +18,7 @@ struct ProfileView: View {
                             .font(.title2)
                         
                         Text(profileVM.group)
+
                             .foregroundColor(.gray)
                     }
                     .padding()
@@ -35,12 +32,14 @@ struct ProfileView: View {
                         NavigationLink(destination: ChooseGroupView(groupSelectionViewModel: groupSelectionViewModel)) {
                             ListItemView(title: "Изменить группу")
                         }
+
                     }
                     
                 }
                 .padding()
                 .navigationTitle("Профиль")
                 .navigationBarTitleDisplayMode(.inline)
+
             }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
@@ -55,6 +54,5 @@ struct ProfileView: View {
     }
 }
 
-//#Preview {
-//    ProfileView(name: "Михаил Рахимов", group: "М8О-101БВ-24")
-//}
+
+

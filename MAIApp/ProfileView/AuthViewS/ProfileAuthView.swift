@@ -2,7 +2,8 @@ import SwiftUI
 
 struct ProfileAuthView: View {
     @Environment(\.colorScheme) var colorScheme
-    @EnvironmentObject var profileVM: ProfileViewModel
+
+
     @State private var isRegistration = false
     
     var body: some View {
@@ -13,11 +14,11 @@ struct ProfileAuthView: View {
                 AuthView(isRegistration: $isRegistration)
             }
         }
-        .environmentObject(profileVM)
     }
 }
 
 enum Theme: String {
+
     case light, dark, system
     
     var colorScheme: ColorScheme? {
@@ -27,6 +28,7 @@ enum Theme: String {
         case .system: return nil
         }
     }
+
 }
 
 enum Lang: String {
