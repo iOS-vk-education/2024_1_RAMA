@@ -13,7 +13,7 @@ extension Color {
     }
     
     static var cardBackground: Color {
-        Color(hex: "F5F5F8", darkHex: "1C1C1E")
+        Color(hex: "F5F5F8", darkHex: "2C2C2E")
     }
     
     static var activeBackground: Color {
@@ -21,11 +21,15 @@ extension Color {
     }
     
     static var placeBadgeBackground: Color {
-        Color(hex: "FFFFFF", darkHex: "1C1C1E")
+        Color(hex: "FFFFFF", darkHex: "2C2C2E")
     }
     
     static var badgeBackground: Color {
         Color(hex: "F2F2F7", darkHex: "2C2C2E")
+    }
+    
+    static var mainBackground: Color {
+        Color(hex: "FFFFFF", darkHex: "000000")
     }
 }
 

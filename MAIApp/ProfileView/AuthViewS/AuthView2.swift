@@ -16,7 +16,7 @@ protocol AuthView2ControllerDelegate: AnyObject {
 class AuthView2Controller: UIViewController {
 
     weak var delegate: AuthView2ControllerDelegate?
-    var viewModel: ProfileViewModel! // Будет внедрен
+    var viewModel: ProfileViewModel! 
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -88,19 +88,73 @@ class AuthView2Controller: UIViewController {
         indicator.hidesWhenStopped = true
         return indicator
     }()
+    
+    private lazy var themeButton: UIBarButtonItem = {
+        let button = UIBarButtonItem(image: UIImage(systemName: "circle.lefthalf.filled"), style: .plain, target: self, action: #selector(showThemePicker))
+        return button
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         setupUI()
+        setupNavigationBar()
         bindViewModel()
         
         emailTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         passwordTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         
-        // Установить начальные значения из ViewModel
         emailTextField.text = viewModel.email
         passwordTextField.text = viewModel.password
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(handleUserDidLogin), name: .userDidLogin, object: nil)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    @objc private func handleUserDidLogin() {
+        delegate?.didSuccessfullyLogin()
+    }
+
+    private func setupNavigationBar() {
+        navigationItem.rightBarButtonItem = themeButton
+    }
+    
+    @objc private func showThemePicker() {
+        let alertController = UIAlertController(title: "Выберите тему", message: nil, preferredStyle: .actionSheet)
+        
+        let systemAction = UIAlertAction(title: "Системная", style: .default) { [weak self] _ in
+            self?.setTheme(.system)
+        }
+        
+        let lightAction = UIAlertAction(title: "Светлая", style: .default) { [weak self] _ in
+            self?.setTheme(.light)
+        }
+        
+        let darkAction = UIAlertAction(title: "Темная", style: .default) { [weak self] _ in
+            self?.setTheme(.dark)
+        }
+        
+        let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
+        
+        alertController.addAction(systemAction)
+        alertController.addAction(lightAction)
+        alertController.addAction(darkAction)
+        alertController.addAction(cancelAction)
+        
+        present(alertController, animated: true)
+    }
+    
+    private func setTheme(_ theme: Theme) {
+        UserDefaults.standard.set(theme.rawValue, forKey: "theme")
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+            windowScene.windows.forEach { window in
+                window.overrideUserInterfaceStyle = theme == .system ? .unspecified :
+                    theme == .light ? .light : .dark
+            }
+        }
     }
 
     private func setupUI() {
@@ -129,7 +183,6 @@ class AuthView2Controller: UIViewController {
             activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
     }
-
 
     private func bindViewModel() {
         viewModel.$email

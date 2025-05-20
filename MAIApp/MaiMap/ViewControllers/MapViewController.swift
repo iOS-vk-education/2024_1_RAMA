@@ -47,12 +47,12 @@ class MapViewController: UIViewController {
         super.viewDidLoad()
         setupUI()
         
-        scene3DView.allowsCameraControl = true
-        if #available(iOS 11.0, *) {
-            scene3DView.defaultCameraController.interactionMode      = .orbitTurntable
-            scene3DView.defaultCameraController.minimumVerticalAngle = -Float.pi/3
-            scene3DView.defaultCameraController.maximumVerticalAngle =  Float.pi/3
-        }
+//        scene3DView.allowsCameraControl = true
+//        if #available(iOS 11.0, *) {
+//            scene3DView.defaultCameraController.interactionMode      = .orbitTurntable
+//            scene3DView.defaultCameraController.minimumVerticalAngle = -Float.pi/3
+//            scene3DView.defaultCameraController.maximumVerticalAngle =  Float.pi/3
+//        }
         
         loadData()
         setupGestures()
@@ -269,7 +269,7 @@ class MapViewController: UIViewController {
         
         
         scene3DView.pointOfView = cameraNode
-        setupCameraConstraints()
+//        setupCameraConstraints()
        
     }
     
@@ -281,14 +281,14 @@ class MapViewController: UIViewController {
         scene3DView.scene?.rootNode.addChildNode(cameraNode)
     }
     
-    private func setupCameraConstraints() {
-        scene3DView.allowsCameraControl = true
-        scene3DView.defaultCameraController.interactionMode = .orbitTurntable
-        scene3DView.defaultCameraController.minimumVerticalAngle = -Float.pi/3
-        scene3DView.defaultCameraController.maximumVerticalAngle =  Float.pi/3
-
-    }
-    
+//    private func setupCameraConstraints() {
+//        scene3DView.allowsCameraControl = true
+//        scene3DView.defaultCameraController.interactionMode = .orbitTurntable
+//        scene3DView.defaultCameraController.minimumVerticalAngle = -Float.pi/3
+//        scene3DView.defaultCameraController.maximumVerticalAngle =  Float.pi/3
+//
+//    }
+//    
     private func setupCamera(for scene: SCNScene, mode: MapMode) -> SCNNode {
             let cameraNode = SCNNode()
             cameraNode.camera = SCNCamera()

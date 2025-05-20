@@ -11,6 +11,5 @@ import Foundation
 enum ScheduleMode: String, CaseIterable {
     case day = "День"
     case week = "Неделя"
-    case calendar = "Календарь"
 }
 

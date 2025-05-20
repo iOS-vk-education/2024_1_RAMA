@@ -29,6 +29,26 @@ class RegView2Controller: UIViewController {
         return label
     }()
     
+    private let firstNameTextField: UITextField = {
+        let textField = UITextField()
+        textField.placeholder = "Имя"
+        textField.borderStyle = .roundedRect
+        // textField.autocapitalizationType = .words
+        textField.textContentType = .givenName
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        return textField
+    }()
+
+    private let lastNameTextField: UITextField = {
+        let textField = UITextField()
+        textField.placeholder = "Фамилия"
+        textField.borderStyle = .roundedRect
+        textField.autocapitalizationType = .words
+        textField.textContentType = .familyName
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        return textField
+    }()
+
     private let emailTextField: UITextField = {
         let textField = UITextField()
         textField.placeholder = "Email"
@@ -100,15 +120,22 @@ class RegView2Controller: UIViewController {
         
         emailTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         passwordTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
+        firstNameTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
+        lastNameTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
+        
+        // Установить делегаты для валидации
+        emailTextField.delegate = self
+        passwordTextField.delegate = self
         
         // Установить начальные значения из ViewModel
         emailTextField.text = viewModel.email
-        // Пароль обычно не предзаполняется на экране регистрации, но если нужно - viewModel.password
+        firstNameTextField.text = viewModel.firstName
+        lastNameTextField.text = viewModel.lastName
     }
 
     private func setupUI() {
         let stackView = UIStackView(arrangedSubviews: [
-            titleLabel, emailTextField, passwordTextField, /*confirmPasswordTextField,*/ registerButton, switchToLoginButton, messageLabel
+            titleLabel, firstNameTextField, lastNameTextField, emailTextField, passwordTextField, registerButton, switchToLoginButton, messageLabel
         ])
         stackView.axis = .vertical
         stackView.spacing = 20
@@ -136,10 +163,19 @@ class RegView2Controller: UIViewController {
 
     private func bindViewModel() {
         viewModel.$email
-            .map { $0 as String? } // Convert to optional
+            .map { $0 as String? }
             .assign(to: \.text, on: emailTextField)
             .store(in: &cancellables)
 
+        viewModel.$firstName
+            .map { $0 as String? }
+            .assign(to: \.text, on: firstNameTextField)
+            .store(in: &cancellables)
+
+        viewModel.$lastName
+            .map { $0 as String? }
+            .assign(to: \.text, on: lastNameTextField)
+            .store(in: &cancellables)
 
         
         // Не биндим viewModel.password напрямую к passwordTextField.text при загрузке,
@@ -181,6 +217,10 @@ class RegView2Controller: UIViewController {
             viewModel.email = textField.text ?? ""
         } else if textField == passwordTextField {
             viewModel.password = textField.text ?? ""
+        } else if textField == firstNameTextField {
+            viewModel.firstName = textField.text ?? ""
+        } else if textField == lastNameTextField {
+            viewModel.lastName = textField.text ?? ""
         }
         // else if textField == confirmPasswordTextField { ... }
     }
@@ -189,6 +229,26 @@ class RegView2Controller: UIViewController {
         view.endEditing(true)
         // Опционально: добавить проверку совпадения паролей, если есть confirmPasswordTextField
         viewModel.registerUser()
+    }
+}
+
+// MARK: - UITextFieldDelegate
+extension RegView2Controller: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        // Проверяем, является ли поле email или password
+        if textField == emailTextField || textField == passwordTextField {
+            // Проверяем, содержит ли вводимый текст русские буквы
+            let russianLetters = CharacterSet(charactersIn: "абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ")
+            let stringSet = CharacterSet(charactersIn: string)
+            
+            // Если вводимый текст содержит русские буквы, запрещаем ввод
+            if stringSet.intersection(russianLetters).isEmpty {
+                return true
+            } else {
+                return false
+            }
+        }
+        return true
     }
 }
 

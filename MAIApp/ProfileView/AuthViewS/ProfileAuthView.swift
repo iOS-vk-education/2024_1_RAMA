@@ -8,7 +8,7 @@ struct ProfileAuthView: View {
     var body: some View {
         NavigationStack {
             if isRegistration {
-//                RegView(isRegistration: $isRegistration)
+                RegView(isRegistration: $isRegistration)
             } else {
                 AuthView(isRegistration: $isRegistration)
             }

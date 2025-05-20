@@ -74,7 +74,7 @@ struct AuthContainerView: View {
     enum AuthScreen {
         case login, registration
     }
-    @State private var currentScreen: AuthScreen = .registration
+    @State private var currentScreen: AuthScreen = .login
 
     var body: some View {
         ZStack {

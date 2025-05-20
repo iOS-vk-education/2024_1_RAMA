@@ -15,25 +15,27 @@ struct OneFavoriteGroupView: View {
 //    let onToggle: () -> Void
     
     var body: some View {
-        ZStack(alignment: .topTrailing){
+        HStack(spacing: 8) {
             Text(group)
-                .padding(8)
-                .frame(maxWidth: .infinity)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 10)
-                        .stroke(isSelected ? Color.customBlue : Color.gray, lineWidth: 1)
-                        .opacity(isSelected ? 0.75 : 0.25)
-                )
                 .font(.subheadline)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
+            
+            Spacer()
             
             Button(action: { vm.toggleFavorite(group) }) {
                 Image(systemName: vm.isFavorite(group) ? "heart.fill" : "heart")
                     .foregroundColor(.red)
-                    .padding(8)
-                    .background(Color.white.opacity(0.8))
-                    .clipShape(Circle())
+                    .font(.system(size: 16))
             }
-            .padding(10)
         }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 12)
+        .frame(maxWidth: .infinity)
+        .overlay(
+            RoundedRectangle(cornerRadius: 10)
+                .stroke(isSelected ? Color.customBlue : Color.gray, lineWidth: 1)
+                .opacity(isSelected ? 0.75 : 0.25)
+        )
     }
 }

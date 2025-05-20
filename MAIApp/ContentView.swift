@@ -22,7 +22,7 @@ struct ContentView: View {
                 .tabItem {
                     Label("Карта", systemImage: "map.circle.fill")
                 }
-            ScheduleView(groupSelectionViewModel: groupSelectionViewModel, dateViewModel: weekViewModel, contentViewModel: contentViewModel, lessonViewModel: lessonViewModel)
+            ScheduleView(groupSelectionViewModel: groupSelectionViewModel, dateViewModel: weekViewModel, contentViewModel: contentViewModel, lessonViewModel: lessonViewModel, profileVM: profileVM)
                 .tabItem {
                     Label("Расписание", systemImage: "calendar")
                 }
@@ -31,17 +31,22 @@ struct ContentView: View {
                     Label("Дедлайны", systemImage: "flame")
                 }
 
-            if profileVM.isLoggedIn {
-                ProfileView(profileVM: profileVM, groupSelectionViewModel: groupSelectionViewModel, weekViewModel: weekViewModel)
+//            if profileVM.isLoggedIn {
+//                ProfileViewControllerRepresentable(profileVM: profileVM, groupSelectionViewModel: groupSelectionViewModel, weekViewModel: weekViewModel)
+//                    .tabItem {
+//                        Label("Профиль", systemImage: "person.circle.fill")
+//                    }
+                ProfileAuthView(profileVM: profileVM)
                     .tabItem {
-                        Label("Профиль", systemImage: "person.circle.fill")
-                    }
-            } else {
-                AuthContainerView(profileVM: profileVM)
-                    .tabItem {
-                        Label("Профиль", systemImage: "person.circle.fill")
-                    }
-            }
+                                            Label("Профиль", systemImage: "person.circle.fill")
+                                        }
+//            } else {
+////                AuthContainerView(profileVM: profileVM)
+//                ProfileView(profileVM: profileVM, groupSelectionViewModel: groupSelectionViewModel, weekViewModel: weekViewModel)
+//                    .tabItem {
+//                        Label("Профиль", systemImage: "person.circle.fill")
+//                    }
+//            }
 
                         
             
@@ -57,5 +62,20 @@ struct ContentView: View {
             
         }
         .preferredColorScheme(selectedTheme.colorScheme)
+    }
+}
+
+struct ProfileViewControllerRepresentable: UIViewControllerRepresentable {
+    let profileVM: ProfileViewModel
+    let groupSelectionViewModel: GroupSelectionViewModel
+    let weekViewModel: DateViewModel
+    
+    func makeUIViewController(context: Context) -> UINavigationController {
+        let profileVC = ProfileViewController(profileVM: profileVM, groupSelectionViewModel: groupSelectionViewModel, weekViewModel: weekViewModel)
+        return UINavigationController(rootViewController: profileVC)
+    }
+    
+    func updateUIViewController(_ uiViewController: UINavigationController, context: Context) {
+        // Обновление не требуется
     }
 }

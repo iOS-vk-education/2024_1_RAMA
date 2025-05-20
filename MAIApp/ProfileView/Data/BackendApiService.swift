@@ -10,19 +10,17 @@ import SwiftUI
 
 
 // MARK: - Data Layer
-
 class APIService {
     
     @EnvironmentObject var profileVM: ProfileViewModel
     
-//    private let baseURL = "https://mai-students.ru/api"
-    private let baseUrl = "http://127.0.0.1:8000/api"
+    private let baseURL = "https://mai-students.ru/api/"
+//    private let baseUrl = "http://127.0.0.1:8000/api"
 
 
-    
     func register(email: String, password: String, completion: @escaping (Result<TokenInfo, Error>) -> Void) {
         // Создаем URL для запроса
-        guard let url = URL(string: "\(baseUrl)/v1/auth/register") else {
+        guard let url = URL(string: "\(baseURL)/v1/auth/register") else {
             completion(.failure(NSError(domain: "APIService", code: 0, userInfo: [NSLocalizedDescriptionKey: "Неверный URL"])))
             return
         }
@@ -106,7 +104,7 @@ class APIService {
     
     // Функция для получения информации о пользователе
     func getUserInfo(token: String, completion: @escaping (Result<[String: Any], Error>) -> Void) {
-        guard let url = URL(string: "\(baseUrl)/v1/auth/me") else {
+        guard let url = URL(string: "\(baseURL)/v1/auth/me") else {
             completion(.failure(NSError(domain: "APIService", code: 0, userInfo: [NSLocalizedDescriptionKey: "Неверный URL"])))
             return
         }
@@ -145,6 +143,91 @@ class APIService {
             }
         }.resume()
     }
+    
+    func login(email: String, password: String, completion: @escaping (Result<TokenInfo, Error>) -> Void) {
+        // Создаем URL для запроса
+        guard let url = URL(string: "\(baseURL)/v1/auth/register") else {
+            completion(.failure(NSError(domain: "APIService", code: 0, userInfo: [NSLocalizedDescriptionKey: "Неверный URL"])))
+            return
+        }
+        
+        let parameters = ["email": email, "password": password]
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: parameters)
+            request.httpBody = jsonData
+            
+            if let jsonString = String(data: jsonData, encoding: .utf8) {
+                print("Отправляемые данные: \(jsonString)")
+            }
+        } catch {
+            completion(.failure(error))
+            return
+        }
+        
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                print("Ошибка запроса: \(error.localizedDescription)")
+                completion(.failure(error))
+                return
+            }
+            
+            // Выводим информацию о запросе для отладки
+            if let httpResponse = response as? HTTPURLResponse {
+                print("Код ответа: \(httpResponse.statusCode)")
+            }
+            
+            // Выводим тело ответа для отладки
+            if let data = data, let responseString = String(data: data, encoding: .utf8) {
+                print("Тело ответа: \(responseString)")
+            }
+            
+            // Проверяем статус ответа
+            guard let httpResponse = response as? HTTPURLResponse else {
+                completion(.failure(NSError(domain: "APIService", code: 0, userInfo: [NSLocalizedDescriptionKey: "Неверный ответ"])))
+                return
+            }
+            
+            // Обрабатываем ответ в зависимости от статуса
+            if (200...299).contains(httpResponse.statusCode) {
+                // Успешный ответ
+                if let data = data {
+                    do {
+                        // Пытаемся распарсить JSON в TokenInfo
+                        let tokenInfo = try JSONDecoder().decode(TokenInfo.self, from: data)
+                        print("Успешная регистрация: \(tokenInfo)")
+                        completion(.success(tokenInfo))
+                    } catch {
+                        print("Ошибка парсинга JSON: \(error.localizedDescription)")
+                        completion(.failure(error))
+                    }
+                } else {
+                    completion(.failure(NSError(domain: "APIService", code: 0, userInfo: [NSLocalizedDescriptionKey: "Пустой ответ"])))
+                }
+            } else if httpResponse.statusCode == 409 {
+                // Пользователь уже существует
+                completion(.failure(NSError(domain: "APIService", code: 409, userInfo: [NSLocalizedDescriptionKey: "Пользователь с таким email уже существует"])))
+            } else {
+                // Другая ошибка
+                let errorMessage = "Ошибка сервера: \(httpResponse.statusCode)"
+                print(errorMessage)
+                
+                if let data = data, let responseString = String(data: data, encoding: .utf8) {
+                    print("Тело ошибки: \(responseString)")
+                }
+                
+                completion(.failure(NSError(domain: "APIService", code: httpResponse.statusCode, userInfo: [NSLocalizedDescriptionKey: errorMessage])))
+            }
+        }.resume()
+    }
+    
+    
+    
 }
 //    func register() {
 //        let parameters: [String: Any] = ["email": "IOSTEST@gmail.com", "password": "123"]
